@@ -1,0 +1,14 @@
+.node-image {
+  width: 40px;
+  height: 40px;
+}
+
+.node {
+  fill: lightgrey;
+}
+
+path {
+	stroke: black;
+	fill: black;
+	stroke-width: 1.5px;
+}

@@ -1,0 +1,177 @@
+[
+  {
+    "statementID": "openownership-register-6986942533025490740",
+    "statementType": "entityStatement",
+    "entityType": "registeredEntity",
+    "name": "AIMIA HOLDINGS UK LIMITED",
+    "incorporatedInJurisdiction": {
+      "name": "United Kingdom of Great Britain and Northern Ireland",
+      "code": "GB"
+    },
+    "identifiers": [
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "06436883" },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "06436883" },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "06436883" },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "06436883" },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "06436883" },
+      {
+        "schemeName": "OpenCorporates",
+        "id": "https://opencorporates.com/companies/gb/06436883",
+        "uri": "https://opencorporates.com/companies/gb/06436883"
+      },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "6436883" },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "6436883" },
+      {
+        "schemeName": "OpenOwnership Register",
+        "id": "https://register.openownership.org/entities/59b9cb8967e4ebf340c53b5d",
+        "uri": "https://register.openownership.org/entities/59b9cb8967e4ebf340c53b5d"
+      }
+    ],
+    "foundingDate": "2007-11-26",
+    "addresses": [
+      {
+        "type": "registered",
+        "address": "Suite 1 3rd Floor, 11-12 St James's Square, London, SW1Y 4LB",
+        "country": "GB"
+      }
+    ]
+  },
+  {
+    "statementID": "openownership-register-4464213138928640503",
+    "statementType": "entityStatement",
+    "entityType": "registeredEntity",
+    "name": "AIMIA INC.",
+    "incorporatedInJurisdiction": { "name": "Canada", "code": "CA" },
+    "identifiers": [
+      {
+        "schemeName": "GB Persons Of Significant Control Register",
+        "id": "/company/06436883/persons-with-significant-control/corporate-entity/7vAYKYu9fXBbLkAuh4yVIk-dAAY"
+      },
+      {
+        "schemeName": "OpenCorporates",
+        "id": "https://opencorporates.com/companies/ca/9967109",
+        "uri": "https://opencorporates.com/companies/ca/9967109"
+      },
+      {
+        "schemeName": "GB Persons Of Significant Control Register",
+        "id": "/company/07474321/persons-with-significant-control/corporate-entity/S3advwC_enScMLhb09FZLYxTrm4"
+      },
+      {
+        "schemeName": "OpenOwnership Register",
+        "id": "https://register.openownership.org/entities/5d009bc89dfc3fae182fd9cc",
+        "uri": "https://register.openownership.org/entities/5d009bc89dfc3fae182fd9cc"
+      }
+    ],
+    "addresses": [
+      {
+        "type": "registered",
+        "address": "525 Viger Avenue West, Tour Aimia, Suite 1000, Montreal, QC, H2Z 0B2",
+        "country": "CA"
+      }
+    ]
+  },
+  {
+    "statementID": "openownership-register-7999312513141141486",
+    "statementType": "ownershipOrControlStatement",
+    "statementDate": "2017-01-01",
+    "subject": {
+      "describedByEntityStatement": "openownership-register-6986942533025490740"
+    },
+    "interestedParty": {
+      "describedByEntityStatement": "openownership-register-4464213138928640503"
+    },
+    "interests": [
+      {
+        "type": "shareholding",
+        "details": "ownership-of-shares-75-to-100-percent",
+        "share": {
+          "minimum": 75,
+          "maximum": 100,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "startDate": "2017-01-01"
+      }
+    ],
+    "source": {
+      "type": ["officialRegister"],
+      "description": "GB Persons Of Significant Control Register",
+      "url": "http://download.companieshouse.gov.uk/en_pscdata.html",
+      "retrievedAt": "2019-07-08T10:37:11Z"
+    }
+  },
+  {
+    "statementID": "openownership-register-17922597383544943623",
+    "statementType": "entityStatement",
+    "entityType": "registeredEntity",
+    "name": "AIMIA HOLDINGS UK II LIMITED",
+    "incorporatedInJurisdiction": {
+      "name": "United Kingdom of Great Britain and Northern Ireland",
+      "code": "GB"
+    },
+    "identifiers": [
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "07474321" },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "07474321" },
+      {
+        "schemeName": "OpenCorporates",
+        "id": "https://opencorporates.com/companies/gb/07474321",
+        "uri": "https://opencorporates.com/companies/gb/07474321"
+      },
+      { "scheme": "GB-COH", "schemeName": "Companies House", "id": "7474321" },
+      {
+        "schemeName": "OpenOwnership Register",
+        "id": "https://register.openownership.org/entities/59b9cc1a67e4ebf340c78b62",
+        "uri": "https://register.openownership.org/entities/59b9cc1a67e4ebf340c78b62"
+      }
+    ],
+    "foundingDate": "2010-12-20",
+    "addresses": [
+      {
+        "type": "registered",
+        "address": "Suite 1, 3rd Floor 11-12 St. James's Square, London, SW1Y 4LB",
+        "country": "GB"
+      }
+    ]
+  },
+  {
+    "statementID": "openownership-register-5578347040419355448",
+    "statementType": "ownershipOrControlStatement",
+    "statementDate": "2017-01-01",
+    "subject": {
+      "describedByEntityStatement": "openownership-register-17922597383544943623"
+    },
+    "interestedParty": {
+      "describedByEntityStatement": "openownership-register-4464213138928640503"
+    },
+    "interests": [
+      {
+        "type": "shareholding",
+        "details": "ownership-of-shares-75-to-100-percent",
+        "share": {
+          "minimum": 75,
+          "maximum": 100,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "startDate": "2017-01-01"
+      }
+    ],
+    "source": {
+      "type": ["officialRegister"],
+      "description": "GB Persons Of Significant Control Register",
+      "url": "http://download.companieshouse.gov.uk/en_pscdata.html",
+      "retrievedAt": "2019-07-08T10:37:11Z"
+    }
+  },
+  {
+    "statementID": "openownership-register-15426418147908013244",
+    "statementType": "ownershipOrControlStatement",
+    "subject": {
+      "describedByEntityStatement": "openownership-register-4464213138928640503"
+    },
+    "interestedParty": {
+      "unspecified": { "reason": "unknown", "description": "Unknown person(s)" }
+    },
+    "interests": []
+  }
+]
