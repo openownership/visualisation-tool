@@ -2,7 +2,7 @@ import React from "react";
 import DagreGraph from "dagre-d3-react";
 import "./App.css";
 
-const jointOwn = require("./fixtures/real.json");
+const jointOwn = require("./fixtures/joint.json");
 console.log(jointOwn);
 
 const personConfig = {
