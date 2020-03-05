@@ -1,6 +1,15 @@
+.h1 {
+  display: inherit;
+}
+
 .node-image {
   width: 40px;
   height: 40px;
+}
+
+.label-text {
+  height: auto;
+  width: auto;
 }
 
 .node {
@@ -10,5 +19,5 @@
 path {
 	stroke: black;
 	fill: black;
-	stroke-width: 1.5px;
+	stroke-width: 1px;
 }

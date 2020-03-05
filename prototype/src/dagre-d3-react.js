@@ -1,6 +1,6 @@
 // Modified from https://github.com/justin-coberly/dagre-d3-react - Justin Coberly
 import React, { Component, createRef } from "react";
-import dagreD3, { GraphLabel } from "dagre-d3";
+import dagreD3 from "dagre-d3";
 import * as d3 from "d3";
 
 class DagreGraph extends Component {
@@ -75,6 +75,31 @@ class DagreGraph extends Component {
         return selection.transition().duration(animate || 1000);
       };
     }
+
+    render.shapes().img = function circle(parent, bbox, node) {
+      var shapeSvg = parent
+        .insert("image")
+        .attr("class", "nodeImage")
+        .attr("xlink:href", function(d) {
+          if (node) {
+            console.log(node);
+            if (node.class === "person") {
+              return "./assets/person.png";
+            } else {
+              return "./assets/ownerCompany.png";
+            }
+          }
+        })
+        .attr("x", "-20px")
+        .attr("y", "-20px")
+        .attr("width", "40px")
+        .attr("height", "40px");
+
+      node.intersect = (point) => {
+        return dagreD3.intersect.circle(node, 20, point);
+      };
+      return shapeSvg;
+    };
 
     render(inner, g);
 
