@@ -77,7 +77,25 @@ class DagreGraph extends Component {
     }
 
     render.shapes().img = function circle(parent, bbox, node) {
-      var shapeSvg = parent
+      // var shapeSvg = parent
+      //   .insert("image")
+      //   .attr("class", "nodeImage")
+      //   .attr("xlink:href", function(d) {
+      //     if (node) {
+      //       console.log(node);
+      //       if (node.class === "person") {
+      //         return "./assets/person.png";
+      //       } else {
+      //         return "./assets/ownerCompany.png";
+      //       }
+      //     }
+      //   })
+      //   .attr("x", "-20px")
+      //   .attr("y", "-20px")
+      //   .attr("width", "40px")
+      //   .attr("height", "40px");
+      
+        var shapeSvg = parent
         .insert("image")
         .attr("class", "nodeImage")
         .attr("xlink:href", function(d) {
@@ -90,13 +108,13 @@ class DagreGraph extends Component {
             }
           }
         })
-        .attr("x", "-20px")
-        .attr("y", "-20px")
-        .attr("width", "40px")
-        .attr("height", "40px");
+        .attr("x", "-30px")
+        .attr("y", "-30px")
+        .attr("width", "60px")
+        .attr("height", "60px");
 
       node.intersect = (point) => {
-        return dagreD3.intersect.circle(node, 20, point);
+        return dagreD3.intersect.circle(node, 30, point);
       };
       return shapeSvg;
     };

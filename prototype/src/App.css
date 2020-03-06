@@ -16,6 +16,10 @@
   fill: lightgrey;
 }
 
+.node .label{
+  fill: black;
+}
+
 path {
 	stroke: black;
 	fill: black;
