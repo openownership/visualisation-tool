@@ -1,0 +1,27 @@
+.h1 {
+  display: inherit;
+}
+
+.node-image {
+  width: 40px;
+  height: 40px;
+}
+
+.label-text {
+  height: auto;
+  width: auto;
+}
+
+.node {
+  fill: lightgrey;
+}
+
+.node .label{
+  fill: black;
+}
+
+path {
+	stroke: black;
+	fill: black;
+	stroke-width: 1px;
+}
