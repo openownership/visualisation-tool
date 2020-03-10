@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dagreD3 from "dagre-d3";
 import { getPersonNodes, getEntityNodes } from "./nodes";
 import { getOwnershipEdges } from "./edges";
+// import personSVG from '../public/assets/person.svg' 
 
 var g = new dagreD3.graphlib.Graph().setGraph({});
 
@@ -55,3 +56,23 @@ svg.call(
 );
 
 svg.attr("height", g.graph().height * initialScale + 40);
+
+const labels = svg.selectAll("g.nodes g.label");
+const labelImages = labels.selectAll("g.labelImage");
+const labelText = labels.selectAll("g.labelText");
+
+console.log(labelImages);
+console.log(labelText);
+
+
+
+// labels.attr('transform', (data, index, element) => {
+//   const labelWidth = element[index].getBBox().width;
+//   console.log(labelWidth);
+  
+//   return `translate(${labelWidth/2},0) scale(0.8)`
+// })
+
+// each((node, index) => {
+//   console.log(this);
+// })
