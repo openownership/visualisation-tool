@@ -2,4 +2,7 @@
 
 To build the project for development run:
 
-`npm run build`
+```
+npm i
+npm run build
+```
