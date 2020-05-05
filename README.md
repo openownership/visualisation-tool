@@ -1,2 +1,5 @@
 # visualisation-tool
-A placeholder for work on tooling to support visualisation of ownership structures. 
+
+To build the project for development run:
+
+`npm run build`
