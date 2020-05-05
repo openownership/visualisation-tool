@@ -1,0 +1,67 @@
+.h1 {
+  display: inherit;
+}
+
+.label-text {
+  height: auto;
+  width: auto;
+}
+
+.node div {
+  white-space: normal;
+  text-align: center;
+}
+
+.centred-label {
+  /* max-width: 100px; */
+  text-align: center;
+  overflow-wrap: normal;
+}
+
+.wrap-text {
+  text-align: center;
+  overflow-wrap: normal;
+  text-align: center;
+}
+
+.node-image {
+  width: 100px;
+  height: 100px;
+}
+
+button {
+  width: 200px;
+  height: 100px;
+}
+
+.image-holder {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.node-glyph {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+}
+
+.top-left {
+  top: 0px;
+  left: 0px;
+}
+
+.top-right {
+  top: 0px;
+  right: 0px;
+}
+
+.bottom-left {
+  bottom: 0px;
+  left: 0px;
+}
+
+.bottom-right {
+  bottom: 0px;
+  right: 0px;
+}
