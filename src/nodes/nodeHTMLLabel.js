@@ -8,7 +8,7 @@ const generateNodeLabel = (nodeType, nodeText) => {
             <div class="node-glyph bottom-right"></div>
             <img class="node-image" src="public/assets/${nodeType}.svg"></img><br>
         </div>
-        <div class="wrap-text">
+        <div class="node-label wrap-text">
             ${nodeText}
         </div>
     </div>

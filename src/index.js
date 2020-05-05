@@ -18,7 +18,7 @@ g.setGraph({
   // ranker: "tight-tree",
 });
 
-const jointOwn = require("../fixtures/joint.json");
+const jointOwn = require("../fixtures/kwik.json");
 const personNodes = getPersonNodes(jointOwn);
 const entityNodes = getEntityNodes(jointOwn);
 const ownershipEdges = getOwnershipEdges(jointOwn);
