@@ -5,8 +5,8 @@ import * as d3 from "d3";
 const edgeConfig = {
   // labeloffset: -100,
   // labelType: "html",
-  // style: "fill: none; stroke: #000; stroke-width: 1px;",
-  curve: d3.curveNatural,
+  style: "fill: none; stroke: #000; stroke-width: 1px;",
+  curve: d3.curveMonotoneX,
   // lineInterpolate: 'basis'
 };
 

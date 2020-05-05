@@ -1,10 +1,9 @@
 import * as d3 from "d3";
 import dagreD3 from "dagre-d3";
-import { getPersonNodes, getEntityNodes, setUnknownNode } from "./nodes/nodes";
-import { getOwnershipEdges } from "./edges/edges";
-import * as svgreverse from "svg-path-reverse";
 import Bezier from "bezier-js";
 import bezierBuilder from "./utils/bezierBuilder";
+import { getPersonNodes, getEntityNodes, setUnknownNode } from "./nodes/nodes";
+import { getOwnershipEdges } from "./edges/edges";
 
 var g = new dagreD3.graphlib.Graph({}); // multigraph: true }); // multigraph allows multiple edges between nodes
 g.setGraph({
@@ -66,17 +65,18 @@ var render = new dagreD3.render();
 // Using this redefinition of the circle to set the intersection point to near the centre
 render.shapes().circle = function circle(parent, bbox, node) {
   var r = Math.max(bbox.width, bbox.height) / 2;
-  var shapeSvg = parent.insert("circle", ":first-child")
+  var shapeSvg = parent
+    .insert("circle", ":first-child")
     .attr("x", -bbox.width / 2)
     .attr("y", -bbox.height / 2)
     .attr("r", r);
 
-  node.intersect = function(point) {
+  node.intersect = function (point) {
     return dagreD3.intersect.circle(node, 0.1, point);
   };
 
   return shapeSvg;
-}
+};
 
 // Run the renderer. This is what draws the final graph.
 render(inner, g);
@@ -97,6 +97,7 @@ const createOwnershipCurve = (element, index, shareStroke) => {
     .clone(true)
     .select(".path")
     .attr("id", (d, i) => "ownText" + index)
+    .attr("style", "fill: none;")
     .attr("marker-end", "")
     .each(function () {
       const path = d3.select(this);
@@ -128,6 +129,7 @@ const createControlCurve = (element, index, controlStroke, curveOffset) => {
     .clone(true)
     .select(".path")
     .attr("id", (d, i) => "controlText" + index)
+    .attr("style", "fill: none;")
     .attr("marker-end", "")
     .each(function () {
       const path = d3.select(this);
@@ -135,6 +137,44 @@ const createControlCurve = (element, index, controlStroke, curveOffset) => {
       const offsetCurve = newBezier.offset(35);
       path.attr("d", bezierBuilder(offsetCurve));
     });
+};
+
+const createControlText = (index, controlExact, controlMin, controlMax) => {
+  svg
+    .select(".control")
+    .append("text")
+    .attr("class", "edgeText")
+    .attr("text-anchor", "middle")
+    .append("textPath")
+    .attr("xlink:href", function (d, i) {
+      return "#controlText" + index;
+    })
+    .attr("startOffset", "50%")
+    .text(
+      `Controls ${
+        controlExact === undefined
+          ? `${controlMin} - ${controlMax}`
+          : controlExact
+      }%`
+    );
+};
+
+const createOwnText = (index, shareExact, shareMin, shareMax) => {  
+  svg
+    .select(".own")
+    .append("text")
+    .attr("class", "edgeText")
+    .attr("text-anchor", "middle")
+    .append("textPath")
+    .attr("xlink:href", function (d, i) {
+      return "#ownText" + index;
+    })
+    .attr("startOffset", "50%")
+    .text(
+      `Owns ${
+        shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact
+      }%`
+    );
 };
 
 edges.forEach((edge, index) => {
@@ -160,40 +200,9 @@ edges.forEach((edge, index) => {
     createOwnershipCurve(element, index, shareStroke);
   "votingRights" in interests &&
     createControlCurve(element, index, controlStroke, curveOffset);
-
-  svg
-    .select(".control")
-    .append("text")
-    .attr("class", "edgeText")
-    .attr("text-anchor", "middle")
-    .append("textPath")
-    .attr("xlink:href", function (d, i) {
-      return "#controlText" + index;
-    })
-    .attr("startOffset", "50%")
-    .text(
-      `Controls ${
-        controlExact === undefined
-          ? `${controlMin} - ${controlMax}`
-          : controlExact
-      }%`
-    );
-
-  svg
-    .select(".own")
-    .append("text")
-    .attr("class", "edgeText")
-    .attr("text-anchor", "middle")
-    .append("textPath")
-    .attr("xlink:href", function (d, i) {
-      return "#ownText" + index;
-    })
-    .attr("startOffset", "50%")
-    .text(
-      `Owns ${
-        shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact
-      }%`
-    );
+  
+  g.nodeCount() < 8 && createControlText(index, controlExact, controlMin, controlMax);
+  g.nodeCount() < 8 && createOwnText(index, shareExact, shareMin, shareMax);
 });
 
 // Center the nodes
