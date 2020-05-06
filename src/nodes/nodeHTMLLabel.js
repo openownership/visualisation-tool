@@ -1,8 +1,11 @@
-const generateNodeLabel = (nodeType, nodeText) => {
-    return `
+const generateNodeLabel = (nodeType, nodeText, jurisdiction) => {
+  const countryCode = jurisdiction ? jurisdiction.code : null;
+  return `
     <div class='centred-label'>
         <div class="image-holder">
-            <div class="node-glyph top-left"></div>
+            <div class="node-glyph top-left">
+                ${countryCode ? `<img class="node-flag" src="public/assets/flags/${countryCode}.svg"/>` : ''}
+            </div>
             <div class="node-glyph top-right"></div>
             <div class="node-glyph bottom-left"></div>
             <div class="node-glyph bottom-right"></div>
@@ -12,7 +15,7 @@ const generateNodeLabel = (nodeType, nodeText) => {
             ${nodeText}
         </div>
     </div>
-    `
+    `;
 };
 
 export default generateNodeLabel;
