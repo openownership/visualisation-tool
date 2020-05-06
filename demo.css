@@ -36,8 +36,8 @@ button {
 
 .image-holder {
   position: relative;
-  /* width: 120px;
-  height: 120px; */
+  margin: 0 auto;
+  width: 160px;
 }
 
 .node-glyph {
@@ -48,11 +48,12 @@ button {
 
 .node-label {
   background-color: white;
+  display: inline;
 }
 
 .node-flag {
+  border: 1px solid #b2b3b9;
   height: 100%;
-  width: 100%;
 }
 
 .top-left {

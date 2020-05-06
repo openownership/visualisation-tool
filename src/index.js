@@ -18,7 +18,7 @@ g.setGraph({
   // ranker: "tight-tree",
 });
 
-const jointOwn = require('../fixtures/joint.json');
+const jointOwn = require('../fixtures/kwik.json');
 const personNodes = getPersonNodes(jointOwn);
 const entityNodes = getEntityNodes(jointOwn);
 const ownershipEdges = getOwnershipEdges(jointOwn);
@@ -132,7 +132,9 @@ const createControlCurve = (element, index, controlStroke, curveOffset) => {
 
 const createControlText = (index, controlExact, controlMin, controlMax) => {
   svg
-    .select('.control')
+    .select('.edgeLabels')
+    .append('g')
+    .attr('class', 'edgeLabel')
     .append('text')
     .attr('class', 'edgeText')
     .attr('text-anchor', 'middle')
@@ -146,7 +148,9 @@ const createControlText = (index, controlExact, controlMin, controlMax) => {
 
 const createOwnText = (index, shareExact, shareMin, shareMax) => {
   svg
-    .select('.own')
+    .select('.edgeLabels')
+    .append('g')
+    .attr('class', 'edgeLabel')
     .append('text')
     .attr('class', 'edgeText')
     .attr('text-anchor', 'middle')
@@ -156,6 +160,23 @@ const createOwnText = (index, shareExact, shareMin, shareMax) => {
     })
     .attr('startOffset', '50%')
     .text(`Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`);
+};
+
+const createUnknownText = (index, element) => {
+  d3.select(element).select('path').attr('id', `unknown${index}`);
+  svg
+    .select('.edgeLabels')
+    .append('g')
+    .attr('class', 'edgeLabel')
+    .append('text')
+    .attr('class', 'edgeText')
+    .attr('text-anchor', 'middle')
+    .append('textPath')
+    .attr('xlink:href', function (d, i) {
+      return '#unknown' + index;
+    })
+    .attr('startOffset', '50%')
+    .text(`Unknown`);
 };
 
 edges.forEach((edge, index) => {
@@ -175,6 +196,7 @@ edges.forEach((edge, index) => {
 
   'shareholding' in interests && createOwnershipCurve(element, index, shareStroke);
   'votingRights' in interests && createControlCurve(element, index, controlStroke, curveOffset);
+  !('shareholding' in interests) && !('votingRights' in interests) && createUnknownText(index, element);
 
   g.nodeCount() < 8 && createControlText(index, controlExact, controlMin, controlMax);
   g.nodeCount() < 8 && createOwnText(index, shareExact, shareMin, shareMax);
