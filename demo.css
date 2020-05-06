@@ -54,6 +54,8 @@ button {
 .node-flag {
   border: 1px solid #b2b3b9;
   height: 100%;
+  right: 0;
+  position: absolute;
 }
 
 .top-left {

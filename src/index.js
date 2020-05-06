@@ -18,7 +18,7 @@ g.setGraph({
   // ranker: "tight-tree",
 });
 
-const jointOwn = require('../fixtures/kwik.json');
+const jointOwn = require('../fixtures/joint.json');
 const personNodes = getPersonNodes(jointOwn);
 const entityNodes = getEntityNodes(jointOwn);
 const ownershipEdges = getOwnershipEdges(jointOwn);
@@ -196,10 +196,14 @@ edges.forEach((edge, index) => {
 
   'shareholding' in interests && createOwnershipCurve(element, index, shareStroke);
   'votingRights' in interests && createControlCurve(element, index, controlStroke, curveOffset);
-  !('shareholding' in interests) && !('votingRights' in interests) && createUnknownText(index, element);
 
+  // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
   g.nodeCount() < 8 && createControlText(index, controlExact, controlMin, controlMax);
   g.nodeCount() < 8 && createOwnText(index, shareExact, shareMin, shareMax);
+  g.nodeCount() < 8 &&
+    !('shareholding' in interests) &&
+    !('votingRights' in interests) &&
+    createUnknownText(index, element);
 });
 
 nodes.forEach((node, index) => {
@@ -207,8 +211,6 @@ nodes.forEach((node, index) => {
   const element = g.node(id).elem;
   const elementD3 = d3.select(element);
   const labelHeight = elementD3.select('.node-label').node().getBoundingClientRect().height;
-  console.log(labelHeight);
-
   elementD3.select('.label').attr('transform', `translate(0, ${labelHeight / 2})`);
 });
 
