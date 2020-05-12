@@ -1,0 +1,30 @@
+button {
+    margin: 10px;
+    width: 200px;
+    height: 40px;
+}
+#svg-holder {
+  text-align: center;
+}
+#bods-svg {
+  width: 600px;
+  height: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#result {
+    height: 100px;
+    width: 100%;
+}
+.main-article {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.file-input {
+    text-align: center;
+}
+#draw-vis {
+    width: 100%;
+}

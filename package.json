@@ -9,6 +9,7 @@
   },
   "scripts": {
     "demo": "webpack --config=webpack.demo.config.js",
+    "dev": "webpack --config=webpack.dev.config.js",
     "library": "webpack --config=webpack.library.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src"
