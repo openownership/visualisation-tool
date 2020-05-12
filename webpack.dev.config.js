@@ -11,6 +11,11 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dev-build'),
   },
+  devServer: {
+    contentBase: path.join(__dirname, 'dev-build'),
+    compress: true,
+    port: 9000
+  },
   module: {
     rules: [
       {
