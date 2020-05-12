@@ -1,5 +1,6 @@
 import executeDraw from '../src/index';
-import downloadSVG from '../src/utils/svgTools';
+import { clearSVG } from '../src/utils/svgTools';
+import './demo.css';
 
 const getJSON = () => {
   var files = document.getElementById('selectFiles').files;
@@ -23,10 +24,10 @@ const getJSON = () => {
 const visualiseData = () => {
   const data = JSON.parse(document.getElementById('result').value);
   executeDraw(data);
-}
+};
 
 window.onload = () => {
-  document.getElementById('svg_download').addEventListener('click', downloadSVG, true);
+  document.getElementById('svg-clear').addEventListener('click', clearSVG, true);
   document.getElementById('import').addEventListener('click', getJSON, true);
-  document.getElementById('drawVis').addEventListener('click', visualiseData, true);
+  document.getElementById('draw-vis').addEventListener('click', visualiseData, true);
 };

@@ -6,8 +6,7 @@ import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import './style.css';
 
-const executeDrawing = data => {
-
+const executeDrawing = (data) => {
   const g = new dagreD3.graphlib.Graph({}); // multigraph: true }); // multigraph allows multiple edges between nodes
   g.setGraph({
     rankdir: 'LR',
@@ -21,7 +20,6 @@ const executeDrawing = data => {
   });
 
   console.log(data);
-  
 
   const personNodes = getPersonNodes(data);
   const entityNodes = getEntityNodes(data);
@@ -52,13 +50,7 @@ const executeDrawing = data => {
   );
 
   const svg = d3.select('svg'),
-    inner = svg.select('g');
-
-  // Set up zoom support
-  const zoom = d3.zoom().on('zoom', () => {
-    inner.attr('transform', d3.event.transform);
-  });
-  svg.call(zoom);
+    inner = svg.append('g');
 
   // Create the renderer
   const render = new dagreD3.render();
@@ -218,14 +210,22 @@ const executeDrawing = data => {
     elementD3.select('.label').attr('transform', `translate(0, ${labelHeight / 2})`);
   });
 
+  // Set up zoom support
+  const zoom = d3.zoom().on('zoom', () => {
+    inner.attr('transform', d3.event.transform);
+  });
+  svg.call(zoom);
+
   // Center the nodes
   const initialScale = 0.75;
   svg.call(
     zoom.transform,
-    d3.zoomIdentity.translate((svg.attr('width') - g.graph().width * initialScale) / 2, 20).scale(initialScale)
+    d3.zoomIdentity
+      .translate((svg.attr('width') - g.graph().width * initialScale) / 2, 20)
+      .scale(initialScale)
   );
 
-  svg.attr('height', g.graph().height * initialScale + 40);
-}
+  // svg.attr('height', g.graph().height * initialScale + 40);
+};
 
 export default executeDrawing;
