@@ -1,11 +1,12 @@
 # Visualisation Tool
 
+**N.B. This tool is still in development**
+
 The Visualisation Tool is a small javascript library for automatic generation of directed graphs representing Beneficial Ownership Data for the web.
 
 The tool accepts [Beneficial Ownership Data](http://standard.openownership.org/) (JSON) as input and outputs SVG content on a webpage which contains the appropriate placeholder.
 
 At present this library does not output pure SVG content and depends on HTML nodes within the graph.
-
 
 ## Development
 To build the project for development using the webpack server run:
