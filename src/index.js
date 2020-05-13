@@ -13,10 +13,6 @@ const executeDrawing = (data) => {
     nodesep: 200,
     edgesep: 25,
     ranksep: 200,
-    directed: false,
-    // align: "DR",
-    // acyclicer: "greedy",
-    // ranker: "tight-tree",
   });
 
   console.log(data);
@@ -207,7 +203,7 @@ const executeDrawing = (data) => {
     const element = g.node(id).elem;
     const elementD3 = d3.select(element);
     const labelHeight = elementD3.select('.node-label').node().getBoundingClientRect().height;
-    elementD3.select('.label').attr('transform', `translate(0, ${labelHeight / 2})`);
+    elementD3.select('.label').attr('transform', `translate(0, ${labelHeight})`);
   });
 
   // Set up zoom support
