@@ -45,7 +45,7 @@ This can be used on a page which has the following placeholder:
 ```
 The usage of the the library can be found in the [demo](demo/) files.
 
-## Zoom
+### Zoom
 
 The functionality has been included for two zoom buttons. These must be added to the page, along with the placeholder, with the correct IDs, for example:
 
