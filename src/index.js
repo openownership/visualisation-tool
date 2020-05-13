@@ -217,13 +217,20 @@ const executeDrawing = (data) => {
   svg.call(zoom);
 
   // Center the nodes
-  const initialScale = 0.75;
+  const initialScale = 0.5;
   svg.call(
     zoom.transform,
     d3.zoomIdentity
-      .translate((svg.attr('width') - g.graph().width * initialScale) / 2, 20)
+      .translate((svg.attr('width') * initialScale) / 2, (svg.attr('height') * initialScale) / 2)
       .scale(initialScale)
   );
+
+  d3.select("#zoom_in").on("click", function() {
+    zoom.scaleBy(svg.transition().duration(750), 1.2);
+  });
+  d3.select("#zoom_out").on("click", function() {
+    zoom.scaleBy(svg.transition().duration(750), 0.8);
+  });
 
   // svg.attr('height', g.graph().height * initialScale + 40);
 };
