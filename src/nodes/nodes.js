@@ -1,4 +1,3 @@
-// import generateNodeLabel from './nodeSVGLabel';
 import generateNodeLabel from './nodeHTMLLabel';
 
 const unknownNode = [

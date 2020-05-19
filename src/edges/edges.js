@@ -26,11 +26,10 @@ export const getOwnershipEdges = (bodsData) => {
       return {
         id: statementID,
         interests: getInterests(interests),
-        source: interestedParty.describedByPersonStatement
-          ? interestedParty.describedByPersonStatement
-          : interestedParty.describedByEntityStatement
-          ? interestedParty.describedByEntityStatement
-          : 'unknown',
+        source:
+          interestedParty.describedByPersonStatement ||
+          interestedParty.describedByEntityStatement ||
+          'unknown',
         target: subject.describedByPersonStatement
           ? subject.describedByPersonStatement
           : subject.describedByEntityStatement,

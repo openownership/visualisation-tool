@@ -4,9 +4,10 @@ button {
   height: 40px;
 }
 #svg-holder {
+  position: relative;
   text-align: center;
   border: 1px solid #000;
-  height: 400px;
+  min-height: 400px;
 }
 #bods-svg {
   width: 100%;
@@ -32,4 +33,18 @@ button {
 }
 #draw-vis {
   width: 100%;
+}
+
+#zoom_in {
+  position: absolute;
+  top: 20px;
+  right: 70px;
+  width: 40px;
+}
+
+#zoom_out {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
 }

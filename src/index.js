@@ -7,15 +7,13 @@ import { getOwnershipEdges } from './edges/edges';
 import './style.css';
 
 const executeDrawing = (data) => {
-  const g = new dagreD3.graphlib.Graph({}); // multigraph: true }); // multigraph allows multiple edges between nodes
+  const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
     rankdir: 'LR',
     nodesep: 200,
     edgesep: 25,
     ranksep: 200,
   });
-
-  console.log(data);
 
   const personNodes = getPersonNodes(data);
   const entityNodes = getEntityNodes(data);
@@ -39,10 +37,9 @@ const executeDrawing = (data) => {
   edges.forEach(
     (edge) =>
       g.setEdge(edge.source, edge.target, {
-        label: edge.label || '',
         class: edge.class || '',
         ...edge.config,
-      }) //, edge.id) // named edges for multigraph only
+      })
   );
 
   const svg = d3.select('svg'),
@@ -89,6 +86,8 @@ const executeDrawing = (data) => {
         const path = d3.select(this);
         const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
         const offsetCurve = newBezier.offset(-20);
+        console.log(offsetCurve);
+        
         path.attr('d', bezierBuilder(offsetCurve));
       });
   };
@@ -228,7 +227,7 @@ const executeDrawing = (data) => {
     zoom.scaleBy(svg.transition().duration(750), 0.8);
   });
 
-  // svg.attr('height', g.graph().height * initialScale + 40);
+  svg.attr('height', g.graph().height * initialScale + 40);
 };
 
 export default executeDrawing;
