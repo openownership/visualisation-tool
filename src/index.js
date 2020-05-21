@@ -86,8 +86,6 @@ const executeDrawing = (data) => {
         const path = d3.select(this);
         const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
         const offsetCurve = newBezier.offset(-20);
-        console.log(offsetCurve);
-        
         path.attr('d', bezierBuilder(offsetCurve));
       });
   };
