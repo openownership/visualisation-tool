@@ -25,6 +25,19 @@ npm run demo
 ```
 This will output the compiled code, including the demo page, to `demo-build`.
 
+To build and push a new version to gh-pages, run:
+```
+rm -rf demo-build
+git worktree add demo-build gh-pages
+npm run demo
+cd demo-build
+git add --all
+git commit -m "New demo build"
+git push origin gh-pages
+cd ..
+git worktree remove demo-build
+```
+
 ## Libary compilation
 To build the library without the demo page run:
 
@@ -53,4 +66,3 @@ The functionality has been included for two zoom buttons. These must be added to
 <button id="zoom_in">+</button>
 <button id="zoom_out">-</button>
 ```
-
