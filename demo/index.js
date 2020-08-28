@@ -19,7 +19,6 @@ const getJSON = () => {
   };
 
   fr.readAsText(files.item(0));
-
 };
 
 const visualiseData = () => {

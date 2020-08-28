@@ -20,7 +20,7 @@ export const getPersonNodes = (bodsData) => {
     .map((statement) => {
       const { statementID, names, nationalities = null } = statement;
       const nodeType = statementID === 'unknown' ? 'unknown' : 'person';
-      const countryCode = nationalities ? nationalities[0].code : null
+      const countryCode = nationalities ? nationalities[0].code : null;
       return {
         id: statementID,
         label: generateNodeLabel(nodeType, names[0].fullName, countryCode),

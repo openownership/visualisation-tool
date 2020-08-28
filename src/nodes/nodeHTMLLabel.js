@@ -8,11 +8,15 @@ const generateNodeLabel = (nodeType, nodeText, countryCode) => {
       <div class="node-glyph top-left">
       </div>
       <div class="node-glyph top-right">
-        ${countryCode ? `<img class="node-flag" src="${images("./flags/" + sanitise(countryCode) + ".svg", true)}"/>` : ''}
+        ${
+          countryCode
+            ? `<img class="node-flag" src="${images('./flags/' + sanitise(countryCode) + '.svg', true)}"/>`
+            : ''
+        }
         </div>
         <div class="node-glyph bottom-left"></div>
         <div class="node-glyph bottom-right"></div>
-        <img class="node-image" src="${images("./" + sanitise(nodeType) + ".svg", true)}"></img><br>
+        <img class="node-image" src="${images('./' + sanitise(nodeType) + '.svg', true)}"></img><br>
       </div>
       <div class="node-label wrap-text">
         ${sanitise(nodeText)}

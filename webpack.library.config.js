@@ -1,6 +1,6 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -13,10 +13,7 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -25,19 +22,21 @@ module.exports = {
             loader: 'file-loader',
             options: {
               esModule: false,
-              name: 'images/[name].[ext]',},
-          }
+              name: 'images/[name].[ext]',
+            },
+          },
         ],
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin(),
-  new TerserPlugin({
-    // Use multi-process parallel running to improve the build speed
-    // Default number of concurrent runs: os.cpus().length - 1
-    parallel: true,
-    // Enable file caching
-    cache: true,
-  }),
-],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new TerserPlugin({
+      // Use multi-process parallel running to improve the build speed
+      // Default number of concurrent runs: os.cpus().length - 1
+      parallel: true,
+      // Enable file caching
+      cache: true,
+    }),
+  ],
 };

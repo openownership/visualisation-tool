@@ -1,6 +1,6 @@
-// This function takes a curve 
-// (defined by the return object from https://pomax.github.io/bezierjs) 
-// and extracts the associated points. 
+// This function takes a curve
+// (defined by the return object from https://pomax.github.io/bezierjs)
+// and extracts the associated points.
 // It then builds an SVG object from those points.
 export default (offsetCurve) => {
   const { curves } = offsetCurve;

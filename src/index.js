@@ -34,12 +34,11 @@ const executeDrawing = (data) => {
     });
   });
 
-  edges.forEach(
-    (edge) =>
-      g.setEdge(edge.source, edge.target, {
-        class: edge.class || '',
-        ...edge.config,
-      })
+  edges.forEach((edge) =>
+    g.setEdge(edge.source, edge.target, {
+      class: edge.class || '',
+      ...edge.config,
+    })
   );
 
   const svg = d3.select('svg'),
@@ -218,10 +217,10 @@ const executeDrawing = (data) => {
       .scale(initialScale)
   );
 
-  d3.select("#zoom_in").on("click", function() {
+  d3.select('#zoom_in').on('click', function () {
     zoom.scaleBy(svg.transition().duration(750), 1.2);
   });
-  d3.select("#zoom_out").on("click", function() {
+  d3.select('#zoom_out').on('click', function () {
     zoom.scaleBy(svg.transition().duration(750), 0.8);
   });
 
