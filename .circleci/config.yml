@@ -12,8 +12,8 @@ jobs:
           override-ci-command: npm install
       - run: npm run lint
       - slack/status:
-        fail_only: true
-        webhook: webhook
+          fail_only: true
+          webhook: webhook
 workflows:
   lint:
     jobs:
