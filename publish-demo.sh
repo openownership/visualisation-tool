@@ -1,3 +1,4 @@
+set -euf -o pipefail
 rm -rf demo-build
 git worktree add demo-build gh-pages
 npm run demo
