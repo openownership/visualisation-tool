@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
 import Bezier from 'bezier-js';
 import bezierBuilder from './utils/bezierBuilder';
+import sanitise from './utils/sanitiser';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import './style.css';
@@ -118,7 +119,7 @@ const executeDrawing = (data) => {
       });
   };
 
-  const createControlText = (index, controlExact, controlMin, controlMax) => {
+  const createControlText = (index, controlText) => {
     svg
       .select('.edgeLabels')
       .append('g')
@@ -131,10 +132,10 @@ const executeDrawing = (data) => {
         return '#controlText' + index;
       })
       .attr('startOffset', '50%')
-      .text(`Controls ${controlExact === undefined ? `${controlMin} - ${controlMax}` : controlExact}%`);
+      .text(sanitise(controlText));
   };
 
-  const createOwnText = (index, shareExact, shareMin, shareMax) => {
+  const createOwnText = (index, shareText) => {
     svg
       .select('.edgeLabels')
       .append('g')
@@ -147,7 +148,7 @@ const executeDrawing = (data) => {
         return '#ownText' + index;
       })
       .attr('startOffset', '50%')
-      .text(`Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`);
+      .text(sanitise(shareText));
   };
 
   const createUnknownText = (index, element) => {
@@ -170,14 +171,26 @@ const executeDrawing = (data) => {
   edges.forEach((edge, index) => {
     const { source, target, interests } = edge;
     const { shareholding, votingRights } = interests;
-    const { exact: shareExact, minimum: shareMin, maximum: shareMax } = {
-      ...shareholding,
-    };
-    const { exact: controlExact, minimum: controlMin, maximum: controlMax } = {
-      ...votingRights,
-    };
-    const shareStroke = (shareExact === undefined ? (shareMin + shareMax) / 2 : shareExact) / 10;
-    const controlStroke = (controlExact === undefined ? (controlMin + controlMax) / 2 : controlExact) / 10;
+    let shareStroke = 1;
+    let shareText = '';
+    if (shareholding) {
+      const { exact: shareExact, minimum: shareMin, maximum: shareMax } = {
+        ...shareholding,
+      };
+      shareStroke = (shareExact === undefined ? (shareMin + shareMax) / 2 : shareExact) / 10;
+      shareText = `Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`;
+    }
+    let controlStroke = 1;
+    let controlText = '';
+    if (votingRights) {
+      const { exact: controlExact, minimum: controlMin, maximum: controlMax } = {
+        ...votingRights,
+      };
+      controlStroke = (controlExact === undefined ? (controlMin + controlMax) / 2 : controlExact) / 10;
+      controlText = `Controls ${
+        controlExact === undefined ? `${controlMin} - ${controlMax}` : controlExact
+      }%`;
+    }
 
     const curveOffset = shareStroke / 2 + controlStroke / 2;
     const element = g.edge(source, target).elem;
@@ -186,8 +199,8 @@ const executeDrawing = (data) => {
     'votingRights' in interests && createControlCurve(element, index, controlStroke, curveOffset);
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
-    g.nodeCount() < 8 && createControlText(index, controlExact, controlMin, controlMax);
-    g.nodeCount() < 8 && createOwnText(index, shareExact, shareMin, shareMax);
+    g.nodeCount() < 8 && createControlText(index, controlText);
+    g.nodeCount() < 8 && createOwnText(index, shareText);
     g.nodeCount() < 8 &&
       !('shareholding' in interests) &&
       !('votingRights' in interests) &&

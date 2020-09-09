@@ -14,6 +14,19 @@ const nodeConfig = {
   style: 'opacity: 0; fill: #f7f7f7; stroke: #444; stroke-width: 1px;',
 };
 
+const personName = (name) => {
+  if (Object.keys(name).length === 0) {
+    return 'Unamed Person';
+  }
+  if (name.fullName) {
+    return name.fullName;
+  }
+  const nameParts = [name.givenName, name.patronymicName, name.familyName].filter(
+    (namePart) => namePart !== null
+  );
+  return nameParts.join(' ');
+};
+
 export const getPersonNodes = (bodsData) => {
   return bodsData
     .filter((statement) => statement.statementType === 'personStatement')
@@ -23,7 +36,7 @@ export const getPersonNodes = (bodsData) => {
       const countryCode = nationalities ? nationalities[0].code : null;
       return {
         id: statementID,
-        label: generateNodeLabel(nodeType, names[0].fullName, countryCode),
+        label: generateNodeLabel(nodeType, personName(names[0]), countryCode),
         labelType: 'html',
         class: nodeType,
         config: nodeConfig,
