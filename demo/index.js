@@ -2,8 +2,12 @@ import executeDraw from '../src/index';
 import { clearSVG } from '../src/utils/svgTools';
 import './demo.css';
 
+const clearDrawing = () => {
+  clearSVG(document.getElementById('svg-holder'));
+};
+
 const getJSON = () => {
-  clearSVG();
+  clearDrawing();
   var files = document.getElementById('selectFiles').files;
   if (files.length <= 0) {
     return false;
@@ -22,13 +26,13 @@ const getJSON = () => {
 };
 
 const visualiseData = () => {
-  clearSVG();
+  clearDrawing();
   const data = JSON.parse(document.getElementById('result').value);
-  executeDraw(data);
+  executeDraw(data, document.getElementById('svg-holder'));
 };
 
 window.onload = () => {
-  document.getElementById('svg-clear').addEventListener('click', clearSVG, true);
+  document.getElementById('svg-clear').addEventListener('click', clearDrawing, true);
   document.getElementById('import').addEventListener('click', getJSON, true);
   document.getElementById('draw-vis').addEventListener('click', visualiseData, true);
 };
