@@ -8,7 +8,7 @@ import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import './style.css';
 
-const executeDrawing = (data, container) => {
+const draw = (data, container) => {
   const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
     rankdir: 'LR',
@@ -242,4 +242,4 @@ const executeDrawing = (data, container) => {
   svg.attr('height', g.graph().height * initialScale + 40);
 };
 
-export default executeDrawing;
+export { draw };

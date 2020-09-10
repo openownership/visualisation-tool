@@ -1,4 +1,4 @@
-import executeDraw from '../src/index';
+import { draw } from '../src/index';
 import { clearSVG } from '../src/utils/svgTools';
 import './demo.css';
 
@@ -28,7 +28,7 @@ const getJSON = () => {
 const visualiseData = () => {
   clearDrawing();
   const data = JSON.parse(document.getElementById('result').value);
-  executeDraw(data, document.getElementById('svg-holder'));
+  draw(data, document.getElementById('svg-holder'));
 };
 
 window.onload = () => {
