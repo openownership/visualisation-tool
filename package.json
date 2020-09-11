@@ -1,7 +1,9 @@
 {
   "name": "@openownership/bods-dagre",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "bezier-js": "^2.6.1",
     "d3": "^5.15.0",
@@ -11,6 +13,7 @@
     "demo": "webpack --config=webpack.demo.config.js",
     "dev": "webpack --config=webpack.dev.config.js",
     "library": "webpack --config=webpack.library.config.js",
+    "prepublishOnly": "npm run library",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src",
     "start": "webpack-dev-server --open --config=webpack.dev.config.js"
