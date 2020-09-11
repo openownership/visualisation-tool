@@ -27,7 +27,7 @@ const personName = (name) => {
   return nameParts.join(' ');
 };
 
-export const getPersonNodes = (bodsData) => {
+export const getPersonNodes = (bodsData, imagesPath) => {
   return bodsData
     .filter((statement) => statement.statementType === 'personStatement')
     .map((statement) => {
@@ -36,7 +36,7 @@ export const getPersonNodes = (bodsData) => {
       const countryCode = nationalities ? nationalities[0].code : null;
       return {
         id: statementID,
-        label: generateNodeLabel(nodeType, personName(names[0]), countryCode),
+        label: generateNodeLabel(nodeType, personName(names[0]), countryCode, imagesPath),
         labelType: 'html',
         class: nodeType,
         config: nodeConfig,
@@ -44,7 +44,7 @@ export const getPersonNodes = (bodsData) => {
     });
 };
 
-export const getEntityNodes = (bodsData) => {
+export const getEntityNodes = (bodsData, imagesPath) => {
   return bodsData
     .filter((statement) => statement.statementType === 'entityStatement')
     .map((statement) => {
@@ -52,7 +52,7 @@ export const getEntityNodes = (bodsData) => {
       const countryCode = incorporatedInJurisdiction ? incorporatedInJurisdiction.code : null;
       return {
         id: statementID,
-        label: generateNodeLabel('entity', name, countryCode),
+        label: generateNodeLabel('entity', name, countryCode, imagesPath),
         labelType: 'html',
         class: 'entity',
         config: nodeConfig,

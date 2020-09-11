@@ -3,11 +3,12 @@ import dagreD3 from 'dagre-d3';
 import Bezier from 'bezier-js';
 import bezierBuilder from './utils/bezierBuilder';
 import sanitise from './utils/sanitiser';
+import { clearSVG } from './utils/svgTools';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import './style.css';
 
-const executeDrawing = (data) => {
+const draw = (data, container, imagesPath) => {
   const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
     rankdir: 'LR',
@@ -16,8 +17,8 @@ const executeDrawing = (data) => {
     ranksep: 200,
   });
 
-  const personNodes = getPersonNodes(data);
-  const entityNodes = getEntityNodes(data);
+  const personNodes = getPersonNodes(data, imagesPath);
+  const entityNodes = getEntityNodes(data, imagesPath);
   const ownershipEdges = getOwnershipEdges(data);
 
   const edges = [...ownershipEdges];
@@ -42,8 +43,9 @@ const executeDrawing = (data) => {
     })
   );
 
-  const svg = d3.select('svg'),
-    inner = svg.append('g');
+  clearSVG(container);
+  const svg = d3.select('svg');
+  const inner = svg.append('g');
 
   // Create the renderer
   const render = new dagreD3.render();
@@ -240,4 +242,4 @@ const executeDrawing = (data) => {
   svg.attr('height', g.graph().height * initialScale + 40);
 };
 
-export default executeDrawing;
+export { draw };
