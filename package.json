@@ -1,11 +1,12 @@
 {
   "name": "@openownership/bods-dagre",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "files": [
     "dist"
   ],
-  "main": "BODSDagre",
+  "main": "dist/bods-dagre.js",
   "repository": "github:openownership/visualisation-tool",
+  "license": "Apache License 2.0",
   "dependencies": {
     "bezier-js": "^2.6.1",
     "d3": "^5.15.0",
