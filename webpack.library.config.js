@@ -1,6 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -14,18 +15,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              esModule: false,
-              name: 'images/[name].[ext]',
-            },
-          },
-        ],
       },
       {
         test: /\.js$/,
@@ -42,6 +31,9 @@ module.exports = {
       parallel: true,
       // Enable file caching
       cache: true,
+    }),
+    new CopyPlugin({
+      patterns: [{ from: 'src/images', to: 'images' }],
     }),
   ],
 };

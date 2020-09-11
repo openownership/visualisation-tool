@@ -58,6 +58,10 @@ This can be used on a page which has the following placeholder:
 ```
 The usage of the the library can be found in the [demo](demo/) files.
 
+In particular, note that we bundle a large collection of SVG images, which you
+need to make available somehow and then configure the library to use through the
+`imagesPath` variable.
+
 ### Zoom
 
 The functionality has been included for two zoom buttons. These must be added to the page, along with the placeholder, with the correct IDs, for example:

@@ -8,7 +8,7 @@ import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import './style.css';
 
-const draw = (data, container) => {
+const draw = (data, container, imagesPath) => {
   const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
     rankdir: 'LR',
@@ -17,8 +17,8 @@ const draw = (data, container) => {
     ranksep: 200,
   });
 
-  const personNodes = getPersonNodes(data);
-  const entityNodes = getEntityNodes(data);
+  const personNodes = getPersonNodes(data, imagesPath);
+  const entityNodes = getEntityNodes(data, imagesPath);
   const ownershipEdges = getOwnershipEdges(data);
 
   const edges = [...ownershipEdges];

@@ -1,7 +1,6 @@
 import sanitise from '../utils/sanitiser';
-const images = require.context('../images', true);
 
-const generateNodeLabel = (nodeType, nodeText, countryCode) => {
+const generateNodeLabel = (nodeType, nodeText, countryCode, imagesPath) => {
   return `
     <div class='centred-label'>
       <div class="image-holder">
@@ -9,14 +8,13 @@ const generateNodeLabel = (nodeType, nodeText, countryCode) => {
       </div>
       <div class="node-glyph top-right">
         ${
-          countryCode
-            ? `<img class="node-flag" src="${images('./flags/' + sanitise(countryCode) + '.svg', true)}"/>`
-            : ''
+          countryCode ? `<img class="node-flag" src="${imagesPath}/flags/${sanitise(countryCode)}.svg"/>` : ''
         }
         </div>
         <div class="node-glyph bottom-left"></div>
         <div class="node-glyph bottom-right"></div>
-        <img class="node-image" src="${images('./' + sanitise(nodeType) + '.svg', true)}"></img><br>
+        <img class="node-image" src="${imagesPath}/${sanitise(nodeType)}.svg"/>
+        <br>
       </div>
       <div class="node-label wrap-text">
         ${sanitise(nodeText)}
