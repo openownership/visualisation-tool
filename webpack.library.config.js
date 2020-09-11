@@ -7,9 +7,11 @@ module.exports = {
   mode: 'production',
   entry: './src/index.js',
   output: {
-    filename: 'main.js',
+    filename: 'bods-dagre.js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'BODSDagre',
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
