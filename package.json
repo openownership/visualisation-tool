@@ -1,5 +1,5 @@
 {
-  "name": "bods-dagre",
+  "name": "@openownership/bods-dagre",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
