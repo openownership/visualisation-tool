@@ -44,7 +44,7 @@ const draw = (data, container, imagesPath) => {
   );
 
   clearSVG(container);
-  const svg = d3.select('svg');
+  const svg = d3.select('#bods-svg');
   const inner = svg.append('g');
 
   // Create the renderer
