@@ -69,14 +69,20 @@ const draw = (data, container, imagesPath) => {
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
 
-  const createOwnershipCurve = (element, index, shareStroke) => {
+  const createOwnershipCurve = (element, index, shareStroke, curveOffset) => {
     d3.select(element)
       .clone(true)
       .attr('class', 'edgePath own')
       .select('path')
       .attr('id', (d, i) => 'ownPath' + index)
       .attr('marker-end', '')
-      .attr('style', `fill: none; stroke: #652eb1; stroke-width: 1px; stroke-width: ${shareStroke}px`);
+      .attr('style', `fill: none; stroke: #652eb1; stroke-width: 1px; stroke-width: ${shareStroke}px`)
+      .each(function () {
+        const path = d3.select(this);
+        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+        const offsetCurve = newBezier.offset(curveOffset);
+        path.attr('d', bezierBuilder(offsetCurve));
+      });
 
     d3.select(element)
       .clone(true)
@@ -92,20 +98,14 @@ const draw = (data, container, imagesPath) => {
       });
   };
 
-  const createControlCurve = (element, index, controlStroke, curveOffset) => {
+  const createControlCurve = (element, index, controlStroke) => {
     d3.select(element)
       .clone(true)
       .attr('class', 'edgePath control')
       .select('.path')
       .attr('id', (d, i) => 'controlPath' + index)
       .attr('marker-end', '')
-      .attr('style', `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px`)
-      .each(function () {
-        const path = d3.select(this);
-        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-        const offsetCurve = newBezier.offset(curveOffset);
-        path.attr('d', bezierBuilder(offsetCurve));
-      });
+      .attr('style', `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px`);
 
     d3.select(element)
       .clone(true)
@@ -197,8 +197,8 @@ const draw = (data, container, imagesPath) => {
     const curveOffset = shareStroke / 2 + controlStroke / 2;
     const element = g.edge(source, target).elem;
 
-    'shareholding' in interests && createOwnershipCurve(element, index, shareStroke);
-    'votingRights' in interests && createControlCurve(element, index, controlStroke, curveOffset);
+    'shareholding' in interests && createOwnershipCurve(element, index, shareStroke, curveOffset);
+    'votingRights' in interests && createControlCurve(element, index, controlStroke);
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
     g.nodeCount() < 8 && createControlText(index, controlText);
