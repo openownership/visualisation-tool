@@ -27,7 +27,7 @@ var getJSON = function() {
 var visualiseData = function() {
   clearDrawing();
   var data = JSON.parse(document.getElementById('result').value);
-  BODSDagre.draw(data, document.getElementById('svg-holder'), '/images');
+  BODSDagre.draw(data, document.getElementById('svg-holder'), '/visualisation-tool/images');
 };
 
 window.onload = function() {
