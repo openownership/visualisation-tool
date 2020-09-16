@@ -60,4 +60,4 @@ export const getEntityNodes = (bodsData, imagesPath) => {
     });
 };
 
-export const setUnknownNode = () => getPersonNodes(unknownNode);
+export const setUnknownNode = (imagesPath) => getPersonNodes(unknownNode, imagesPath);

@@ -24,7 +24,7 @@ const draw = (data, container, imagesPath) => {
   const edges = [...ownershipEdges];
 
   const unknownSubject = edges.filter((edge) => edge.source === 'unknown');
-  const unknownNode = unknownSubject.length > 0 ? setUnknownNode() : [];
+  const unknownNode = unknownSubject.length > 0 ? setUnknownNode(imagesPath) : [];
   const nodes = [...personNodes, ...entityNodes, ...unknownNode];
 
   nodes.forEach((node) => {
