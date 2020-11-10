@@ -8,7 +8,7 @@ The tool accepts [Beneficial Ownership Data](http://standard.openownership.org/)
 (JSON) as input and outputs SVG content on a webpage which contains the
 appropriate placeholder HTML.
 
-For a hosted version you can use directly, see [our main website's installation](/visualisation/visualisation-tool/)
+For a hosted version you can use directly, see [our main website's installation](https://openownership.org/visualisation/visualisation-tool/)
 
 ## Installation & Usage
 
