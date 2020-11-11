@@ -6,6 +6,9 @@ const edgeConfig = {
 };
 
 const getInterests = (interests) => {
+  if (!interests) {
+    return {};
+  }
   const data = {
     ...interests.reduce((data, interest) => {
       const { type, share } = interest;
