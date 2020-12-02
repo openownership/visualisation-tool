@@ -6,14 +6,22 @@ const edgeConfig = {
   curve: d3.curveMonotoneX,
 };
 
+const endedEdgeConfig = {
+  style: 'fill: none; stroke: #000; stroke-width: 1px; stroke-opacity: 0.25;',
+  curve: d3.curveMonotoneX,
+};
+
 const getInterests = (interests) => {
   if (!interests) {
     return {};
   }
   const data = {
     ...interests.reduce((data, interest) => {
-      const { type, share } = interest;
+      const { type, share, endDate } = interest;
       const typeKey = type === 'voting-rights' ? 'votingRights' : type;
+      if (share) {
+        share.ended = endDate ? true : false;
+      }
       return { ...data, [typeKey]: share };
     }, {}),
   };
@@ -38,7 +46,7 @@ export const getOwnershipEdges = (bodsData) => {
           target: subject.describedByPersonStatement
             ? subject.describedByPersonStatement
             : subject.describedByEntityStatement,
-          config: edgeConfig,
+          config: interests && interests.every((i) => i.endDate) ? endedEdgeConfig : edgeConfig,
           replaces: replaces,
         };
       })
