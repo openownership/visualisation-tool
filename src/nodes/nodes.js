@@ -1,4 +1,5 @@
 import generateNodeLabel from './nodeHTMLLabel';
+import latest from '../utils/bods';
 
 const unknownNode = [
   {
@@ -34,37 +35,45 @@ const personName = (name, personType) => {
 };
 
 export const getPersonNodes = (bodsData, imagesPath) => {
-  return bodsData
-    .filter((statement) => statement.statementType === 'personStatement')
-    .map((statement) => {
-      const { statementID, names, personType, nationalities = null } = statement;
-      const nodeType = statementID === 'unknown' ? 'unknown' : 'person';
-      const countryCode = nationalities ? nationalities[0].code : null;
-      const name = names ? names[0] : {};
-      return {
-        id: statementID,
-        label: generateNodeLabel(nodeType, personName(name, personType), countryCode, imagesPath),
-        labelType: 'html',
-        class: nodeType,
-        config: nodeConfig,
-      };
-    });
+  return latest(
+    bodsData
+      .filter((statement) => statement.statementType === 'personStatement')
+      .map((statement) => {
+        const { statementID, names, personType, nationalities = null } = statement;
+        const nodeType = statementID === 'unknown' ? 'unknown' : 'person';
+        const countryCode = nationalities ? nationalities[0].code : null;
+        const name = names ? names[0] : {};
+        const replaces = statement.replacesStatements ? statement.replacesStatements : [];
+        return {
+          id: statementID,
+          label: generateNodeLabel(nodeType, personName(name, personType), countryCode, imagesPath),
+          labelType: 'html',
+          class: nodeType,
+          config: nodeConfig,
+          replaces: replaces,
+        };
+      })
+  );
 };
 
 export const getEntityNodes = (bodsData, imagesPath) => {
-  return bodsData
-    .filter((statement) => statement.statementType === 'entityStatement')
-    .map((statement) => {
-      const { statementID, name, incorporatedInJurisdiction = null } = statement;
-      const countryCode = incorporatedInJurisdiction ? incorporatedInJurisdiction.code : null;
-      return {
-        id: statementID,
-        label: generateNodeLabel('entity', name, countryCode, imagesPath),
-        labelType: 'html',
-        class: 'entity',
-        config: nodeConfig,
-      };
-    });
+  return latest(
+    bodsData
+      .filter((statement) => statement.statementType === 'entityStatement')
+      .map((statement) => {
+        const { statementID, name, incorporatedInJurisdiction = null } = statement;
+        const countryCode = incorporatedInJurisdiction ? incorporatedInJurisdiction.code : null;
+        const replaces = statement.replacesStatements ? statement.replacesStatements : [];
+        return {
+          id: statementID,
+          label: generateNodeLabel('entity', name, countryCode, imagesPath),
+          labelType: 'html',
+          class: 'entity',
+          config: nodeConfig,
+          replaces: replaces,
+        };
+      })
+  );
 };
 
 export const setUnknownNode = (imagesPath) => getPersonNodes(unknownNode, imagesPath);
