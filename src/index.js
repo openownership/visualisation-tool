@@ -205,8 +205,12 @@ const draw = (data, container, imagesPath) => {
     const curveOffset = shareStroke / 2 + controlStroke / 2;
     const element = g.edge(source, target).elem;
 
-    'shareholding' in interests && createOwnershipCurve(element, index, shareStroke, curveOffset, shareholding.ended);
-    'votingRights' in interests && createControlCurve(element, index, controlStroke, votingRights.ended);
+    if ('shareholding' in interests) {
+      createOwnershipCurve(element, index, shareStroke, curveOffset, shareholding.ended);
+    }
+    if ('votingRights' in interests) {
+      createControlCurve(element, index, controlStroke, votingRights.ended);
+    }
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
     g.nodeCount() < 8 && createControlText(index, controlText);
