@@ -181,6 +181,7 @@ const draw = (data, container, imagesPath) => {
   edges.forEach((edge, index) => {
     const { source, target, interests } = edge;
     const { shareholding, votingRights } = interests;
+
     let shareStroke = 1;
     let shareText = '';
     if (shareholding) {
@@ -190,6 +191,7 @@ const draw = (data, container, imagesPath) => {
       shareStroke = (shareExact === undefined ? (shareMin + shareMax) / 2 : shareExact) / 10;
       shareText = `Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`;
     }
+
     let controlStroke = 1;
     let controlText = '';
     if (votingRights) {
@@ -206,10 +208,12 @@ const draw = (data, container, imagesPath) => {
     const element = g.edge(source, target).elem;
 
     if ('shareholding' in interests) {
-      createOwnershipCurve(element, index, shareStroke, curveOffset, shareholding.ended);
+      const ended = shareholding ? shareholding.ended : false;
+      createOwnershipCurve(element, index, shareStroke, curveOffset, ended);
     }
     if ('votingRights' in interests) {
-      createControlCurve(element, index, controlStroke, votingRights.ended);
+      const ended = votingRights ? votingRights.ended : false;
+      createControlCurve(element, index, controlStroke, ended);
     }
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
