@@ -1,11 +1,11 @@
-var clearDrawing = function() {
+var clearDrawing = function () {
   const svg = document.getElementById('bods-svg');
-  if(svg) {
+  if (svg) {
     svg.remove();
   }
 };
 
-var getJSON = function() {
+var getJSON = function () {
   clearDrawing();
   var files = document.getElementById('selectFiles').files;
   if (files.length <= 0) {
@@ -24,13 +24,13 @@ var getJSON = function() {
   fr.readAsText(files.item(0));
 };
 
-var visualiseData = function() {
+var visualiseData = function () {
   clearDrawing();
   var data = JSON.parse(document.getElementById('result').value);
   BODSDagre.draw(data, document.getElementById('svg-holder'), '/visualisation-tool/images');
 };
 
-window.onload = function() {
+window.onload = function () {
   document.getElementById('svg-clear').addEventListener('click', clearDrawing, true);
   document.getElementById('import').addEventListener('click', getJSON, true);
   document.getElementById('draw-vis').addEventListener('click', visualiseData, true);

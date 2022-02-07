@@ -6,6 +6,9 @@ import sanitise from './utils/sanitiser';
 import { clearSVG } from './utils/svgTools';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
+import { SvgSaver } from './utils/svgsaver';
+import SVGInjectInstance from '@iconfu/svg-inject';
+
 import './style.css';
 
 const draw = (data, container, imagesPath) => {
@@ -32,6 +35,8 @@ const draw = (data, container, imagesPath) => {
       label: node.label,
       class: node.class || '',
       labelType: node.labelType || 'string',
+      nodeType: node.nodeType,
+      countryCode: node.countryCode,
       ...node.config,
     });
   });
@@ -68,6 +73,30 @@ const draw = (data, container, imagesPath) => {
 
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
+
+  inner
+    .selectAll('g.node')
+    .append('img')
+    .attr('width', 120)
+    .attr('height', 120)
+    .attr('x', -60)
+    .attr('y', -60)
+    .attr('class', 'node-label label-container injectable')
+    .attr('src', function (el) {
+      return `${imagesPath}/${g.node(el).nodeType}.svg`;
+    });
+
+  inner
+    .selectAll('g.node')
+    .append('img')
+    .attr('src', function (el) {
+      return `${imagesPath}/flags/${g.node(el).countryCode}.svg`;
+    })
+    .attr('width', '80')
+    .attr('height', '60')
+    .attr('x', '10')
+    .attr('y', '-80')
+    .attr('class', 'injectable');
 
   const createOwnershipCurve = (element, index, shareStroke, curveOffset, ended) => {
     d3.select(element)
@@ -248,6 +277,8 @@ const draw = (data, container, imagesPath) => {
       .scale(initialScale)
   );
 
+  SVGInjectInstance(document.querySelectorAll('img.injectable'));
+
   d3.select('#zoom_in').on('click', function () {
     zoom.scaleBy(svg.transition().duration(750), 1.2);
   });
@@ -255,7 +286,21 @@ const draw = (data, container, imagesPath) => {
     zoom.scaleBy(svg.transition().duration(750), 0.8);
   });
 
-  svg.attr('height', g.graph().height * initialScale + 40);
+  svg.attr('height', g.graph().height * initialScale + 400);
+  svg.attr('width', g.graph().width * initialScale + 400);
+  svg.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+  d3.select('#download-svg').on('click', function () {
+    var svgsaver = new SvgSaver();
+    var svg = document.querySelector('#bods-svg');
+    svgsaver.asSvg(svg);
+  });
+
+  d3.select('#download-png').on('click', function () {
+    var svgsaver = new SvgSaver();
+    var svg = document.querySelector('#bods-svg');
+    svgsaver.asPng(svg);
+  });
 };
 
 export { draw };
