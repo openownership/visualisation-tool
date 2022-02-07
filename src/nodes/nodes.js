@@ -1,5 +1,7 @@
-import generateNodeLabel from './nodeHTMLLabel';
+// import generateNodeLabel from './nodeHTMLLabel';
+import generateNodeLabel from './nodeSVGLabel';
 import latest from '../utils/bods';
+import sanitise from '../utils/sanitiser';
 
 const unknownNode = [
   {
@@ -12,7 +14,7 @@ const unknownNode = [
 const nodeConfig = {
   shape: 'circle',
   width: 100,
-  style: 'opacity: 0; fill: #f7f7f7; stroke: #444; stroke-width: 1px;',
+  style: 'opacity: 1; fill: #f7f7f7; stroke: #444; stroke-width: 1px;',
 };
 
 const personName = (name, personType) => {
@@ -34,7 +36,7 @@ const personName = (name, personType) => {
   return nameParts.join(' ');
 };
 
-export const getPersonNodes = (bodsData, imagesPath) => {
+export const getPersonNodes = (bodsData) => {
   return latest(
     bodsData
       .filter((statement) => statement.statementType === 'personStatement')
@@ -46,17 +48,19 @@ export const getPersonNodes = (bodsData, imagesPath) => {
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         return {
           id: statementID,
-          label: generateNodeLabel(nodeType, personName(name, personType), countryCode, imagesPath),
-          labelType: 'html',
+          label: generateNodeLabel(personName(name)),
+          labelType: 'svg',
           class: nodeType,
           config: nodeConfig,
           replaces: replaces,
+          nodeType: sanitise(nodeType),
+          countryCode: sanitise(countryCode),
         };
       })
   );
 };
 
-export const getEntityNodes = (bodsData, imagesPath) => {
+export const getEntityNodes = (bodsData) => {
   return latest(
     bodsData
       .filter((statement) => statement.statementType === 'entityStatement')
@@ -66,9 +70,11 @@ export const getEntityNodes = (bodsData, imagesPath) => {
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         return {
           id: statementID,
-          label: generateNodeLabel('entity', name, countryCode, imagesPath),
-          labelType: 'html',
+          label: generateNodeLabel(name),
+          labelType: 'svg',
           class: 'entity',
+          nodeType: 'entity',
+          countryCode: sanitise(countryCode),
           config: nodeConfig,
           replaces: replaces,
         };

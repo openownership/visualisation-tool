@@ -8,9 +8,12 @@
   "repository": "github:openownership/visualisation-tool",
   "license": "Apache License 2.0",
   "dependencies": {
+    "@iconfu/svg-inject": "^1.2.3",
     "bezier-js": "^2.6.1",
+    "canvas-toBlob": "^1.0.0",
     "d3": "^5.15.0",
-    "dagre-d3": "^0.6.4"
+    "dagre-d3": "^0.6.4",
+    "file-saver": "^2.0.5"
   },
   "scripts": {
     "demo": "webpack --config=webpack.demo.config.js",
@@ -21,7 +24,9 @@
     "lint": "eslint src",
     "start": "webpack-dev-server --open --config=webpack.dev.config.js"
   },
-  "browserslist": ["defaults"],
+  "browserslist": [
+    "defaults"
+  ],
   "devDependencies": {
     "@babel/core": "^7.11.4",
     "@babel/plugin-transform-runtime": "^7.11.0",
