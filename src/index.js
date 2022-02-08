@@ -293,13 +293,13 @@ const draw = (data, container, imagesPath) => {
   d3.select('#download-svg').on('click', function () {
     var svgsaver = new SvgSaver();
     var svg = document.querySelector('#bods-svg');
-    svgsaver.asSvg(svg);
+    svgsaver.asSvg(svg, 'bods.svg');
   });
 
   d3.select('#download-png').on('click', function () {
     var svgsaver = new SvgSaver();
     var svg = document.querySelector('#bods-svg');
-    svgsaver.asPng(svg);
+    svgsaver.asPng(svg, 'bods.png');
   });
 };
 
