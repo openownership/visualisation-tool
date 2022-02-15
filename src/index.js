@@ -56,24 +56,26 @@ const draw = (data, container, imagesPath) => {
   const render = new dagreD3.render();
 
   // Using this redefinition of the circle to set the intersection point to near the centre
-  render.shapes().circle = function circle(parent, bbox, node) {
-    const r = Math.max(bbox.width, bbox.height) / 2;
-    const shapeSvg = parent
-      .insert('circle', ':first-child')
-      .attr('x', -bbox.width / 2)
-      .attr('y', -bbox.height / 2)
-      .attr('r', r);
+  // This might still be useful if the new edge thicknesses affect arrwoheads (preserving for posterity)
+  // render.shapes().circle = function circle(parent, bbox, node) {
+  //   const r = Math.max(bbox.width, bbox.height) / 2;
+  //   const shapeSvg = parent
+  //     .insert('circle', ':first-child')
+  //     .attr('x', -bbox.width / 2)
+  //     .attr('y', -bbox.height / 2)
+  //     .attr('r', r);
 
-    node.intersect = function (point) {
-      return dagreD3.intersect.circle(node, 0.1, point);
-    };
+  //   node.intersect = function (point) {
+  //     return dagreD3.intersect.circle(node, r + 2, point);
+  //   };
 
-    return shapeSvg;
-  };
+  //   return shapeSvg;
+  // };
 
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
 
+  // create the nodetype injectable img elements
   inner
     .selectAll('g.node')
     .append('img')
@@ -86,6 +88,7 @@ const draw = (data, container, imagesPath) => {
       return `${imagesPath}/${g.node(el).nodeType}.svg`;
     });
 
+  // create the flag injectable img elements
   inner
     .selectAll('g.node')
     .append('img')
@@ -98,13 +101,47 @@ const draw = (data, container, imagesPath) => {
     .attr('y', '-80')
     .attr('class', 'injectable');
 
+  // create arrowhead markers for edge termination
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-control')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 5)
+    .attr('refY', 4)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 0 L 10 5 L 0 5 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#349aee');
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-own')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 5)
+    .attr('refY', 6)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 10 L 10 5 L 0 5 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#652eb1');
+
+  // define the additional curves and text for ownership and control edges
   const createOwnershipCurve = (element, index, shareStroke, curveOffset, ended) => {
     d3.select(element)
       .clone(true)
       .attr('class', 'edgePath own')
       .select('path')
       .attr('id', (d, i) => 'ownPath' + index)
-      .attr('marker-end', '')
+      .attr('marker-end', 'url(#arrow-own)')
       .attr(
         'style',
         `fill: none; stroke: #652eb1; stroke-width: 1px; stroke-width: ${shareStroke}px;
@@ -137,7 +174,7 @@ const draw = (data, container, imagesPath) => {
       .attr('class', 'edgePath control')
       .select('.path')
       .attr('id', (d, i) => 'controlPath' + index)
-      .attr('marker-end', '')
+      .attr('marker-end', 'url(#arrow-control)')
       .attr(
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px;
