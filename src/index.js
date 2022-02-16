@@ -55,23 +55,6 @@ const draw = (data, container, imagesPath) => {
   // Create the renderer
   const render = new dagreD3.render();
 
-  // Using this redefinition of the circle to set the intersection point to near the centre
-  // This might still be useful if the new edge thicknesses affect arrwoheads (preserving for posterity)
-  // render.shapes().circle = function circle(parent, bbox, node) {
-  //   const r = Math.max(bbox.width, bbox.height) / 2;
-  //   const shapeSvg = parent
-  //     .insert('circle', ':first-child')
-  //     .attr('x', -bbox.width / 2)
-  //     .attr('y', -bbox.height / 2)
-  //     .attr('r', r);
-
-  //   node.intersect = function (point) {
-  //     return dagreD3.intersect.circle(node, r + 2, point);
-  //   };
-
-  //   return shapeSvg;
-  // };
-
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
 
@@ -107,11 +90,11 @@ const draw = (data, container, imagesPath) => {
     .append('marker')
     .attr('id', 'arrow-control')
     .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 5)
-    .attr('refY', 4)
+    .attr('refX', 8)
+    .attr('refY', 5)
     .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
+    .attr('markerWidth', 30)
+    .attr('markerHeight', 30)
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 0 L 10 5 L 0 5 z')
@@ -123,16 +106,33 @@ const draw = (data, container, imagesPath) => {
     .append('marker')
     .attr('id', 'arrow-own')
     .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 5)
-    .attr('refY', 6)
+    .attr('refX', 8)
+    .attr('refY', 5)
     .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
+    .attr('markerWidth', 30)
+    .attr('markerHeight', 30)
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 10 L 10 5 L 0 5 z')
     .attr('stroke', 'none')
     .attr('fill', '#652eb1');
+
+  d3.selectAll('.label').each(function (d, i) {
+    const label = d3.select(this);
+    const text = label.select('text');
+    const textParent = text.select(function () {
+      return this.parentNode;
+    });
+    const bBox = text.node().getBBox();
+
+    textParent
+      .insert('rect', ':first-child')
+      .attr('x', bBox.x)
+      .attr('y', bBox.y)
+      .attr('height', bBox.height)
+      .attr('width', bBox.width)
+      .style('fill', 'white');
+  });
 
   // define the additional curves and text for ownership and control edges
   const createOwnershipCurve = (element, index, shareStroke, curveOffset, ended) => {
@@ -168,7 +168,7 @@ const draw = (data, container, imagesPath) => {
       });
   };
 
-  const createControlCurve = (element, index, controlStroke, ended) => {
+  const createControlCurve = (element, index, controlStroke, curveOffset, ended) => {
     d3.select(element)
       .clone(true)
       .attr('class', 'edgePath control')
@@ -179,7 +179,13 @@ const draw = (data, container, imagesPath) => {
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px;
         stroke-opacity: ${ended ? '0.3' : '1'}`
-      );
+      )
+      .each(function () {
+        const path = d3.select(this);
+        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+        const offsetCurve = newBezier.offset(curveOffset);
+        path.attr('d', bezierBuilder(offsetCurve));
+      });
 
     d3.select(element)
       .clone(true)
@@ -270,16 +276,17 @@ const draw = (data, container, imagesPath) => {
       }%`;
     }
 
-    const curveOffset = shareStroke / 2 + controlStroke / 2;
+    const shareOffset = shareStroke / 2;
+    const controlOffset = -(controlStroke / 2);
     const element = g.edge(source, target).elem;
 
     if ('shareholding' in interests) {
       const ended = shareholding ? shareholding.ended : false;
-      createOwnershipCurve(element, index, shareStroke, curveOffset, ended);
+      createOwnershipCurve(element, index, shareStroke, shareOffset, ended);
     }
     if ('votingRights' in interests) {
       const ended = votingRights ? votingRights.ended : false;
-      createControlCurve(element, index, controlStroke, ended);
+      createControlCurve(element, index, controlStroke, controlOffset, ended);
     }
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
