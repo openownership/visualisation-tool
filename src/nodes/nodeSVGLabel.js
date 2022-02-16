@@ -8,15 +8,7 @@ const generateNodeLabel = (nodeText) => {
   svg_label.setAttribute('y', 90);
   const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
   tspan.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
-  const link = document.createElementNS('http://www.w3.org/2000/svg', 'a');
-  link.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    `http://register.openownership.org/search?q=${sanitisedNodeText}`
-  );
-  link.setAttribute('target', '_blank');
-  link.textContent = sanitisedNodeText;
-  tspan.appendChild(link);
+  tspan.textContent = sanitisedNodeText;
   svg_label.appendChild(tspan);
   text_label.appendChild(svg_label);
 
