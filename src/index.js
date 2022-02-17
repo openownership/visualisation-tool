@@ -10,6 +10,7 @@ import { SvgSaver } from './utils/svgsaver';
 import SVGInjectInstance from '@iconfu/svg-inject';
 
 import './style.css';
+import { node } from 'dagre-d3/lib/intersect';
 
 const draw = (data, container, imagesPath) => {
   const g = new dagreD3.graphlib.Graph({});
@@ -59,30 +60,36 @@ const draw = (data, container, imagesPath) => {
   render(inner, g);
 
   // create the nodetype injectable img elements
-  inner
-    .selectAll('g.node')
-    .append('img')
-    .attr('width', 120)
-    .attr('height', 120)
-    .attr('x', -60)
-    .attr('y', -60)
-    .attr('class', 'node-label label-container injectable')
-    .attr('src', function (el) {
-      return `${imagesPath}/${g.node(el).nodeType}.svg`;
-    });
+  inner.selectAll('g.node').each(function (d, i) {
+    if (g.node(d).nodeType !== null) {
+      d3.select(this)
+        .append('img')
+        .attr('width', 120)
+        .attr('height', 120)
+        .attr('x', -60)
+        .attr('y', -60)
+        .attr('class', 'node-label label-container injectable')
+        .attr('src', function (d) {
+          return `${imagesPath}/${g.node(d).nodeType}.svg`;
+        });
+    }
+  });
 
   // create the flag injectable img elements
-  inner
-    .selectAll('g.node')
-    .append('img')
-    .attr('src', function (el) {
-      return `${imagesPath}/flags/${g.node(el).countryCode}.svg`;
-    })
-    .attr('width', '80')
-    .attr('height', '60')
-    .attr('x', '10')
-    .attr('y', '-80')
-    .attr('class', 'injectable');
+  inner.selectAll('g.node').each(function (d, i) {
+    if (g.node(d).countryCode !== null) {
+      d3.select(this)
+        .append('img')
+        .attr('src', function (el) {
+          return `${imagesPath}/flags/${g.node(el).countryCode}.svg`;
+        })
+        .attr('width', '80')
+        .attr('height', '60')
+        .attr('x', '10')
+        .attr('y', '-80')
+        .attr('class', 'injectable');
+    }
+  });
 
   // create arrowhead markers for edge termination
   svg
@@ -145,7 +152,7 @@ const draw = (data, container, imagesPath) => {
       .attr(
         'style',
         `fill: none; stroke: #652eb1; stroke-width: 1px; stroke-width: ${shareStroke}px;
-        stroke-opacity: ${ended ? '0.3' : '1'}`
+        opacity: ${ended ? '0.3' : '1'}`
       )
       .each(function () {
         const path = d3.select(this);
@@ -178,7 +185,7 @@ const draw = (data, container, imagesPath) => {
       .attr(
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px;
-        stroke-opacity: ${ended ? '0.3' : '1'}`
+        opacity: ${ended ? '0.3' : '1'}`
       )
       .each(function () {
         const path = d3.select(this);
@@ -296,6 +303,10 @@ const draw = (data, container, imagesPath) => {
       !('shareholding' in interests) &&
       !('votingRights' in interests) &&
       createUnknownText(index, element);
+
+    if (shareholding || votingRights) {
+      d3.select(g.edge(source, target).elem).select('path').attr('marker-end', ''); //.attr('style', 'opacity: 0;');
+    }
   });
 
   nodes.forEach((node, index) => {

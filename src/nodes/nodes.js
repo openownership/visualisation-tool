@@ -42,8 +42,8 @@ export const getPersonNodes = (bodsData) => {
       .filter((statement) => statement.statementType === 'personStatement')
       .map((statement) => {
         const { statementID, names, personType, nationalities = null } = statement;
-        const nodeType = statementID === 'unknown' ? 'unknown' : 'person';
-        const countryCode = nationalities ? nationalities[0].code : null;
+        const nodeType = sanitise(statementID === 'unknown' ? 'unknown' : 'person');
+        const countryCode = nationalities ? sanitise(nationalities[0].code) : null;
         const name = names ? names[0] : {};
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         return {
@@ -53,8 +53,8 @@ export const getPersonNodes = (bodsData) => {
           class: nodeType,
           config: nodeConfig,
           replaces: replaces,
-          nodeType: sanitise(nodeType),
-          countryCode: sanitise(countryCode),
+          nodeType: nodeType,
+          countryCode: countryCode,
         };
       })
   );
@@ -66,7 +66,7 @@ export const getEntityNodes = (bodsData) => {
       .filter((statement) => statement.statementType === 'entityStatement')
       .map((statement) => {
         const { statementID, name, incorporatedInJurisdiction = null } = statement;
-        const countryCode = incorporatedInJurisdiction ? incorporatedInJurisdiction.code : null;
+        const countryCode = incorporatedInJurisdiction ? sanitise(incorporatedInJurisdiction.code) : null;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         return {
           id: statementID,
@@ -74,7 +74,7 @@ export const getEntityNodes = (bodsData) => {
           labelType: 'svg',
           class: 'entity',
           nodeType: 'entity',
-          countryCode: sanitise(countryCode),
+          countryCode: countryCode,
           config: nodeConfig,
           replaces: replaces,
         };
