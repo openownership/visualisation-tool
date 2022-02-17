@@ -10,7 +10,6 @@ import { SvgSaver } from './utils/svgsaver';
 import SVGInjectInstance from '@iconfu/svg-inject';
 
 import './style.css';
-import { node } from 'dagre-d3/lib/intersect';
 
 const draw = (data, container, imagesPath) => {
   const g = new dagreD3.graphlib.Graph({});
