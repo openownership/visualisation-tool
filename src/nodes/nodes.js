@@ -17,20 +17,25 @@ const nodeConfig = {
   style: 'opacity: 1; fill: #f7f7f7; stroke: #444; stroke-width: 1px;',
 };
 
-const personName = (name, personType) => {
-  if (Object.keys(name).length === 0) {
+const personName = (names, personType) => {
+  const personTypes = ['individual', 'transliteration', 'alternative', 'birth', 'translation', 'former'];
+  const selectedName = names
+    .slice()
+    .sort((a, b) => personTypes.indexOf(a.type) - personTypes.indexOf(b.type))[0];
+
+  if (Object.keys(selectedName).length === 0) {
     if (personType === 'anonymousPerson') {
       return 'Anonymous Person';
     } else if (personType === 'unknownPerson') {
       return 'Unknown Person';
     } else {
-      return 'Unamed Person';
+      return 'Unnamed Person';
     }
   }
-  if (name.fullName) {
-    return name.fullName;
+  if (selectedName.fullName) {
+    return selectedName.fullName;
   }
-  const nameParts = [name.givenName, name.patronymicName, name.familyName].filter(
+  const nameParts = [selectedName.givenName, selectedName.patronymicName, selectedName.familyName].filter(
     (namePart) => namePart !== null
   );
   return nameParts.join(' ');
@@ -44,11 +49,10 @@ export const getPersonNodes = (bodsData) => {
         const { statementID, names, personType, nationalities = null } = statement;
         const nodeType = sanitise(statementID === 'unknown' ? 'unknown' : 'person');
         const countryCode = nationalities ? sanitise(nationalities[0].code) : null;
-        const name = names ? names[0] : {};
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         return {
           id: statementID,
-          label: generateNodeLabel(personName(name)),
+          label: generateNodeLabel(personName(names, personType)),
           labelType: 'svg',
           class: nodeType,
           config: nodeConfig,
