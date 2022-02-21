@@ -1,4 +1,3 @@
-// import generateNodeLabel from './nodeHTMLLabel';
 import generateNodeLabel from './nodeSVGLabel';
 import latest from '../utils/bods';
 import sanitise from '../utils/sanitiser';
