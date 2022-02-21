@@ -11,10 +11,10 @@ import SVGInjectInstance from '@iconfu/svg-inject';
 
 import './style.css';
 
-const draw = (data, container, imagesPath) => {
+const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
-    rankdir: 'LR',
+    rankdir: rankDir,
     nodesep: 200,
     edgesep: 25,
     ranksep: 200,
@@ -256,6 +256,7 @@ const draw = (data, container, imagesPath) => {
       .text(`Unknown`);
   };
 
+  // use the previous function to calculate the new edges using control and ownership values
   edges.forEach((edge, index) => {
     const { source, target, interests } = edge;
     const { shareholding, votingRights } = interests;
@@ -296,15 +297,16 @@ const draw = (data, container, imagesPath) => {
     }
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
-    g.nodeCount() < 8 && createControlText(index, controlText);
-    g.nodeCount() < 8 && createOwnText(index, shareText);
-    g.nodeCount() < 8 &&
+    g.nodeCount() < labelLimit && createControlText(index, controlText);
+    g.nodeCount() < labelLimit && createOwnText(index, shareText);
+    g.nodeCount() < labelLimit &&
       !('shareholding' in interests) &&
       !('votingRights' in interests) &&
       createUnknownText(index, element);
 
+    // This removes the markers from any edges that have either ownership or control
     if (shareholding || votingRights) {
-      d3.select(g.edge(source, target).elem).select('path').attr('marker-end', ''); //.attr('style', 'opacity: 0;');
+      d3.select(g.edge(source, target).elem).select('path').attr('marker-end', '');
     }
   });
 
