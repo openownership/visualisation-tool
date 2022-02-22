@@ -6,7 +6,8 @@ const unknownNode = [
   {
     statementID: 'unknown',
     statementType: 'personStatement',
-    names: [{ fullName: 'Unknown Person' }],
+    personType: 'unknown',
+    names: [{ fullName: 'Unknown Person(s)' }],
   },
 ];
 
@@ -46,17 +47,20 @@ export const getPersonNodes = (bodsData) => {
       .filter((statement) => statement.statementType === 'personStatement')
       .map((statement) => {
         const { statementID, names, personType, nationalities = null } = statement;
-        const nodeType = sanitise(statementID === 'unknown' ? 'unknown' : 'person');
         const countryCode = nationalities ? sanitise(nationalities[0].code) : null;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
+        const personLabel =
+          names && names.length > 0 && personType
+            ? generateNodeLabel(personName(names, personType))
+            : generateNodeLabel('Unknown Person');
         return {
           id: statementID,
-          label: generateNodeLabel(personName(names, personType)),
+          label: personLabel,
           labelType: 'svg',
-          class: nodeType,
+          class: personType,
           config: nodeConfig,
           replaces: replaces,
-          nodeType: nodeType,
+          nodeType: personType,
           countryCode: countryCode,
         };
       })
