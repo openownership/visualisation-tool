@@ -72,15 +72,16 @@ export const getEntityNodes = (bodsData) => {
     bodsData
       .filter((statement) => statement.statementType === 'entityStatement')
       .map((statement) => {
-        const { statementID, name, entityType, incorporatedInJurisdiction = null } = statement;
+        const { statementID, name, entityType, publicListing, incorporatedInJurisdiction = null } = statement;
         const countryCode = incorporatedInJurisdiction ? sanitise(incorporatedInJurisdiction.code) : null;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
+        const nodeType = entityType && !publicListing ? entityType : 'registeredEntityListed';
         return {
           id: statementID,
           label: generateNodeLabel(name),
           labelType: 'svg',
           class: entityType,
-          nodeType: entityType,
+          nodeType: nodeType,
           countryCode: countryCode,
           config: nodeConfig,
           replaces: replaces,
