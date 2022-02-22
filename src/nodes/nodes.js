@@ -13,7 +13,7 @@ const unknownNode = [
 const nodeConfig = {
   shape: 'circle',
   width: 100,
-  style: 'opacity: 1; fill: #f7f7f7; stroke: #444; stroke-width: 1px;',
+  style: 'opacity: 1; fill: #fff; stroke: #000; stroke-width: 4px;',
 };
 
 const personName = (names, personType) => {
