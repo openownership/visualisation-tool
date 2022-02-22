@@ -1,8 +1,1 @@
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 154.80006 154.80006" version="1.1" width="154.80006" height="154.80006">
-    <g id="unknownNodeSVG">
-        <ellipse class="cls-7" cx="77.400032" cy="77.400032" id="ellipse25-6-6" style="fill:#fff;fill-opacity:1;stroke:#b2b3b9;stroke-width:1.86959994;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" rx="77.039917" ry="75.809235"/>
-        <text style="font-style:normal;font-weight:400;font-size:47.09462738px;line-height:1.25;font-family:sans-serif;letter-spacing:0;word-spacing:0;fill:#000;fill-opacity:1;stroke:none;stroke-width:1.17736566" x="64.856033" y="94.876549" id="text1796">
-            <tspan id="tspan1794" x="64.856033" y="94.876549" style="stroke-width:1.17736566"> ? </tspan>
-        </text>
-    </g>
-</svg>
+<svg id="Unknown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720"><defs><style>.cls-1{fill:#fff;}</style></defs><circle class="cls-1" cx="360" cy="360" r="180"/><path d="M374.93,347c14.57-10.22,22.4-14.92,22.4-35S380.66,277.91,360,277.91c-25.06,0-40.46,15.58-40.8,41.29H276c1-43.85,28.79-79.2,84-79.2,51.82,0,84,31.25,84,70.15,0,32.64-12,44.58-26.58,55.45-25.4,18.79-35.82,19-35.82,42.4H338.4C338.4,369.43,354.27,361.53,374.93,347ZM336,432h48v48H336Z"/></svg>
