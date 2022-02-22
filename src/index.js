@@ -82,8 +82,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         .attr('src', function (el) {
           return `${imagesPath}/flags/${g.node(el).countryCode}.svg`;
         })
-        .attr('width', '80')
-        .attr('height', '60')
+        .attr('width', '60')
+        .attr('height', '45')
         .attr('x', '10')
         .attr('y', '-80')
         .attr('class', 'injectable');
