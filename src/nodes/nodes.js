@@ -6,7 +6,7 @@ const unknownNode = [
   {
     statementID: 'unknown',
     statementType: 'personStatement',
-    personType: 'unknown',
+    personType: 'unknownPerson',
     names: [{ fullName: 'Unknown Person(s)' }],
   },
 ];
@@ -41,6 +41,24 @@ const personName = (names, personType) => {
   return nameParts.join(' ');
 };
 
+let iconType = (nodeType) => {
+  const iconFile = {
+    knownPerson: 'bovs-person.svg',
+    anonymousPerson: 'bovs-person-unknown.svg',
+    unknownPerson: 'bovs-person-unknown.svg',
+    registeredEntity: 'bovs-organisation.svg',
+    registeredEntityListed: 'bovs-listed.svg',
+    legalEntity: 'bovs-organisation.svg',
+    arrangement: 'bovs-arrangement.svg',
+    anonymousEntity: 'bovs-entity-unknown.svg',
+    unknownEntity: 'bovs-entity-unknown.svg',
+    state: 'bovs-state.svg',
+    stateBody: 'bovs-state.svg',
+  }[nodeType];
+
+  return iconFile ? iconFile : 'bovs-unknown.svg';
+};
+
 export const getPersonNodes = (bodsData) => {
   return latest(
     bodsData
@@ -60,7 +78,7 @@ export const getPersonNodes = (bodsData) => {
           class: personType,
           config: nodeConfig,
           replaces: replaces,
-          nodeType: personType,
+          nodeType: iconType(personType),
           countryCode: countryCode,
         };
       })
@@ -81,7 +99,7 @@ export const getEntityNodes = (bodsData) => {
           label: generateNodeLabel(name),
           labelType: 'svg',
           class: entityType,
-          nodeType: nodeType,
+          nodeType: iconType(nodeType),
           countryCode: countryCode,
           config: nodeConfig,
           replaces: replaces,

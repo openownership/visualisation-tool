@@ -69,7 +69,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         .attr('y', -60)
         .attr('class', 'node-label label-container injectable')
         .attr('src', function (d) {
-          return `${imagesPath}/${g.node(d).nodeType}.svg`;
+          return `${imagesPath}/${g.node(d).nodeType}`;
         });
     }
   });
