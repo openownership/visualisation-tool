@@ -35,7 +35,10 @@ module.exports = {
       cache: true,
     }),
     new CopyPlugin({
-      patterns: [{ from: 'src/images', to: 'images' }],
+      patterns: [
+        { from: 'src/images', to: 'images' },
+        { from: 'node_modules/flag-icons/flags/4x3/', to: 'images/flags/' },
+      ],
     }),
   ],
 };
