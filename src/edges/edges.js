@@ -36,9 +36,17 @@ export const getOwnershipEdges = (bodsData) => {
       .map((statement) => {
         const { statementID, subject, interestedParty, interests } = statement;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
+        const { interestLevel, directOrIndirect } = interests[0] || { interestLevel: 'unknown' };
+        // this accounts for changes from 0.2 to 0.3 (interestLevel renamed to directOrIndirect)
+        const interestRelationship = interestLevel
+          ? interestLevel
+          : directOrIndirect
+          ? directOrIndirect
+          : 'direct';
         return {
           id: statementID,
           interests: getInterests(interests),
+          interestRelationship,
           source:
             interestedParty.describedByPersonStatement ||
             interestedParty.describedByEntityStatement ||
