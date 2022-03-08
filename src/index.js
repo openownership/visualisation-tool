@@ -80,10 +80,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       d3.select(this)
         .append('img')
         .attr('src', function (el) {
-          return `${imagesPath}/flags/${g.node(el).countryCode}.svg`;
+          return `${imagesPath}/flags/${g.node(el).countryCode.toLowerCase()}.svg`;
         })
-        .attr('width', '60')
-        .attr('height', '45')
+        .attr('width', '75')
+        .attr('height', '50')
         .attr('x', '10')
         .attr('y', '-80')
         .attr('class', 'injectable');

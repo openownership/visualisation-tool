@@ -1,4 +1,5 @@
 const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -29,7 +30,7 @@ module.exports = {
     ],
   },
   plugins: [
-    // new CleanWebpackPlugin(),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       inject: true,
       template: './demo/index.html',
@@ -46,6 +47,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: 'src/images', to: 'images' },
+        { from: 'node_modules/flag-icons/flags/4x3/', to: 'images/flags/' },
         { from: 'demo/script-tag.html', to: 'script-tag.html' },
         { from: 'demo/demo.css', to: 'demo.css' },
         { from: 'demo/script-tag.js', to: 'demo.js' },
