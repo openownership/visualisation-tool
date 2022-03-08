@@ -28,7 +28,7 @@ const getJSON = () => {
 const visualiseData = () => {
   clearDrawing();
   const data = JSON.parse(document.getElementById('result').value);
-  draw(data, document.getElementById('svg-holder'), 'images');
+  draw(data, document.getElementById('svg-holder'), 'images', 100);
 };
 
 window.onload = () => {
