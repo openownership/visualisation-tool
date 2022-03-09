@@ -276,30 +276,16 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   // use the previous function to calculate the new edges using control and ownership values
   // this section could do with a refactor and move more of the logic into edges.js
   edges.forEach((edge, index) => {
-    const { source, target, interests, interestRelationship } = edge;
-    const { shareholding, votingRights } = interests;
-
-    let shareStroke = 1;
-    let shareText = '';
-    if (shareholding) {
-      const { exact: shareExact, minimum: shareMin, maximum: shareMax } = {
-        ...shareholding,
-      };
-      shareStroke = (shareExact === undefined ? (shareMin + shareMax) / 2 : shareExact) / 10;
-      shareText = `Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`;
-    }
-
-    let controlStroke = 1;
-    let controlText = '';
-    if (votingRights) {
-      const { exact: controlExact, minimum: controlMin, maximum: controlMax } = {
-        ...votingRights,
-      };
-      controlStroke = (controlExact === undefined ? (controlMin + controlMax) / 2 : controlExact) / 10;
-      controlText = `Controls ${
-        controlExact === undefined ? `${controlMin} - ${controlMax}` : controlExact
-      }%`;
-    }
+    const {
+      source,
+      target,
+      interests,
+      interestRelationship,
+      shareStroke,
+      shareText,
+      controlStroke,
+      controlText,
+    } = edge;
 
     const shareOffset = shareStroke / 2;
     const controlOffset = -(controlStroke / 2);
@@ -310,6 +296,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       d3.select(element).style('stroke-dasharray', '3, 3');
     }
 
+    const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
       const ended = shareholding ? shareholding.ended : false;
       createOwnershipCurve(element, index, shareStroke, shareOffset, ended, interestRelationship);

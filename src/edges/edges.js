@@ -2,12 +2,12 @@ import * as d3 from 'd3';
 import latest from '../utils/bods';
 
 const edgeConfig = {
-  style: 'fill: none; stroke: #000; stroke-width: 1px;',
+  style: 'fill: none; stroke: #000; stroke-width: 5px;',
   curve: d3.curveMonotoneX,
 };
 
 const endedEdgeConfig = {
-  style: 'fill: none; stroke: #000; stroke-width: 1px; stroke-opacity: 0.25;',
+  style: 'fill: none; stroke: #000; stroke-width: 5px; stroke-opacity: 0.25;',
   curve: d3.curveMonotoneX,
 };
 
@@ -43,10 +43,42 @@ export const getOwnershipEdges = (bodsData) => {
           : directOrIndirect
           ? directOrIndirect
           : 'direct';
+
+        const mappedInterests = getInterests(interests);
+
+        // work out the ownership stroke and text
+        const { shareholding, votingRights } = mappedInterests;
+        let shareStroke = 5;
+        let shareText = '';
+        if (shareholding) {
+          const { exact: shareExact, minimum: shareMin, maximum: shareMax } = {
+            ...shareholding,
+          };
+          shareStroke = (shareExact === undefined ? (shareMin + shareMax) / 2 : shareExact) / 10;
+          shareText = `Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`;
+        }
+
+        // work out the control stroke and text
+        let controlStroke = 5;
+        let controlText = '';
+        if (votingRights) {
+          const { exact: controlExact, minimum: controlMin, maximum: controlMax } = {
+            ...votingRights,
+          };
+          controlStroke = (controlExact === undefined ? (controlMin + controlMax) / 2 : controlExact) / 10;
+          controlText = `Controls ${
+            controlExact === undefined ? `${controlMin} - ${controlMax}` : controlExact
+          }%`;
+        }
+
         return {
           id: statementID,
-          interests: getInterests(interests),
+          interests: mappedInterests,
           interestRelationship,
+          controlStroke,
+          controlText,
+          shareText,
+          shareStroke,
           source:
             interestedParty.describedByPersonStatement ||
             interestedParty.describedByEntityStatement ||
