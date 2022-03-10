@@ -20,3 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+/**
+ * SVGInject - Version 1.2.3
+ * A tiny, intuitive, robust, caching solution for injecting SVG files inline into the DOM.
+ *
+ * https://github.com/iconfu/svg-inject
+ *
+ * Copyright (c) 2018 INCORS, the creators of iconfu.com
+ * @license MIT License - https://github.com/iconfu/svg-inject/blob/master/LICENSE
+ */
