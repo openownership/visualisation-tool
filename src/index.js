@@ -20,6 +20,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     ranksep: 200,
   });
 
+  // This section maps the incoming BODS data to the structures expected by Dagre
   const personNodes = getPersonNodes(data, imagesPath);
   const entityNodes = getEntityNodes(data, imagesPath);
   const ownershipEdges = getOwnershipEdges(data);
@@ -124,6 +125,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('stroke', 'none')
     .attr('fill', '#652eb1');
 
+  // Create white backgrounds for all of the labels
   d3.selectAll('.label').each(function (d, i) {
     const label = d3.select(this);
     const text = label.select('text');

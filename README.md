@@ -33,6 +33,8 @@ const data = JSON.parse('some JSON string');
 const container = document.getElementById('some-id');
 // Where you're serving the bundled images from (see below)
 const imagesPath = '/some/folder';
+// Set a node limit above which labels will no longer be shown 
+const labelLimit = 8
 
 BODSDagre.draw(data, container, imagesPath);
 ```
@@ -61,36 +63,3 @@ pick them up:
 <button id="zoom_out">-</button>
 ```
 
-## Development
-To build the project for development using the webpack server run:
-
-```
-npm i
-npm start
-```
-
-## Demo Page
-To build the demo page, which uses the templates found in `/demo`, run:
-
-```
-npm i
-npm run demo
-```
-This will output the compiled code, including the demo page, to `demo-build`.
-
-To build and push a new version to gh-pages, run `publish-demo.sh`.
-
-## Libary compilation
-To build the library without the demo page run:
-
-```
-npm i
-npm run library
-```
-This will compile the javascript into `dist/main.js` and will include all of the required SVG files in `/dist/images`
-
-## Publishing
-To publish this to NPM (assuming you're logged in through the cli and have
-permissions on the project):
-
-`$ npm publish --access public`
