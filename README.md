@@ -63,3 +63,28 @@ pick them up:
 <button id="zoom_out">-</button>
 ```
 
+## Node types
+
+At present the tool provides visualisation of the following entity types (based on [`personStatements` and `entityStatements`](https://standard.openownership.org/en/0.2.0/schema/reference.html#schema-entity-statement)):
+
+  * knownPerson
+  * anonymousPerson
+  * unknownPerson
+  * registeredEntity
+  * registeredEntityListed
+  * legalEntity
+  * arrangement
+  * anonymousEntity
+  * unknownEntity
+  * state
+  * stateBody
+
+If the entity type is not recognised then it will default to the unknown type.
+
+## Country flags
+
+If the country is not present or is not recognised then no flag will be displayed.
+
+## Development
+
+Please see the [developer guide](./DEVELOPER.md) for more information.
