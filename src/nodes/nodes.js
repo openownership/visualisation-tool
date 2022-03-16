@@ -96,7 +96,7 @@ export const getEntityNodes = (bodsData) => {
         const nodeType = entityType && !publicListing ? entityType : 'registeredEntityListed';
         return {
           id: statementID,
-          label: generateNodeLabel(name),
+          label: generateNodeLabel(name || ''),
           labelType: 'svg',
           class: entityType,
           nodeType: iconType(nodeType),
