@@ -53,7 +53,7 @@ let iconType = (nodeType) => {
     anonymousEntity: 'bovs-entity-unknown.svg',
     unknownEntity: 'bovs-entity-unknown.svg',
     state: 'bovs-state.svg',
-    stateBody: 'bovs-state.svg',
+    stateBody: 'bovs-statebody.svg',
   }[nodeType];
 
   return iconFile ? iconFile : 'bovs-unknown.svg';
