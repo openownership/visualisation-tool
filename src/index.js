@@ -95,7 +95,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-control')
+    .attr('id', 'arrow-control-half')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 5)
@@ -111,7 +111,23 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-own')
+    .attr('id', 'arrow-control-full')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 5)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 30)
+    .attr('markerHeight', 30)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#349aee');
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-own-half')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 5)
@@ -121,6 +137,22 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 10 L 10 5 L 0 5 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#652eb1');
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-own-full')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 5)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 30)
+    .attr('markerHeight', 30)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 10 L 10 5 L 0 0 z')
     .attr('stroke', 'none')
     .attr('fill', '#652eb1');
 
@@ -142,13 +174,23 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   });
 
   // define the additional curves and text for ownership and control edges
-  const createOwnershipCurve = (element, index, shareStroke, curveOffset, ended, interestRelationship) => {
+  const createOwnershipCurve = (
+    element,
+    index,
+    shareStroke,
+    curveOffset,
+    ended,
+    interestRelationship,
+    arrowheadShape
+  ) => {
     d3.select(element)
+      .attr('style', 'opacity: 0;')
       .clone(true)
+      .attr('style', 'opacity: 1;')
       .attr('class', 'edgePath own')
       .select('path')
       .attr('id', (d, i) => 'ownPath' + index)
-      .attr('marker-end', 'url(#arrow-own)')
+      .attr('marker-end', `url(#arrow-own-${arrowheadShape})`)
       .attr(
         'style',
         `fill: none; stroke: #652eb1; stroke-width: ${shareStroke}px; ${
@@ -176,13 +218,23 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       });
   };
 
-  const createControlCurve = (element, index, controlStroke, curveOffset, ended, interestRelationship) => {
+  const createControlCurve = (
+    element,
+    index,
+    controlStroke,
+    curveOffset,
+    ended,
+    interestRelationship,
+    arrowheadShape
+  ) => {
     d3.select(element)
+      .attr('style', 'opacity: 0;')
       .clone(true)
+      .attr('style', 'opacity: 1;')
       .attr('class', 'edgePath control')
       .select('.path')
       .attr('id', (d, i) => 'controlPath' + index)
-      .attr('marker-end', 'url(#arrow-control)')
+      .attr('marker-end', `url(#arrow-control-${arrowheadShape})`)
       .attr(
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px; ${
@@ -299,11 +351,29 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
       const ended = shareholding ? shareholding.ended : false;
-      createOwnershipCurve(element, index, shareStroke, shareOffset, ended, interestRelationship);
+      const arrowheadShape = 'votingRights' in interests ? 'half' : 'full';
+      createOwnershipCurve(
+        element,
+        index,
+        shareStroke,
+        shareOffset,
+        ended,
+        interestRelationship,
+        arrowheadShape
+      );
     }
     if ('votingRights' in interests) {
       const ended = votingRights ? votingRights.ended : false;
-      createControlCurve(element, index, controlStroke, controlOffset, ended, interestRelationship);
+      const arrowheadShape = 'shareholding' in interests ? 'half' : 'full';
+      createControlCurve(
+        element,
+        index,
+        controlStroke,
+        controlOffset,
+        ended,
+        interestRelationship,
+        arrowheadShape
+      );
     }
 
     // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
