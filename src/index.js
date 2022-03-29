@@ -210,7 +210,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr(
         'style',
         `fill: none; stroke: #652eb1; stroke-width: ${shareStroke}px; ${
-          interestRelationship === 'indirect' ? 'stroke-dasharray: 3,3' : ''
+          interestRelationship === 'indirect' ? 'stroke-dasharray: 10,12' : ''
         }; opacity: ${ended ? '0.3' : '1'}`
       )
       .each(function () {
@@ -254,7 +254,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr(
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px; ${
-          interestRelationship === 'indirect' ? 'stroke-dasharray: 3,3' : ''
+          interestRelationship === 'indirect' ? 'stroke-dasharray: 10,12' : ''
         };
         opacity: ${ended ? '0.3' : '1'}`
       )
@@ -361,7 +361,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
     // set all indirect relationships to dashed lines
     if (interestRelationship === 'indirect') {
-      d3.select(element).style('stroke-dasharray', '3, 3');
+      d3.select(element).style('stroke-dasharray', '10,12');
     }
 
     const { shareholding, votingRights } = interests;
