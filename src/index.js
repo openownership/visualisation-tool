@@ -114,10 +114,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('id', 'arrow-control-half')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
-    .attr('refY', 5)
+    .attr('refY', 3.8)
     .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 30)
-    .attr('markerHeight', 30)
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 0 L 10 5 L 0 5 z')
@@ -132,8 +132,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('refX', 8)
     .attr('refY', 5)
     .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 30)
-    .attr('markerHeight', 30)
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 0 L 10 5 L 0 10 z')
@@ -146,10 +146,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('id', 'arrow-own-half')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
-    .attr('refY', 5)
+    .attr('refY', 6.1)
     .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 30)
-    .attr('markerHeight', 30)
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 10 L 10 5 L 0 5 z')
@@ -164,8 +164,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('refX', 8)
     .attr('refY', 5)
     .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 30)
-    .attr('markerHeight', 30)
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
     .attr('orient', 'auto-start-reverse')
     .append('path')
     .attr('d', 'M 0 10 L 10 5 L 0 0 z')
@@ -196,7 +196,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     shareStroke,
     curveOffset,
     ended,
-    interestRelationship,
+    dashedInterest,
     arrowheadShape
   ) => {
     d3.select(element)
@@ -210,7 +210,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr(
         'style',
         `fill: none; stroke: #652eb1; stroke-width: ${shareStroke}px; ${
-          interestRelationship === 'indirect' ? 'stroke-dasharray: 10,12' : ''
+          dashedInterest ? 'stroke-dasharray: 20,12' : ''
         }; opacity: ${ended ? '0.3' : '1'}`
       )
       .each(function () {
@@ -240,7 +240,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     controlStroke,
     curveOffset,
     ended,
-    interestRelationship,
+    dashedInterest,
     arrowheadShape
   ) => {
     d3.select(element)
@@ -254,7 +254,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr(
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px; ${
-          interestRelationship === 'indirect' ? 'stroke-dasharray: 10,12' : ''
+          dashedInterest ? 'stroke-dasharray: 20,12' : ''
         };
         opacity: ${ended ? '0.3' : '1'}`
       )
@@ -359,9 +359,12 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     const controlOffset = -(controlStroke / 2);
     const element = g.edge(source, target).elem;
 
+    const checkInterests = (interestRelationship) =>
+      interestRelationship === 'indirect' || interestRelationship === 'unknown' ? true : false;
+
     // set all indirect relationships to dashed lines
-    if (interestRelationship === 'indirect') {
-      d3.select(element).style('stroke-dasharray', '10,12');
+    if (checkInterests(interestRelationship)) {
+      d3.select(element).style('stroke-dasharray: 20,12');
     }
 
     const { shareholding, votingRights } = interests;
@@ -374,7 +377,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         shareStroke,
         shareOffset,
         ended,
-        interestRelationship,
+        checkInterests(interestRelationship),
         arrowheadShape
       );
     }
@@ -387,7 +390,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         controlStroke,
         controlOffset,
         ended,
-        interestRelationship,
+        checkInterests(interestRelationship),
         arrowheadShape
       );
     }
