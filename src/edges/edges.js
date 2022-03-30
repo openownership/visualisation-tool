@@ -42,7 +42,7 @@ export const getOwnershipEdges = (bodsData) => {
           ? interestLevel
           : directOrIndirect
           ? directOrIndirect
-          : 'direct';
+          : 'unknown';
 
         const mappedInterests = getInterests(interests);
 
