@@ -338,7 +338,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         return '#unknown' + index;
       })
       .attr('startOffset', '50%')
-      .text(`Unknown`);
+      .text(`Interest details unknown`);
   };
 
   // use the previous function to calculate the new edges using control and ownership values
