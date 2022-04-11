@@ -17,7 +17,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     rankdir: rankDir,
     nodesep: 200,
     edgesep: 25,
-    ranksep: 200,
+    ranksep: 300,
   });
 
   const personNodes = getPersonNodes(data, imagesPath);
