@@ -46,7 +46,7 @@ Full demo applications are hosted from this repo:
 ### Images
 
 The library includes license-free SVG images for world flags, as well as some
-generic icons from our [Beneficial Ownership Visualisation System](https://openownership.org/visualisation/).
+generic icons from our [Beneficial Ownership Visualisation System](https://www.openownership.org/en/publications/beneficial-ownership-visualisation-system/).
 
 You can find these inside the dist/images folder, but you need to make them
 available at some URL path in your application and tell the library what that
