@@ -63,6 +63,21 @@ pick them up:
 <button id="zoom_out">-</button>
 ```
 
+### Save
+
+The functionality has been included for two save buttons. These must be added to
+the page, along with the placeholder, with the correct IDs for the code to
+pick them up:
+
+```html
+<button id="download-svg">Download SVG</button>
+<button id="download-png">Download PNG</button>
+```
+
+It should be noted that the PNG output will provide an image that is scaled to the canvas. The resolution is likely to be poor.
+
+The SVG download button provides the complete graph in the SVG markup format.
+
 ## Node types
 
 At present the tool provides visualisation of the following entity types (based on [`personStatements` and `entityStatements`](https://standard.openownership.org/en/0.2.0/schema/reference.html#schema-entity-statement)):
