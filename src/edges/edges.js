@@ -75,10 +75,10 @@ export const getOwnershipEdges = (bodsData) => {
           id: statementID,
           interests: mappedInterests,
           interestRelationship,
-          controlStroke,
+          controlStroke: controlStroke > 0 ? controlStroke : 1,
           controlText,
           shareText,
-          shareStroke,
+          shareStroke: shareStroke > 0 ? shareStroke : 1,
           source:
             interestedParty.describedByPersonStatement ||
             interestedParty.describedByEntityStatement ||
