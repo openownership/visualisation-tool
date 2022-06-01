@@ -90,8 +90,22 @@ export const getEntityNodes = (bodsData) => {
     bodsData
       .filter((statement) => statement.statementType === 'entityStatement')
       .map((statement) => {
-        const { statementID, name, entityType, publicListing, incorporatedInJurisdiction = null } = statement;
-        const countryCode = incorporatedInJurisdiction ? sanitise(incorporatedInJurisdiction.code) : null;
+        const {
+          statementID,
+          name,
+          entityType,
+          publicListing,
+          incorporatedInJurisdiction = null,
+          jurisdiction = null,
+        } = statement;
+
+        // This gets the country code from v0.2 BODS (incorporatedInJurisdiction)
+        // Or from v0.3 BODS (jurisdiction)
+        const countryCode = incorporatedInJurisdiction
+          ? sanitise(incorporatedInJurisdiction.code)
+          : jurisdiction
+          ? sanitise(jurisdiction.code)
+          : null;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         const nodeType = entityType && !publicListing ? entityType : 'registeredEntityListed';
         return {
