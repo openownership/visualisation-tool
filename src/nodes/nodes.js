@@ -2,14 +2,14 @@ import generateNodeLabel from './nodeSVGLabel';
 import latest from '../utils/bods';
 import sanitise from '../utils/sanitiser';
 
-const unknownNode = [
-  {
-    statementID: 'unknown',
+const unknownNode = (nodeId) => {
+  return {
+    statementID: nodeId,
     statementType: 'personStatement',
     personType: 'unknownPerson',
     names: [{ fullName: 'Unknown Person(s)' }],
-  },
-];
+  };
+};
 
 const nodeConfig = {
   shape: 'circle',
@@ -122,4 +122,4 @@ export const getEntityNodes = (bodsData) => {
   );
 };
 
-export const setUnknownNode = (imagesPath) => getPersonNodes(unknownNode, imagesPath);
+export const setUnknownNode = (source) => unknownNode(source);

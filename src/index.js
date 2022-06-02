@@ -21,15 +21,20 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   });
 
   // This section maps the incoming BODS data to the structures expected by Dagre
-  const personNodes = getPersonNodes(data, imagesPath);
-  const entityNodes = getEntityNodes(data, imagesPath);
+  const personNodes = getPersonNodes(data);
+  const entityNodes = getEntityNodes(data);
   const ownershipEdges = getOwnershipEdges(data);
 
   const edges = [...ownershipEdges];
 
-  const unknownSubject = edges.filter((edge) => edge.source === 'unknown');
-  const unknownNode = unknownSubject.length > 0 ? setUnknownNode(imagesPath) : [];
-  const nodes = [...personNodes, ...entityNodes, ...unknownNode];
+  const unknownSubjects = edges.filter((edge, index) => {
+    edge.source = edge.source === 'unknown' ? `unknown${index}` : edge.source;
+    return edge.source === `unknown${index}`;
+  });
+  const unknownNodes = unknownSubjects.map((unknownSubject) => {
+    return setUnknownNode(unknownSubject.source);
+  });
+  const nodes = [...personNodes, ...entityNodes, ...getPersonNodes(unknownNodes)];
 
   nodes.forEach((node) => {
     g.setNode(node.id, {
