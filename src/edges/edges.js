@@ -11,6 +11,8 @@ const endedEdgeConfig = {
   curve: d3.curveMonotoneX,
 };
 
+const DEFAULT_STROKE = 5;
+
 const getInterests = (interests) => {
   if (!interests) {
     return {};
@@ -27,6 +29,32 @@ const getInterests = (interests) => {
   };
 
   return data;
+};
+
+const getStroke = (shareValues) => {
+  const { exact, minimum, maximum } = shareValues || {};
+  if (exact === undefined) {
+    if (minimum !== undefined && maximum !== undefined) {
+      return (minimum + maximum) / 2 / 10;
+    } else {
+      return DEFAULT_STROKE;
+    }
+  } else {
+    return exact > 0 ? exact / 10 : 1;
+  }
+};
+
+const getText = (shareValues, type) => {
+  const { exact, minimum, maximum } = shareValues || {};
+  if (exact === undefined) {
+    if (minimum !== undefined && maximum !== undefined) {
+      return `${type} ${minimum} - ${maximum}%`;
+    } else {
+      return ``;
+    }
+  } else {
+    return `${type} ${exact}%`;
+  }
 };
 
 export const getOwnershipEdges = (bodsData) => {
@@ -48,28 +76,12 @@ export const getOwnershipEdges = (bodsData) => {
 
         // work out the ownership stroke and text
         const { shareholding, votingRights } = mappedInterests;
-        let shareStroke = 5;
-        let shareText = '';
-        if (shareholding) {
-          const { exact: shareExact, minimum: shareMin, maximum: shareMax } = {
-            ...shareholding,
-          };
-          shareStroke = (shareExact === undefined ? (shareMin + shareMax) / 2 : shareExact) / 10;
-          shareText = `Owns ${shareExact === undefined ? `${shareMin} - ${shareMax}` : shareExact}%`;
-        }
 
-        // work out the control stroke and text
-        let controlStroke = 5;
-        let controlText = '';
-        if (votingRights) {
-          const { exact: controlExact, minimum: controlMin, maximum: controlMax } = {
-            ...votingRights,
-          };
-          controlStroke = (controlExact === undefined ? (controlMin + controlMax) / 2 : controlExact) / 10;
-          controlText = `Controls ${
-            controlExact === undefined ? `${controlMin} - ${controlMax}` : controlExact
-          }%`;
-        }
+        const shareStroke = getStroke(shareholding);
+        const shareText = getText(shareholding, 'Owns');
+
+        const controlStroke = getStroke(votingRights);
+        const controlText = getText(votingRights, 'Controls');
 
         return {
           id: statementID,
