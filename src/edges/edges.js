@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
 import latest from '../utils/bods';
 
-const edgeConfig = {
+const EDGE_CONFIG = {
   style: 'fill: none; stroke: #000; stroke-width: 5px;',
   curve: d3.curveMonotoneX,
 };
 
-const endedEdgeConfig = {
+const ENDED_EDGE_CONFIG = {
   style: 'fill: none; stroke: #000; stroke-width: 5px; stroke-opacity: 0.25;',
   curve: d3.curveMonotoneX,
 };
@@ -98,7 +98,7 @@ export const getOwnershipEdges = (bodsData) => {
           target: subject.describedByPersonStatement
             ? subject.describedByPersonStatement
             : subject.describedByEntityStatement,
-          config: interests && interests.every((i) => i.endDate) ? endedEdgeConfig : edgeConfig,
+          config: interests && interests.every((i) => i.endDate) ? ENDED_EDGE_CONFIG : EDGE_CONFIG,
           replaces: replaces,
         };
       })
