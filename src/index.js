@@ -408,6 +408,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     // this creates the edge labels, and will allow the labels to be turned off if the node count exceeds the labelLimit
     limitLabels(createControlText(index, controlText));
     limitLabels(createOwnText(index, shareText));
+
+    // The unknown interest labels are drawn when the interest type is set to 'unknownInterest' or the data are missing
+    // No label is displayed if the interestType is within the interestType codelist but is not shareholding or votingRights
     if (
       (interests &&
         !Object.keys(interests).some((type) => Object.keys(interestTypesCodelist).includes(type))) ||
