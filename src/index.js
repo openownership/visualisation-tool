@@ -8,6 +8,7 @@ import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import { SvgSaver } from './utils/svgsaver';
 import SVGInjectInstance from '@iconfu/svg-inject';
+import interestTypesCodelist from './codelists/interestTypes';
 
 import './style.css';
 
@@ -402,13 +403,18 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       );
     }
 
-    // this will allow the labels to be turned off if there are too many nodes and edge labels overlap
-    g.nodeCount() < labelLimit && createControlText(index, controlText);
-    g.nodeCount() < labelLimit && createOwnText(index, shareText);
-    g.nodeCount() < labelLimit &&
-      !('shareholding' in interests) &&
-      !('votingRights' in interests) &&
-      createUnknownText(index, element);
+    const limitLabels = (createLabel) => g.nodeCount() < labelLimit && createLabel;
+
+    // this creates the edge labels, and will allow the labels to be turned off if the node count exceeds the labelLimit
+    limitLabels(createControlText(index, controlText));
+    limitLabels(createOwnText(index, shareText));
+    if (
+      (interests &&
+        !Object.keys(interests).some((type) => Object.keys(interestTypesCodelist).includes(type))) ||
+      (Object.keys(interests).length === 1 && Object.keys(interests)[0] === 'unknownInterest')
+    ) {
+      limitLabels(createUnknownText(index, element));
+    }
 
     // This removes the markers from any edges that have either ownership or control
     if (shareholding || votingRights) {
