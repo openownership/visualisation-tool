@@ -14,21 +14,18 @@ const ENDED_EDGE_CONFIG = {
 const DEFAULT_STROKE = 5;
 
 const getInterests = (interests) => {
-  if (!interests) {
-    return {};
-  }
-  const data = {
-    ...interests.reduce((data, interest) => {
-      const { type, share, endDate } = interest;
-      const typeKey = type === 'voting-rights' ? 'votingRights' : type;
-      if (share) {
-        share.ended = endDate ? true : false;
-      }
-      return { ...data, [typeKey]: share };
-    }, {}),
-  };
-
-  return data;
+  return !interests
+    ? {}
+    : {
+        ...interests.reduce((data, interest) => {
+          const { type, share, endDate } = interest;
+          const typeKey = type === 'voting-rights' ? 'votingRights' : type;
+          if (share) {
+            share.ended = endDate ? true : false;
+          }
+          return { ...data, [typeKey]: share };
+        }, {}),
+      };
 };
 
 const getStroke = (shareValues) => {
@@ -64,7 +61,9 @@ export const getOwnershipEdges = (bodsData) => {
       .map((statement) => {
         const { statementID, subject, interestedParty, interests } = statement;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
-        const { interestLevel, directOrIndirect } = interests[0] || { interestLevel: 'unknown' };
+        const { interestLevel, directOrIndirect } = interests
+          ? interests[0] || { interestLevel: 'unknown' }
+          : { interestLevel: 'unknown' };
         // this accounts for changes from 0.2 to 0.3 (interestLevel renamed to directOrIndirect)
         const interestRelationship = interestLevel
           ? interestLevel
@@ -92,8 +91,8 @@ export const getOwnershipEdges = (bodsData) => {
           shareText,
           shareStroke,
           source:
-            interestedParty.describedByPersonStatement ||
-            interestedParty.describedByEntityStatement ||
+            interestedParty?.describedByPersonStatement ||
+            interestedParty?.describedByEntityStatement ||
             'unknown',
           target: subject.describedByPersonStatement
             ? subject.describedByPersonStatement
