@@ -21,7 +21,7 @@ const getInterests = (interests) => {
           const { type, share, endDate } = interest;
           const typeKey = type === 'voting-rights' ? 'votingRights' : type;
           if (share) {
-            share.ended = endDate ? true : false;
+            share.ended = new Date(Date.parse(endDate)) < new Date() ? true : false;
           }
           return { ...data, [typeKey]: share };
         }, {}),
