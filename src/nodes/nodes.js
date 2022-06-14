@@ -38,7 +38,9 @@ const personName = (names, personType) => {
   const nameParts = [selectedName.givenName, selectedName.patronymicName, selectedName.familyName].filter(
     (namePart) => namePart !== null
   );
-  return nameParts.join(' ');
+  if (nameParts.filter((name) => name).length > 0) {
+    return nameParts.join(' ');
+  } else return 'Unnamed Person';
 };
 
 let iconType = (nodeType) => {
