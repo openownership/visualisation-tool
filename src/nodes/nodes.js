@@ -67,7 +67,7 @@ export const getPersonNodes = (bodsData) => {
       .filter((statement) => statement.statementType === 'personStatement')
       .map((statement) => {
         const { statementID, names, personType, nationalities = null } = statement;
-        const countryCode = nationalities ? sanitise(nationalities[0].code) : null;
+        const countryCode = nationalities && nationalities[0].code ? sanitise(nationalities[0].code) : null;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
         const personLabel =
           names && names.length > 0 && personType
