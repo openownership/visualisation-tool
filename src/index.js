@@ -198,15 +198,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   });
 
   // define the additional curves and text for ownership and control edges
-  const createOwnershipCurve = (
-    element,
-    index,
-    shareStroke,
-    curveOffset,
-    ended,
-    dashedInterest,
-    arrowheadShape
-  ) => {
+  const createOwnershipCurve = (element, index, shareStroke, curveOffset, dashedInterest, arrowheadShape) => {
     d3.select(element)
       .attr('style', 'opacity: 0;')
       .clone(true)
@@ -219,7 +211,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         'style',
         `fill: none; stroke: #652eb1; stroke-width: ${shareStroke}px; ${
           dashedInterest ? 'stroke-dasharray: 20,12' : ''
-        }; opacity: ${ended ? '0.3' : '1'}`
+        };`
       )
       .each(function () {
         const path = d3.select(this);
@@ -242,15 +234,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       });
   };
 
-  const createControlCurve = (
-    element,
-    index,
-    controlStroke,
-    curveOffset,
-    ended,
-    dashedInterest,
-    arrowheadShape
-  ) => {
+  const createControlCurve = (element, index, controlStroke, curveOffset, dashedInterest, arrowheadShape) => {
     d3.select(element)
       .attr('style', 'opacity: 0;')
       .clone(true)
@@ -263,8 +247,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         'style',
         `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px; ${
           dashedInterest ? 'stroke-dasharray: 20,12' : ''
-        };
-        opacity: ${ended ? '0.3' : '1'}`
+        };`
       )
       .each(function () {
         const path = d3.select(this);
@@ -377,27 +360,23 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
     const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
-      const ended = shareholding ? shareholding.ended : false;
       const arrowheadShape = 'votingRights' in interests ? 'half' : 'full';
       createOwnershipCurve(
         element,
         index,
         shareStroke,
         shareOffset,
-        ended,
         checkInterests(interestRelationship),
         arrowheadShape
       );
     }
     if ('votingRights' in interests) {
-      const ended = votingRights ? votingRights.ended : false;
       const arrowheadShape = 'shareholding' in interests ? 'half' : 'full';
       createControlCurve(
         element,
         index,
         controlStroke,
         controlOffset,
-        ended,
         checkInterests(interestRelationship),
         arrowheadShape
       );
