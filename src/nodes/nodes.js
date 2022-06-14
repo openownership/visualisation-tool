@@ -95,7 +95,7 @@ export const getEntityNodes = (bodsData) => {
         const {
           statementID,
           name,
-          entityType,
+          entityType = 'unknown',
           publicListing = null,
           incorporatedInJurisdiction = null,
           jurisdiction = null,
@@ -109,8 +109,7 @@ export const getEntityNodes = (bodsData) => {
           ? sanitise(jurisdiction.code)
           : null;
         const replaces = statement.replacesStatements ? statement.replacesStatements : [];
-        const nodeType =
-          entityType && publicListing?.hasPublicListing !== true ? entityType : 'registeredEntityListed';
+        const nodeType = publicListing?.hasPublicListing !== true ? entityType : 'registeredEntityListed';
         return {
           id: statementID,
           label: generateNodeLabel(name || ''),
