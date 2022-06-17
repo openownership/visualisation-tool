@@ -11,6 +11,7 @@ import SVGInjectInstance from '@iconfu/svg-inject';
 import interestTypesCodelist from './codelists/interestTypes';
 
 import './style.css';
+import { path } from 'd3';
 
 const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const g = new dagreD3.graphlib.Graph({});
@@ -100,6 +101,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     }
   });
 
+  // This section needs some TLC, much repetition
   svg
     .append('filter')
     .attr('id', 'shadow')
@@ -114,11 +116,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('flood-color', '#000')
     .attr('flood-opacity', 1);
 
-  // create arrowhead markers for edge termination
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-control-half')
+    .attr('id', 'arrow-control-Half')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 3.8)
@@ -134,7 +135,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-control-full')
+    .attr('id', 'arrow-control-Full')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 5)
@@ -150,7 +151,39 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-own-half')
+    .attr('id', 'arrow-control-blackHalf')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 5)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#000');
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-control-blackFull')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 5)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#000');
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-own-Half')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 6.1)
@@ -166,7 +199,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-own-full')
+    .attr('id', 'arrow-own-Full')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 5)
@@ -182,7 +215,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-own-black')
+    .attr('id', 'arrow-own-blackHalf')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 6.1)
@@ -198,7 +231,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   svg
     .append('defs')
     .append('marker')
-    .attr('id', 'arrow-control-black')
+    .attr('id', 'arrow-own-blackFull')
     .attr('viewBox', [0, 0, 10, 10])
     .attr('refX', 8)
     .attr('refY', 5)
@@ -207,7 +240,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('markerHeight', 40)
     .attr('orient', 'auto-start-reverse')
     .append('path')
-    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
+    .attr('d', 'M 0 10 L 10 5 L 0 0 z')
     .attr('stroke', 'none')
     .attr('fill', '#000');
 
@@ -283,8 +316,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     dashedInterest,
     arrowheadShape
   ) => {
-    console.log(arrowheadShape);
-    console.log(positiveStroke);
     d3.select(element)
       .attr('style', 'opacity: 0;')
       .clone(true)
@@ -410,8 +441,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
     const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
-      const arrowheadShape = shareStroke === 0 ? 'black' : 'votingRights' in interests ? 'half' : 'full';
-      const strokeValue = shareStroke === 0 ? '#000' : '#349aee';
+      const arrowheadColour = shareStroke === 0 ? 'black' : '';
+      const arrowheadShape = `${arrowheadColour}${'votingRights' in interests ? 'Half' : 'Full'}`;
+      const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
       const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
       createOwnershipCurve(
         element,
@@ -424,7 +456,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       );
     }
     if ('votingRights' in interests) {
-      const arrowheadShape = controlStroke === 0 ? 'black' : 'shareholding' in interests ? 'half' : 'full';
+      const arrowheadColour = controlStroke === 0 ? 'black' : '';
+      const arrowheadShape = `${arrowheadColour}${'votingRights' in interests ? 'Half' : 'Full'}`;
       const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
       const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
       createControlCurve(
