@@ -29,20 +29,22 @@ const getStroke = (shareValues) => {
       return DEFAULT_STROKE;
     }
   } else {
-    return exact > 0 ? exact / 10 : 1;
+    return exact;
   }
 };
 
 const getText = (shareValues, type) => {
   const { exact, minimum, maximum } = shareValues || {};
-  if (exact === undefined) {
+  if (exact === undefined && minimum !== maximum) {
     if (minimum !== undefined && maximum !== undefined) {
       return `${type} ${minimum} - ${maximum}%`;
     } else {
       return ``;
     }
-  } else {
+  } else if (exact !== undefined) {
     return `${type} ${exact}%`;
+  } else {
+    return `${type} ${minimum}%`;
   }
 };
 
