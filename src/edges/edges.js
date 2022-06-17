@@ -29,7 +29,7 @@ const getStroke = (shareValues) => {
       return DEFAULT_STROKE;
     }
   } else {
-    return exact;
+    return exact / 10;
   }
 };
 
