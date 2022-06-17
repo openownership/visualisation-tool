@@ -179,6 +179,38 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('stroke', 'none')
     .attr('fill', '#652eb1');
 
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-own-black')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 6.1)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 10 L 10 5 L 0 5 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#000');
+
+  svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-control-black')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 5)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#000');
+
   // Create white backgrounds for all of the labels
   d3.selectAll('.label').each(function (d, i) {
     const label = d3.select(this);
@@ -198,7 +230,15 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   });
 
   // define the additional curves and text for ownership and control edges
-  const createOwnershipCurve = (element, index, shareStroke, curveOffset, dashedInterest, arrowheadShape) => {
+  const createOwnershipCurve = (
+    element,
+    index,
+    positiveStroke,
+    strokeValue,
+    curveOffset,
+    dashedInterest,
+    arrowheadShape
+  ) => {
     d3.select(element)
       .attr('style', 'opacity: 0;')
       .clone(true)
@@ -209,7 +249,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr('marker-end', `url(#arrow-own-${arrowheadShape})`)
       .attr(
         'style',
-        `fill: none; stroke: #652eb1; stroke-width: ${shareStroke}px; ${
+        `fill: none; stroke: ${strokeValue}; stroke-width: ${positiveStroke}px; ${
           dashedInterest ? 'stroke-dasharray: 20,12' : ''
         };`
       )
@@ -234,7 +274,17 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       });
   };
 
-  const createControlCurve = (element, index, controlStroke, curveOffset, dashedInterest, arrowheadShape) => {
+  const createControlCurve = (
+    element,
+    index,
+    positiveStroke,
+    strokeValue,
+    curveOffset,
+    dashedInterest,
+    arrowheadShape
+  ) => {
+    console.log(arrowheadShape);
+    console.log(positiveStroke);
     d3.select(element)
       .attr('style', 'opacity: 0;')
       .clone(true)
@@ -245,7 +295,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr('marker-end', `url(#arrow-control-${arrowheadShape})`)
       .attr(
         'style',
-        `fill: none; stroke: #349aee; stroke-width: 1px; stroke-width: ${controlStroke}px; ${
+        `fill: none; stroke: ${strokeValue}; stroke-width: 1px; stroke-width: ${positiveStroke}px; ${
           dashedInterest ? 'stroke-dasharray: 20,12' : ''
         };`
       )
@@ -360,22 +410,28 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
     const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
-      const arrowheadShape = 'votingRights' in interests ? 'half' : 'full';
+      const arrowheadShape = shareStroke === 0 ? 'black' : 'votingRights' in interests ? 'half' : 'full';
+      const strokeValue = shareStroke === 0 ? '#000' : '#349aee';
+      const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
       createOwnershipCurve(
         element,
         index,
-        shareStroke,
+        positiveStroke,
+        strokeValue,
         shareOffset,
         checkInterests(interestRelationship),
         arrowheadShape
       );
     }
     if ('votingRights' in interests) {
-      const arrowheadShape = 'shareholding' in interests ? 'half' : 'full';
+      const arrowheadShape = controlStroke === 0 ? 'black' : 'shareholding' in interests ? 'half' : 'full';
+      const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
+      const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
       createControlCurve(
         element,
         index,
-        controlStroke,
+        positiveStroke,
+        strokeValue,
         controlOffset,
         checkInterests(interestRelationship),
         arrowheadShape
