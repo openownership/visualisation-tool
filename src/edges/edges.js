@@ -22,7 +22,7 @@ const getInterests = (interests) => {
 
 const getStroke = (shareValues) => {
   const { exact, minimum, maximum } = shareValues || {};
-  if (exact === undefined) {
+  if (exact === undefined && minimum <= maximum) {
     if (minimum !== undefined && maximum !== undefined) {
       return (minimum + maximum) / 2 / 10;
     } else {
@@ -35,7 +35,7 @@ const getStroke = (shareValues) => {
 
 const getText = (shareValues, type) => {
   const { exact, minimum, maximum } = shareValues || {};
-  if (exact === undefined && minimum !== maximum) {
+  if (exact === undefined && minimum < maximum) {
     if (minimum !== undefined && maximum !== undefined) {
       return `${type} ${minimum} - ${maximum}%`;
     } else {
