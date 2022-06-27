@@ -11,7 +11,6 @@ import SVGInjectInstance from '@iconfu/svg-inject';
 import interestTypesCodelist from './codelists/interestTypes';
 
 import './style.css';
-import { path } from 'd3';
 
 const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const g = new dagreD3.graphlib.Graph({});
