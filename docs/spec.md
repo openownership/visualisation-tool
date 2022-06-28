@@ -5,16 +5,15 @@ This document outlines the functionality and requirements of the [BODS Visualise
 Refer to the full [BODS documentation](https://standard.openownership.org/en/0.3.0/) for more information (and the associated [github repository](https://github.com/openownership/data-standard)). 
 
 
-
 ## Data requirements
 
-The visualiser requires a minimum set of data fields to produce a directed graph. It is not necessary for the supplied JSON data to be valid BODS data, but it must meet these minimum requirements.
+The visualiser requires JSON data with a minimum set of data fields to produce a directed graph. It is not necessary for the supplied JSON data to be valid BODS data, but it must meet these minimum requirements.
 
-This is not a full schema. The following tables represent the opinionated requirements of the visualiser. Any schema fields that are not present in the tables below are not currently used in the generation of graphs by the visualiser tool.
+This is not a full schema. The following tables represent the opinionated requirements of the visualiser. Any schema fields that are not present in the tables below are not currently used in the generation of graphs by the visualiser tool and will be ignored.
 
 
 ### Edges
-
+Edges are drawn using BODS (or BODS-like) [ownership or control statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#ownership-or-control-statement)
 
 <table>
   <tr>
@@ -54,7 +53,7 @@ This is not a full schema. The following tables represent the opinionated requir
    </td>
    <td>(Yes)
    </td>
-   <td>Must be connected to either a person or an entity
+   <td>Must contain a `statementID` from a person node or an entity node in the dataset
    </td>
   </tr>
   <tr>
@@ -62,19 +61,19 @@ This is not a full schema. The following tables represent the opinionated requir
    </td>
    <td>(Yes)
    </td>
-   <td>Must be connected to either a person or an entity
+   <td>Must contain a `statementID` from a person node or an entity node in the dataset
    </td>
   </tr>
   <tr>
-   <td>interestParty
+   <td>interestedParty
    </td>
    <td>No
    </td>
-   <td>Creates an unknown node if array is empty
+   <td>Creates an unknown node if object is empty (can contain either describedByPersonStatement or describedByEntityStatement)
    </td>
   </tr>
   <tr>
-   <td>interestParty.describedByPersonStatement
+   <td>interestedParty.describedByPersonStatement
    </td>
    <td>No
    </td>
@@ -82,7 +81,7 @@ This is not a full schema. The following tables represent the opinionated requir
    </td>
   </tr>
   <tr>
-   <td>interestParty.describedByEntityStatement
+   <td>interestedParty.describedByEntityStatement
    </td>
    <td>No
    </td>
@@ -106,7 +105,7 @@ This is not a full schema. The following tables represent the opinionated requir
    </td>
   </tr>
   <tr>
-   <td>interests.interestLevel (directOrIndirect)
+   <td>interests.interestLevel (BODS v0.2)/interests.directOrIndirect (BODS v0.3)
    </td>
    <td>No
    </td>
@@ -150,7 +149,7 @@ This is not a full schema. The following tables represent the opinionated requir
 
 
 ### Person Nodes
-
+Person nodes are drawn using BODS (or BODS-like) [person statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#person-statement)
 
 <table>
   <tr>
@@ -230,15 +229,15 @@ This is not a full schema. The following tables represent the opinionated requir
    </td>
    <td>No
    </td>
-   <td>No flags will be drawn if these data are missing. The visualiser only uses the first flag in the nationalities array.
+   <td>No flags will be drawn if these data are missing. The visualiser only uses the first nationality in the nationalities array.
    </td>
   </tr>
   <tr>
-   <td>nationalities[0].code
+   <td>nationalities.code
    </td>
    <td>No
    </td>
-   <td>No flag will be drawn if the country code is missing
+   <td>No flag will be drawn if the country code is missing. The visualiser only uses the first nationality in the nationalities array.
    </td>
   </tr>
 </table>
@@ -246,7 +245,7 @@ This is not a full schema. The following tables represent the opinionated requir
 
 
 ### Entity Nodes
-
+Entity nodes are drawn using BODS (or BODS-like) [entity statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#entity-statement).
 
 <table>
   <tr>
@@ -298,11 +297,19 @@ This is not a full schema. The following tables represent the opinionated requir
    </td>
   </tr>
   <tr>
-   <td>incorporatedInJurisdiction [jurisdiction]
+   <td>incorporatedInJurisdiction (BODS v0.2)/jurisdiction (BODS v0.3)
    </td>
    <td>No
    </td>
-   <td>No flags are drawn if this field is missing
+   <td>No flags are drawn if this field is missing.
+   </td>
+  </tr>
+  <tr>
+   <td>jurisdiction.code
+   </td>
+   <td>No
+   </td>
+   <td>No flags are drawn if this field is missing.
    </td>
   </tr>
 </table>
