@@ -13,7 +13,7 @@ This is not a full schema. The following tables represent the opinionated requir
 
 
 ### Edges
-'Edges are drawn using BODS (or BODS-like) [ownership or control statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#ownership-or-control-statement)'
+Edges are drawn using BODS (or BODS-like) [ownership or control statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#ownership-or-control-statement)
 
 <table>
   <tr>
@@ -149,7 +149,7 @@ This is not a full schema. The following tables represent the opinionated requir
 
 
 ### Person Nodes
-Suggest adding 'Person nodes are drawn using BODS (or BODS-like) [person statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#person-statement)'
+Person nodes are drawn using BODS (or BODS-like) [person statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#person-statement)
 
 <table>
   <tr>
@@ -245,7 +245,7 @@ Suggest adding 'Person nodes are drawn using BODS (or BODS-like) [person stateme
 
 
 ### Entity Nodes
-Suggest adding 'Entity nodes are drawn using BODS (or BODS-like) [entity statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#entity-statement).
+Entity nodes are drawn using BODS (or BODS-like) [entity statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#entity-statement).
 
 <table>
   <tr>
