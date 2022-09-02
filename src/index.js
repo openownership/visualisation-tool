@@ -94,26 +94,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         .attr('height', '50')
         .attr('x', '10')
         .attr('y', '-80')
-        .attr('style', 'background-color: "#000"')
-        .attr('filter', 'url(#shadow)')
         .attr('class', 'injectable flag');
     }
   });
-
-  // This section needs some TLC, much repetition
-  svg
-    .append('filter')
-    .attr('id', 'shadow')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', '110%')
-    .attr('height', '110%')
-    .append('feDropShadow')
-    .attr('dx', 0)
-    .attr('dy', 0)
-    .attr('stdDeviation', 20)
-    .attr('flood-color', '#000')
-    .attr('flood-opacity', 1);
 
   svg
     .append('defs')
@@ -518,9 +501,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   SVGInjectInstance(document.querySelectorAll('img.injectable')).then(() => {
     d3.selectAll('.flag')
       .insert('rect', ':first-child')
+      .attr('class', 'flag-bg')
       .attr('height', '100%')
       .attr('width', '100%')
-      .style('fill', 'white');
+      .attr('style', 'fill: white; stroke: black; stroke-width: 2px;');
   });
 
   d3.select('#zoom_in').on('click', function () {
