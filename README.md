@@ -4,7 +4,7 @@ BODS-Dagre is a small javascript library for automatic generation of directed
 graphs representing Beneficial Ownership Data for the web. It relies on d3,
 dagre-d3 and bezier-js to do all the heavy lifting.
 
-The tool accepts [Beneficial Ownership Data](http://standard.openownership.org/)
+The tool accepts [Beneficial Ownership Data Standard (BODS)](http://standard.openownership.org/)
 (JSON) as input and outputs SVG content on a webpage which contains the
 appropriate placeholder HTML.
 
