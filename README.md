@@ -5,7 +5,7 @@ graphs representing Beneficial Ownership Data for the web. It relies on d3,
 dagre-d3 and bezier-js to do all the heavy lifting.
 
 The tool accepts [Beneficial Ownership Data Standard (BODS)](http://standard.openownership.org/)
-(JSON) as input and outputs SVG content on a webpage which contains the
+JSON as an input and outputs SVG content on a webpage which contains the
 appropriate placeholder HTML.
 
 For a hosted version you can use directly, see [our main website's installation](https://www.openownership.org/en/publications/beneficial-ownership-visualisation-system/bods-data-visualiser/)
