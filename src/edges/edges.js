@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import latest from '../utils/bods';
 
+// This sets the style and shape of the edges using D3 parameters
 const EDGE_CONFIG = {
   style: 'fill: none; stroke: #000; stroke-width: 5px;',
   curve: d3.curveMonotoneX,

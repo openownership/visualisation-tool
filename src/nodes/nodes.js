@@ -2,6 +2,7 @@ import generateNodeLabel from './nodeSVGLabel';
 import latest from '../utils/bods';
 import sanitise from '../utils/sanitiser';
 
+// This will generate a node when there unknown fields
 const unknownNode = (nodeId) => {
   return {
     statementID: nodeId,
@@ -17,12 +18,14 @@ const nodeConfig = {
   style: 'opacity: 1; fill: #fff; stroke: #000; stroke-width: 4px;',
 };
 
+// This sets up the order in which names should be selected from the data
 const personName = (names, personType) => {
   const personTypes = ['individual', 'transliteration', 'alternative', 'birth', 'translation', 'former'];
   const selectedName = names
     .slice()
     .sort((a, b) => personTypes.indexOf(a.type) - personTypes.indexOf(b.type))[0];
 
+  // This creates the personType if the person is anonymous, unknown, or unanmed and describes the conditions for each
   if (Object.keys(selectedName).length === 0) {
     if (personType === 'anonymousPerson') {
       return 'Anonymous Person';
@@ -43,6 +46,7 @@ const personName = (names, personType) => {
   } else return 'Unnamed Person';
 };
 
+// These are a direct mapping from the nodetype to the respresentative SVG element
 let iconType = (nodeType) => {
   const iconFile = {
     knownPerson: 'bovs-person.svg',
@@ -61,6 +65,7 @@ let iconType = (nodeType) => {
   return iconFile ? iconFile : 'bovs-unknown.svg';
 };
 
+// This builds up the required person object from the BODS data, using the functions above
 export const getPersonNodes = (bodsData) => {
   return latest(
     bodsData
@@ -87,6 +92,7 @@ export const getPersonNodes = (bodsData) => {
   );
 };
 
+// This builds up the required entity object from the BODS data, using the functions above
 export const getEntityNodes = (bodsData) => {
   return latest(
     bodsData

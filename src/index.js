@@ -12,6 +12,7 @@ import interestTypesCodelist from './codelists/interestTypes';
 
 import './style.css';
 
+// This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
 const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
@@ -21,13 +22,14 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     ranksep: 300,
   });
 
-  // This section maps the incoming BODS data to the structures expected by Dagre
+  // These functions extract the BODS data that is required for drawing the graph
   const personNodes = getPersonNodes(data);
   const entityNodes = getEntityNodes(data);
   const ownershipEdges = getOwnershipEdges(data);
 
   const edges = [...ownershipEdges];
 
+  // Some of the edges have unknown sources then we map these to an inserted unknown node
   const unknownSubjects = edges.filter((edge, index) => {
     edge.source = edge.source === 'unknown' ? `unknown${index}` : edge.source;
     return edge.source === `unknown${index}`;
@@ -37,6 +39,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   });
   const nodes = [...personNodes, ...entityNodes, ...getPersonNodes(unknownNodes)];
 
+  // This section maps the incoming BODS data to the parameters expected by Dagre
   nodes.forEach((node) => {
     g.setNode(node.id, {
       label: node.label,
@@ -56,6 +59,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     })
   );
 
+  // This ensures that the graph is drawn on a clean slate
   clearSVG(container);
   const svg = d3.select('#bods-svg');
   const inner = svg.append('g');
@@ -66,7 +70,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
 
-  // create the nodetype injectable img elements
+  // create the nodetype injectable img elements used by an image injection library later
   inner.selectAll('g.node').each(function (d, i) {
     if (g.node(d).nodeType !== null) {
       d3.select(this)
@@ -98,6 +102,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     }
   });
 
+  // Set up a load of arrow heads and markers for bespoke edge formats
+  // This could probably be refactored into something less verbose but not essential
   svg
     .append('defs')
     .append('marker')
@@ -226,7 +232,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('stroke', 'none')
     .attr('fill', '#000');
 
-  // Create white backgrounds for all of the labels
+  // Create white backgrounds for all of the node labels so that text legible
+  // We don't currently do this for edge labels as there are complexities in shape, layout, and overlap
   d3.selectAll('.label').each(function (d, i) {
     const label = d3.select(this);
     const text = label.select('text');
@@ -244,7 +251,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .style('fill', 'white');
   });
 
-  // define the additional curves and text for ownership and control edges
+  // define the additional offset curves and text for ownership and control edges
   const createOwnershipCurve = (
     element,
     index,
@@ -453,9 +460,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       );
     }
 
+    // this creates the edge labels, and will allow the labels to be turned off if the node count exceeds the labelLimit
     const limitLabels = (createLabel) => g.nodeCount() < labelLimit && createLabel;
 
-    // this creates the edge labels, and will allow the labels to be turned off if the node count exceeds the labelLimit
     limitLabels(createControlText(index, controlText));
     limitLabels(createOwnText(index, shareText));
 
@@ -498,6 +505,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .scale(initialScale)
   );
 
+  // This is the SVG injection library mentioned earlier - this allows SVGs to be injected directly from source
   SVGInjectInstance(document.querySelectorAll('img.injectable')).then(() => {
     d3.selectAll('.flag')
       .insert('rect', ':first-child')
@@ -507,6 +515,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr('style', 'fill: white; stroke: black; stroke-width: 2px;');
   });
 
+  // Some graph functionality - zoom, download, etc
   d3.select('#zoom_in').on('click', function () {
     zoom.scaleBy(svg.transition().duration(750), 1.2);
   });

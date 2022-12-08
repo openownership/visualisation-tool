@@ -1,4 +1,5 @@
 // This is currently a mix of the interestType codelists from v0.3 and earlier
+// N.B. Not respresentative of a single BODS version. This is to ensure backwards compatibility.
 export default {
   shareholding: 'Shareholding',
   votingRights: 'Voting rights',
