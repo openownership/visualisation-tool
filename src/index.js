@@ -227,7 +227,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     .attr('fill', '#000');
 
   // Create white backgrounds for all of the labels
-  d3.selectAll('.label').each(function (d, i) {
+  d3.selectAll('.edgeLabels .edgeLabel .label, .nodes .node .label').each(function (d, i) {
     const label = d3.select(this);
     const text = label.select('text');
     const textParent = text.select(function () {
