@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
 import Bezier from 'bezier-js';
 import bezierBuilder from './utils/bezierBuilder';
-import sanitise from './utils/sanitiser';
 import { clearSVG } from './utils/svgTools';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
@@ -352,7 +351,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         return '#controlText' + index;
       })
       .attr('startOffset', '50%')
-      .text(sanitise(controlText))
+      .text(controlText)
       .style('fill', '#349aee');
   };
 
@@ -369,7 +368,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         return '#ownText' + index;
       })
       .attr('startOffset', '50%')
-      .text(sanitise(shareText))
+      .text(shareText)
       .style('fill', '#652eb1');
   };
 
