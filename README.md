@@ -103,3 +103,7 @@ If the country is not present or is not recognised then no flag will be displaye
 ## Development
 
 Please see the [developer guide](./DEVELOPER.md) for more information.
+
+## Specification
+
+Please see the [visualiser specification](docs/spec.md) for an outline of functionality and requirements.
