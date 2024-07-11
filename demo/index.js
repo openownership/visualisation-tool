@@ -1,5 +1,6 @@
 import { draw } from '../src/index';
 import { clearSVG } from '../src/utils/svgTools';
+import { parse } from '../src/parse/parse';
 import './demo.css';
 
 const clearDrawing = () => {
@@ -19,26 +20,30 @@ const readFile = (file) => {
 
 const getJSON = async () => {
   clearDrawing();
-  const files = document.getElementById('selectFiles').files;
+  let data;
+  var files = document.getElementById('selectFiles').files;
+
   if (files.length <= 0) {
-    return false;
+    // Parse inline data
+    data = parse(document.getElementById('result').value);
+  } else {
+    // Parse file data
+    const file = await readFile(files.item(0));
+    data = parse(file);
   }
 
-  const file = await readFile(files.item(0));
-  const result = JSON.parse(file);
-  const formatted = JSON.stringify(result, null, 2);
-  document.getElementById('result').value = formatted;
-  visualiseData();
+  visualiseData(data);
 };
 
-const visualiseData = () => {
-  clearDrawing();
-  const data = JSON.parse(document.getElementById('result').value);
-  draw(data, document.getElementById('svg-holder'), 'images', 100);
+const visualiseData = (data) => {
+  // Render data as text
+  document.getElementById('result').value = data.formatted;
+  // Render data as graph
+  draw(data.parsed, document.getElementById('svg-holder'), 'images', 100);
 };
 
 window.onload = () => {
   document.getElementById('svg-clear').addEventListener('click', clearDrawing, true);
   document.getElementById('import').addEventListener('click', getJSON, true);
-  document.getElementById('draw-vis').addEventListener('click', visualiseData, true);
+  document.getElementById('draw-vis').addEventListener('click', getJSON, true);
 };
