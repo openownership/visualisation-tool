@@ -6,23 +6,29 @@ const clearDrawing = () => {
   clearSVG(document.getElementById('svg-holder'));
 };
 
-const getJSON = () => {
+// Read file asynchronously
+const readFile = (file) => {
+  return new Promise((resolve) => {
+    const fr = new FileReader();
+    fr.onload = function (e) {
+      resolve(e.target.result);
+    };
+    fr.readAsText(file);
+  });
+};
+
+const getJSON = async () => {
   clearDrawing();
   var files = document.getElementById('selectFiles').files;
   if (files.length <= 0) {
     return false;
   }
 
-  var fr = new FileReader();
-
-  fr.onload = function (e) {
-    var result = JSON.parse(e.target.result);
-    var formatted = JSON.stringify(result, null, 2);
-    document.getElementById('result').value = formatted;
-    visualiseData();
-  };
-
-  fr.readAsText(files.item(0));
+  const file = await readFile(files.item(0));
+  var result = JSON.parse(file);
+  var formatted = JSON.stringify(result, null, 2);
+  document.getElementById('result').value = formatted;
+  visualiseData();
 };
 
 const visualiseData = () => {
