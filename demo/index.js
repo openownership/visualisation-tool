@@ -19,14 +19,14 @@ const readFile = (file) => {
 
 const getJSON = async () => {
   clearDrawing();
-  var files = document.getElementById('selectFiles').files;
+  const files = document.getElementById('selectFiles').files;
   if (files.length <= 0) {
     return false;
   }
 
   const file = await readFile(files.item(0));
-  var result = JSON.parse(file);
-  var formatted = JSON.stringify(result, null, 2);
+  const result = JSON.parse(file);
+  const formatted = JSON.stringify(result, null, 2);
   document.getElementById('result').value = formatted;
   visualiseData();
 };
