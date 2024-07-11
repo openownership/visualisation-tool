@@ -5,33 +5,64 @@ var clearDrawing = function () {
   }
 };
 
-var getJSON = function () {
-  clearDrawing();
-  var files = document.getElementById('selectFiles').files;
-  if (files.length <= 0) {
-    return false;
+const parse = (data) => {
+  let parsed;
+
+  // Check data is valid JSON
+  try {
+    parsed = JSON.parse(data);
+  } catch (error) {
+    console.error(error);
+    return {};
   }
 
-  var fr = new FileReader();
+  // Format JSON consistently
+  const formatted = JSON.stringify(parsed, null, 2);
 
-  fr.onload = function (e) {
-    var result = JSON.parse(e.target.result);
-    var formatted = JSON.stringify(result, null, 2);
-    document.getElementById('result').value = formatted;
-    visualiseData();
+  // Return parsed and formatted JSON
+  return {
+    formatted,
+    parsed: JSON.parse(formatted),
   };
-
-  fr.readAsText(files.item(0));
 };
 
-var visualiseData = function () {
+// Read file asynchronously
+const readFile = (file) => {
+  return new Promise((resolve) => {
+    const fr = new FileReader();
+    fr.onload = function (e) {
+      resolve(e.target.result);
+    };
+    fr.readAsText(file);
+  });
+};
+
+const getJSON = async () => {
   clearDrawing();
-  var data = JSON.parse(document.getElementById('result').value);
-  BODSDagre.draw(data, document.getElementById('svg-holder'), '/visualisation-tool/images');
+  let data;
+  var files = document.getElementById('selectFiles').files;
+
+  if (files.length <= 0) {
+    // Parse inline data
+    data = parse(document.getElementById('result').value);
+  } else {
+    // Parse file data
+    const file = await readFile(files.item(0));
+    data = parse(file);
+  }
+
+  visualiseData(data);
 };
 
-window.onload = function () {
+const visualiseData = (data) => {
+  // Render data as text
+  document.getElementById('result').value = data.formatted;
+  // Render data as graph
+  BODSDagre.draw(data.parsed, document.getElementById('svg-holder'), 'images', 100);
+};
+
+window.onload = () => {
   document.getElementById('svg-clear').addEventListener('click', clearDrawing, true);
   document.getElementById('import').addEventListener('click', getJSON, true);
-  document.getElementById('draw-vis').addEventListener('click', visualiseData, true);
+  document.getElementById('draw-vis').addEventListener('click', getJSON, true);
 };
