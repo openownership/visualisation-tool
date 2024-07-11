@@ -1,13 +1,14 @@
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
 import Bezier from 'bezier-js';
+import SVGInjectInstance from '@iconfu/svg-inject';
+
 import bezierBuilder from './utils/bezierBuilder';
 import { clearSVG } from './utils/svgTools';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
-import { SvgSaver } from './utils/svgsaver';
-import SVGInjectInstance from '@iconfu/svg-inject';
 import interestTypesCodelist from './codelists/interestTypes';
+import { setupUI } from './render/setupUI';
 
 import './style.css';
 
@@ -513,29 +514,11 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .attr('style', 'fill: white; stroke: black; stroke-width: 2px;');
   });
 
-  // Some graph functionality - zoom, download, etc
-  d3.select('#zoom_in').on('click', function () {
-    zoom.scaleBy(svg.transition().duration(750), 1.2);
-  });
-  d3.select('#zoom_out').on('click', function () {
-    zoom.scaleBy(svg.transition().duration(750), 0.8);
-  });
-
   svg.attr('height', g.graph().height * initialScale + 400);
   svg.attr('width', g.graph().width * initialScale + 400);
   svg.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
-  d3.select('#download-svg').on('click', function () {
-    var svgsaver = new SvgSaver();
-    var svg = document.querySelector('#bods-svg');
-    svgsaver.asSvg(svg, 'bods.svg');
-  });
-
-  d3.select('#download-png').on('click', function () {
-    var svgsaver = new SvgSaver();
-    var svg = document.querySelector('#bods-svg');
-    svgsaver.asPng(svg, 'bods.png');
-  });
+  setupUI(zoom, svg);
 };
 
 export { draw };
