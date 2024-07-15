@@ -4,16 +4,18 @@ import Bezier from 'bezier-js';
 import SVGInjectInstance from '@iconfu/svg-inject';
 
 import bezierBuilder from './utils/bezierBuilder';
-import { clearSVG } from './utils/svgTools';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
-import { setupUI } from './render/setupUI';
+import { setupD3 } from './render/renderD3';
+import { setupUI } from './render/renderUI';
 
 import './style.css';
 
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
 const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
+  const { svg, inner } = setupD3(container);
+
   const g = new dagreD3.graphlib.Graph({});
   g.setGraph({
     rankdir: rankDir,
@@ -58,11 +60,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       ...edge.config,
     })
   );
-
-  // This ensures that the graph is drawn on a clean slate
-  clearSVG(container);
-  const svg = d3.select('#bods-svg');
-  const inner = svg.append('g');
 
   // Create the renderer
   const render = new dagreD3.render();
