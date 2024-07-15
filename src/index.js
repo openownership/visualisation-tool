@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import dagreD3 from 'dagre-d3';
 import Bezier from 'bezier-js';
 import SVGInjectInstance from '@iconfu/svg-inject';
 
@@ -8,21 +7,16 @@ import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
 import { setupD3 } from './render/renderD3';
+import { setupGraph } from './render/renderGraph';
 import { setupUI } from './render/renderUI';
 
 import './style.css';
 
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
 const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
+  // Initialise D3 and graph
   const { svg, inner } = setupD3(container);
-
-  const g = new dagreD3.graphlib.Graph({});
-  g.setGraph({
-    rankdir: rankDir,
-    nodesep: 200,
-    edgesep: 25,
-    ranksep: 300,
-  });
+  const { g, render } = setupGraph(rankDir);
 
   // These functions extract the BODS data that is required for drawing the graph
   const personNodes = getPersonNodes(data);
@@ -60,9 +54,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       ...edge.config,
     })
   );
-
-  // Create the renderer
-  const render = new dagreD3.render();
 
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
