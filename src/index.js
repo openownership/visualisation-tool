@@ -6,7 +6,7 @@ import bezierBuilder from './utils/bezierBuilder';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
-import { setupD3 } from './render/renderD3';
+import { setupD3, defineArrowHeads } from './render/renderD3';
 import { setupGraph } from './render/renderGraph';
 import { setupUI } from './render/renderUI';
 
@@ -17,6 +17,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   // Initialise D3 and graph
   const { svg, inner } = setupD3(container);
   const { g, render } = setupGraph(rankDir);
+
+  defineArrowHeads(svg);
 
   // These functions extract the BODS data that is required for drawing the graph
   const personNodes = getPersonNodes(data);
@@ -89,136 +91,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         .attr('class', 'injectable flag');
     }
   });
-
-  // Set up a load of arrow heads and markers for bespoke edge formats
-  // This could probably be refactored into something less verbose but not essential
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-control-Half')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 3.8)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 0 L 10 5 L 0 5 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#349aee');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-control-Full')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 5)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#349aee');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-control-blackHalf')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 5)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#000');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-control-blackFull')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 5)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 0 L 10 5 L 0 10 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#000');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-own-Half')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 6.1)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 10 L 10 5 L 0 5 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#652eb1');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-own-Full')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 5)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 10 L 10 5 L 0 0 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#652eb1');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-own-blackHalf')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 6.1)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 10 L 10 5 L 0 5 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#000');
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow-own-blackFull')
-    .attr('viewBox', [0, 0, 10, 10])
-    .attr('refX', 8)
-    .attr('refY', 5)
-    .attr('markerUnits', 'userSpaceOnUse')
-    .attr('markerWidth', 40)
-    .attr('markerHeight', 40)
-    .attr('orient', 'auto-start-reverse')
-    .append('path')
-    .attr('d', 'M 0 10 L 10 5 L 0 0 z')
-    .attr('stroke', 'none')
-    .attr('fill', '#000');
 
   // Create white backgrounds for all of the node labels so that text legible
   d3.selectAll('.edgeLabels .edgeLabel .label, .nodes .node .label').each(function (d, i) {
