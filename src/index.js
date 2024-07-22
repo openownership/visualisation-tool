@@ -1,12 +1,18 @@
 import * as d3 from 'd3';
-import Bezier from 'bezier-js';
 import SVGInjectInstance from '@iconfu/svg-inject';
 
-import bezierBuilder from './utils/bezierBuilder';
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
-import { setupD3, defineArrowHeads } from './render/renderD3';
+import {
+  setupD3,
+  defineArrowHeads,
+  createOwnershipCurve,
+  createControlCurve,
+  createControlText,
+  createOwnText,
+  createUnknownText,
+} from './render/renderD3';
 import { setupGraph } from './render/renderGraph';
 import { setupUI } from './render/renderUI';
 
@@ -110,157 +116,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .style('fill', 'white');
   });
 
-  // define the additional offset curves and text for ownership and control edges
-  const createOwnershipCurve = (
-    element,
-    index,
-    positiveStroke,
-    strokeValue,
-    curveOffset,
-    dashedInterest,
-    arrowheadShape
-  ) => {
-    d3.select(element)
-      .attr('style', 'opacity: 0;')
-      .clone(true)
-      .attr('style', 'opacity: 1;')
-      .attr('class', 'edgePath own')
-      .select('path')
-      .attr('id', (d, i) => 'ownPath' + index)
-      .attr('marker-end', `url(#arrow-own-${arrowheadShape})`)
-      .attr(
-        'style',
-        `fill: none; stroke: ${strokeValue}; stroke-width: ${positiveStroke}px; ${
-          dashedInterest ? 'stroke-dasharray: 20,12' : ''
-        };`
-      )
-      .each(function () {
-        const path = d3.select(this);
-        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-        const offsetCurve = newBezier.offset(curveOffset);
-        path.attr('d', bezierBuilder(offsetCurve));
-      });
-
-    d3.select(element)
-      .clone(true)
-      .select('.path')
-      .attr('id', (d, i) => 'ownText' + index)
-      .attr('style', 'fill: none;')
-      .attr('marker-end', '')
-      .each(function () {
-        const path = d3.select(this);
-        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-        const offsetCurve = newBezier.offset(25);
-        path.attr('d', bezierBuilder(offsetCurve));
-      });
-  };
-
-  const createControlCurve = (
-    element,
-    index,
-    positiveStroke,
-    strokeValue,
-    curveOffset,
-    dashedInterest,
-    arrowheadShape
-  ) => {
-    d3.select(element)
-      .attr('style', 'opacity: 0;')
-      .clone(true)
-      .attr('style', 'opacity: 1;')
-      .attr('class', 'edgePath control')
-      .select('.path')
-      .attr('id', (d, i) => 'controlPath' + index)
-      .attr('marker-end', `url(#arrow-control-${arrowheadShape})`)
-      .attr(
-        'style',
-        `fill: none; stroke: ${strokeValue}; stroke-width: 1px; stroke-width: ${positiveStroke}px; ${
-          dashedInterest ? 'stroke-dasharray: 20,12' : ''
-        };`
-      )
-      .each(function () {
-        const path = d3.select(this);
-        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-        const offsetCurve = newBezier.offset(curveOffset);
-        path.attr('d', bezierBuilder(offsetCurve));
-      });
-
-    d3.select(element)
-      .clone(true)
-      .select('.path')
-      .attr('id', (d, i) => 'controlText' + index)
-      .attr('style', 'fill: none;')
-      .attr('marker-end', '')
-      .each(function () {
-        const path = d3.select(this);
-        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-        const offsetCurve = newBezier.offset(-15);
-        path.attr('d', bezierBuilder(offsetCurve));
-      });
-  };
-
-  const createControlText = (index, controlText) => {
-    svg
-      .select('.edgeLabels')
-      .append('g')
-      .attr('class', 'edgeLabel')
-      .append('text')
-      .attr('class', 'edgeText')
-      .attr('text-anchor', 'middle')
-      .append('textPath')
-      .attr('xlink:href', function (d, i) {
-        return '#controlText' + index;
-      })
-      .attr('startOffset', '50%')
-      .text(controlText)
-      .style('fill', '#349aee');
-  };
-
-  const createOwnText = (index, shareText) => {
-    svg
-      .select('.edgeLabels')
-      .append('g')
-      .attr('class', 'edgeLabel')
-      .append('text')
-      .attr('class', 'edgeText')
-      .attr('text-anchor', 'middle')
-      .append('textPath')
-      .attr('xlink:href', function (d, i) {
-        return '#ownText' + index;
-      })
-      .attr('startOffset', '50%')
-      .text(shareText)
-      .style('fill', '#652eb1');
-  };
-
-  const createUnknownText = (index, element) => {
-    d3.select(element)
-      .clone(true)
-      .select('path')
-      .attr('id', `unknown${index}`)
-      .attr('style', 'fill: none;')
-      .attr('marker-end', '')
-      .each(function () {
-        const path = d3.select(this);
-        const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-        const offsetCurve = newBezier.offset(-10);
-        path.attr('d', bezierBuilder(offsetCurve));
-      });
-    svg
-      .select('.edgeLabels')
-      .append('g')
-      .attr('class', 'edgeLabel')
-      .append('text')
-      .attr('class', 'edgeText')
-      .attr('text-anchor', 'middle')
-      .append('textPath')
-      .attr('xlink:href', function (d, i) {
-        return '#unknown' + index;
-      })
-      .attr('startOffset', '50%')
-      .text(`Interest details unknown`);
-  };
-
   // use the previous function to calculate the new edges using control and ownership values
   // this section could do with a refactor and move more of the logic into edges.js
   edges.forEach((edge, index) => {
@@ -322,8 +177,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     // this creates the edge labels, and will allow the labels to be turned off if the node count exceeds the labelLimit
     const limitLabels = (createLabel) => g.nodeCount() < labelLimit && createLabel;
 
-    limitLabels(createControlText(index, controlText));
-    limitLabels(createOwnText(index, shareText));
+    limitLabels(createControlText(svg, index, controlText));
+    limitLabels(createOwnText(svg, index, shareText));
 
     // The unknown interest labels are drawn when the interest type is set to 'unknownInterest' or the data are missing
     // No label is displayed if the interestType is within the interestType codelist but is not shareholding or votingRights
@@ -332,7 +187,7 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
         !Object.keys(interests).some((type) => Object.keys(interestTypesCodelist).includes(type))) ||
       (Object.keys(interests).length === 1 && Object.keys(interests)[0] === 'unknownInterest')
     ) {
-      limitLabels(createUnknownText(index, element));
+      limitLabels(createUnknownText(svg, index, element));
     }
 
     // This removes the markers from any edges that have either ownership or control
