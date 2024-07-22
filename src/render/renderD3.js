@@ -1,4 +1,6 @@
 import * as d3 from 'd3';
+import Bezier from 'bezier-js';
+import bezierBuilder from '../utils/bezierBuilder';
 import { clearSVG } from '../utils/svgTools';
 
 export const setupD3 = (container) => {
@@ -154,4 +156,155 @@ export const defineArrowHeads = (svg) => {
     ownBlackHalf,
     ownBlackFull,
   };
+};
+
+// define the additional offset curves and text for ownership and control edges
+export const createOwnershipCurve = (
+  element,
+  index,
+  positiveStroke,
+  strokeValue,
+  curveOffset,
+  dashedInterest,
+  arrowheadShape
+) => {
+  d3.select(element)
+    .attr('style', 'opacity: 0;')
+    .clone(true)
+    .attr('style', 'opacity: 1;')
+    .attr('class', 'edgePath own')
+    .select('path')
+    .attr('id', (d, i) => 'ownPath' + index)
+    .attr('marker-end', `url(#arrow-own-${arrowheadShape})`)
+    .attr(
+      'style',
+      `fill: none; stroke: ${strokeValue}; stroke-width: ${positiveStroke}px; ${
+        dashedInterest ? 'stroke-dasharray: 20,12' : ''
+      };`
+    )
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(curveOffset);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+
+  d3.select(element)
+    .clone(true)
+    .select('.path')
+    .attr('id', (d, i) => 'ownText' + index)
+    .attr('style', 'fill: none;')
+    .attr('marker-end', '')
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(25);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+};
+
+export const createControlCurve = (
+  element,
+  index,
+  positiveStroke,
+  strokeValue,
+  curveOffset,
+  dashedInterest,
+  arrowheadShape
+) => {
+  d3.select(element)
+    .attr('style', 'opacity: 0;')
+    .clone(true)
+    .attr('style', 'opacity: 1;')
+    .attr('class', 'edgePath control')
+    .select('.path')
+    .attr('id', (d, i) => 'controlPath' + index)
+    .attr('marker-end', `url(#arrow-control-${arrowheadShape})`)
+    .attr(
+      'style',
+      `fill: none; stroke: ${strokeValue}; stroke-width: 1px; stroke-width: ${positiveStroke}px; ${
+        dashedInterest ? 'stroke-dasharray: 20,12' : ''
+      };`
+    )
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(curveOffset);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+
+  d3.select(element)
+    .clone(true)
+    .select('.path')
+    .attr('id', (d, i) => 'controlText' + index)
+    .attr('style', 'fill: none;')
+    .attr('marker-end', '')
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(-15);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+};
+
+export const createControlText = (svg, index, controlText) => {
+  svg
+    .select('.edgeLabels')
+    .append('g')
+    .attr('class', 'edgeLabel')
+    .append('text')
+    .attr('class', 'edgeText')
+    .attr('text-anchor', 'middle')
+    .append('textPath')
+    .attr('xlink:href', function (d, i) {
+      return '#controlText' + index;
+    })
+    .attr('startOffset', '50%')
+    .text(controlText)
+    .style('fill', '#349aee');
+};
+
+export const createOwnText = (svg, index, shareText) => {
+  svg
+    .select('.edgeLabels')
+    .append('g')
+    .attr('class', 'edgeLabel')
+    .append('text')
+    .attr('class', 'edgeText')
+    .attr('text-anchor', 'middle')
+    .append('textPath')
+    .attr('xlink:href', function (d, i) {
+      return '#ownText' + index;
+    })
+    .attr('startOffset', '50%')
+    .text(shareText)
+    .style('fill', '#652eb1');
+};
+
+export const createUnknownText = (svg, index, element) => {
+  d3.select(element)
+    .clone(true)
+    .select('path')
+    .attr('id', `unknown${index}`)
+    .attr('style', 'fill: none;')
+    .attr('marker-end', '')
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(-10);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+  svg
+    .select('.edgeLabels')
+    .append('g')
+    .attr('class', 'edgeLabel')
+    .append('text')
+    .attr('class', 'edgeText')
+    .attr('text-anchor', 'middle')
+    .append('textPath')
+    .attr('xlink:href', function (d, i) {
+      return '#unknown' + index;
+    })
+    .attr('startOffset', '50%')
+    .text(`Interest details unknown`);
 };
