@@ -13,7 +13,7 @@ import {
   createOwnText,
   createUnknownText,
 } from './render/renderD3';
-import { setupGraph } from './render/renderGraph';
+import { setupGraph, setEdges, setNodes } from './render/renderGraph';
 import { setupUI } from './render/renderUI';
 
 import './style.css';
@@ -44,24 +44,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const nodes = [...personNodes, ...entityNodes, ...getPersonNodes(unknownNodes)];
 
   // This section maps the incoming BODS data to the parameters expected by Dagre
-  nodes.forEach((node) => {
-    g.setNode(node.id, {
-      label: node.label,
-      class: node.class || '',
-      labelType: node.labelType || 'string',
-      nodeType: node.nodeType,
-      countryCode: node.countryCode,
-      ...node.config,
-    });
-  });
-
-  edges.forEach((edge) =>
-    g.setEdge(edge.source, edge.target, {
-      class: edge.class || '',
-      edgeType: edge.interestRelationship,
-      ...edge.config,
-    })
-  );
+  setNodes(nodes, g);
+  setEdges(edges, g);
 
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
