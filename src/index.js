@@ -137,14 +137,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     }
   });
 
-  nodes.forEach((node, index) => {
-    const { id } = node;
-    const element = g.node(id).elem;
-    const elementD3 = d3.select(element);
-    const labelHeight = elementD3.select('.node-label').node().getBoundingClientRect().height;
-    elementD3.select('.label').attr('transform', `translate(0, ${labelHeight})`);
-  });
-
   // Set up zoom support
   const zoom = d3.zoom().on('zoom', () => {
     inner.attr('transform', d3.event.transform);
