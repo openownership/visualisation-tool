@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
-import { getOwnershipEdges } from './edges/edges';
+import { checkInterests, getOwnershipEdges } from './edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
 import {
   setupD3,
@@ -70,14 +70,12 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       shareText,
       controlStroke,
       controlText,
+      config,
     } = edge;
 
     const shareOffset = shareStroke / 2;
     const controlOffset = -(controlStroke / 2);
     const element = g.edge(source, target).elem;
-
-    const checkInterests = (interestRelationship) =>
-      interestRelationship === 'indirect' || interestRelationship === 'unknown' ? true : false;
 
     // set all indirect relationships to dashed lines
     if (checkInterests(interestRelationship)) {
@@ -86,33 +84,25 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
     const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
-      const arrowheadColour = shareStroke === 0 ? 'black' : '';
-      const arrowheadShape = `${arrowheadColour}${'votingRights' in interests ? 'Half' : 'Full'}`;
-      const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
-      const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
       createOwnershipCurve(
         element,
         index,
-        positiveStroke,
-        strokeValue,
+        config.share.positiveStroke,
+        config.share.strokeValue,
         shareOffset,
         checkInterests(interestRelationship),
-        arrowheadShape
+        config.share.arrowheadShape
       );
     }
     if ('votingRights' in interests) {
-      const arrowheadColour = controlStroke === 0 ? 'black' : '';
-      const arrowheadShape = `${arrowheadColour}${'votingRights' in interests ? 'Half' : 'Full'}`;
-      const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
-      const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
       createControlCurve(
         element,
         index,
-        positiveStroke,
-        strokeValue,
+        config.control.positiveStroke,
+        config.control.strokeValue,
         controlOffset,
         checkInterests(interestRelationship),
-        arrowheadShape
+        config.control.arrowheadShape
       );
     }
 

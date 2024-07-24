@@ -2,12 +2,12 @@ import * as d3 from 'd3';
 import latest from '../utils/bods';
 
 // This sets the style and shape of the edges using D3 parameters
-const EDGE_CONFIG = {
+const edgeConfig = {
   style: 'fill: none; stroke: #000; stroke-width: 5px;',
   curve: d3.curveMonotoneX,
 };
 
-const DEFAULT_STROKE = 5;
+const defaultStroke = 5;
 
 const getInterests = (interests) => {
   return !interests
@@ -27,7 +27,7 @@ const getStroke = (shareValues) => {
     if (minimum !== undefined && maximum !== undefined) {
       return (minimum + maximum) / 2 / 10;
     } else {
-      return DEFAULT_STROKE;
+      return defaultStroke;
     }
   } else {
     return exact / 10;
@@ -45,6 +45,10 @@ const getText = (shareValues, type) => {
   } else {
     return `${type} ${exact}%`;
   }
+};
+
+export const checkInterests = (interestRelationship) => {
+  return interestRelationship === 'indirect' || interestRelationship === 'unknown' ? true : false;
 };
 
 export const getOwnershipEdges = (bodsData) => {
@@ -75,6 +79,31 @@ export const getOwnershipEdges = (bodsData) => {
         const controlStroke = getStroke(votingRights);
         const controlText = getText(votingRights, 'Controls');
 
+        if ('shareholding' in mappedInterests) {
+          const arrowheadColour = shareStroke === 0 ? 'black' : '';
+          const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
+          const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
+          const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
+
+          edgeConfig.share = {
+            arrowheadShape,
+            strokeValue,
+            positiveStroke,
+          };
+        }
+        if ('votingRights' in mappedInterests) {
+          const arrowheadColour = controlStroke === 0 ? 'black' : '';
+          const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
+          const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
+          const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
+
+          edgeConfig.control = {
+            arrowheadShape,
+            strokeValue,
+            positiveStroke,
+          };
+        }
+
         return {
           id: statementID,
           interests: mappedInterests,
@@ -90,7 +119,7 @@ export const getOwnershipEdges = (bodsData) => {
           target: subject.describedByPersonStatement
             ? subject.describedByPersonStatement
             : subject.describedByEntityStatement,
-          config: EDGE_CONFIG,
+          config: edgeConfig,
           replaces: replaces,
         };
       })
