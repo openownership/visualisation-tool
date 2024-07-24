@@ -375,3 +375,26 @@ export const injectSVGElements = (imagesPath, inner, g) => {
     });
   }
 };
+
+export const setZoomTransform = (inner, svg, g) => {
+  // Set up zoom support
+  const zoom = d3.zoom().on('zoom', () => {
+    inner.attr('transform', d3.event.transform);
+  });
+  svg.call(zoom);
+
+  // Center the nodes
+  const initialScale = 0.5;
+  svg.call(
+    zoom.transform,
+    d3.zoomIdentity
+      .translate((svg.attr('width') * initialScale) / 2, (svg.attr('height') * initialScale) / 2)
+      .scale(initialScale)
+  );
+
+  svg.attr('height', g.graph().height * initialScale + 400);
+  svg.attr('width', g.graph().width * initialScale + 400);
+  svg.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+  return { zoom };
+};
