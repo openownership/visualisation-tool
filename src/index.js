@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import SVGInjectInstance from '@iconfu/svg-inject';
 
 import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
 import { getOwnershipEdges } from './edges/edges';
@@ -12,6 +11,8 @@ import {
   createControlText,
   createOwnText,
   createUnknownText,
+  setNodeLabelBkg,
+  injectSVGElements,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
 import { setupUI } from './render/renderUI';
@@ -50,57 +51,13 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   // Run the renderer. This is what draws the final graph.
   render(inner, g);
 
-  // create the nodetype injectable img elements used by an image injection library later
-  inner.selectAll('g.node').each(function (d, i) {
-    if (g.node(d).nodeType !== null) {
-      d3.select(this)
-        .append('img')
-        .attr('width', 120)
-        .attr('height', 120)
-        .attr('x', -60)
-        .attr('y', -60)
-        .attr('class', 'node-label label-container injectable')
-        .attr('src', function (d) {
-          return `${imagesPath}/${g.node(d).nodeType}`;
-        });
-    }
-  });
-
-  // create the flag injectable img elements
-  inner.selectAll('g.node').each(function (d, i) {
-    if (g.node(d).countryCode !== null) {
-      d3.select(this)
-        .append('img')
-        .attr('src', function (el) {
-          return `${imagesPath}/flags/${g.node(el).countryCode.toLowerCase()}.svg`;
-        })
-        .attr('width', '75')
-        .attr('height', '50')
-        .attr('x', '10')
-        .attr('y', '-80')
-        .attr('class', 'injectable flag');
-    }
-  });
+  // Inject SVG images (for use e.g. as flags)
+  injectSVGElements(imagesPath, inner, g);
 
   // Create white backgrounds for all of the node labels so that text legible
-  d3.selectAll('.edgeLabels .edgeLabel .label, .nodes .node .label').each(function (d, i) {
-    const label = d3.select(this);
-    const text = label.select('text');
-    const textParent = text.select(function () {
-      return this.parentNode;
-    });
-    const bBox = text.node().getBBox();
+  setNodeLabelBkg('white');
 
-    textParent
-      .insert('rect', ':first-child')
-      .attr('x', bBox.x)
-      .attr('y', bBox.y)
-      .attr('height', bBox.height)
-      .attr('width', bBox.width)
-      .style('fill', 'white');
-  });
-
-  // use the previous function to calculate the new edges using control and ownership values
+  // calculate the new edges using control and ownership values
   // this section could do with a refactor and move more of the logic into edges.js
   edges.forEach((edge, index) => {
     const {
@@ -202,16 +159,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
       .translate((svg.attr('width') * initialScale) / 2, (svg.attr('height') * initialScale) / 2)
       .scale(initialScale)
   );
-
-  // This is the SVG injection library mentioned earlier - this allows SVGs to be injected directly from source
-  SVGInjectInstance(document.querySelectorAll('img.injectable')).then(() => {
-    d3.selectAll('.flag')
-      .insert('rect', ':first-child')
-      .attr('class', 'flag-bg')
-      .attr('height', '100%')
-      .attr('width', '100%')
-      .attr('style', 'fill: white; stroke: black; stroke-width: 2px;');
-  });
 
   svg.attr('height', g.graph().height * initialScale + 400);
   svg.attr('width', g.graph().width * initialScale + 400);
