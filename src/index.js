@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import { getPersonNodes, getEntityNodes, setUnknownNode } from './nodes/nodes';
-import { checkInterests, getOwnershipEdges } from './edges/edges';
+import { getPersonNodes, getEntityNodes, setUnknownNode, getNodes } from './nodes/nodes';
+import { checkInterests, getEdges, getOwnershipEdges } from './edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
 import {
   setupD3,
@@ -28,22 +28,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
   defineArrowHeads(svg);
 
-  // These functions extract the BODS data that is required for drawing the graph
-  const personNodes = getPersonNodes(data);
-  const entityNodes = getEntityNodes(data);
-  const ownershipEdges = getOwnershipEdges(data);
-
-  const edges = [...ownershipEdges];
-
-  // Some of the edges have unknown sources then we map these to an inserted unknown node
-  const unknownSubjects = edges.filter((edge, index) => {
-    edge.source = edge.source === 'unknown' ? `unknown${index}` : edge.source;
-    return edge.source === `unknown${index}`;
-  });
-  const unknownNodes = unknownSubjects.map((unknownSubject) => {
-    return setUnknownNode(unknownSubject.source);
-  });
-  const nodes = [...personNodes, ...entityNodes, ...getPersonNodes(unknownNodes)];
+  // Extract the BODS data that is required for drawing the graph
+  const { edges } = getEdges(data);
+  const { nodes } = getNodes(data, edges);
 
   // This section maps the incoming BODS data to the parameters expected by Dagre
   setNodes(nodes, g);
