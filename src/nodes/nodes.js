@@ -131,3 +131,19 @@ export const getEntityNodes = (bodsData) => {
 };
 
 export const setUnknownNode = (source) => unknownNode(source);
+
+export const getNodes = (data, edges) => {
+  const personNodes = getPersonNodes(data);
+  const entityNodes = getEntityNodes(data);
+
+  // Some of the edges have unknown sources then we map these to an inserted unknown node
+  const unknownSubjects = edges.filter((edge, index) => {
+    edge.source = edge.source === 'unknown' ? `unknown${index}` : edge.source;
+    return edge.source === `unknown${index}`;
+  });
+  const unknownNodes = unknownSubjects.map((unknownSubject) => {
+    return setUnknownNode(unknownSubject.source);
+  });
+
+  return { nodes: [...personNodes, ...entityNodes, ...getPersonNodes(unknownNodes)] };
+};

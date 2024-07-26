@@ -125,3 +125,8 @@ export const getOwnershipEdges = (bodsData) => {
       })
   );
 };
+
+export const getEdges = (data) => {
+  const ownershipEdges = getOwnershipEdges(data);
+  return { edges: [...ownershipEdges] };
+};
