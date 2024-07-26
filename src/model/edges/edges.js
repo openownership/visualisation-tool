@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import latest from '../utils/bods';
+import latest from '../../utils/bods';
 
 // This sets the style and shape of the edges using D3 parameters
 const edgeConfig = {

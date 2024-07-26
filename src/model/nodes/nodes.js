@@ -1,6 +1,6 @@
 import generateNodeLabel from './nodeSVGLabel';
-import latest from '../utils/bods';
-import sanitise from '../utils/sanitiser';
+import latest from '../../utils/bods';
+import sanitise from '../../utils/sanitiser';
 
 // This will generate a node when there unknown fields
 const unknownNode = (nodeId) => {
