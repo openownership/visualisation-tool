@@ -1,5 +1,3 @@
-import * as d3 from 'd3';
-
 import { getNodes } from './model/nodes/nodes';
 import { checkInterests, getEdges } from './model/edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
@@ -14,6 +12,8 @@ import {
   setNodeLabelBkg,
   injectSVGElements,
   setZoomTransform,
+  removeMarkers,
+  setDashedLine,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
 import { setupUI } from './render/renderUI';
@@ -66,10 +66,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
     // set all indirect relationships to dashed lines
     if (checkInterests(interestRelationship)) {
-      d3.select(element).style('stroke-dasharray: 20,12');
+      setDashedLine(element);
     }
 
-    const { shareholding, votingRights } = interests;
     if ('shareholding' in interests) {
       createOwnershipCurve(
         element,
@@ -110,8 +109,9 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
     }
 
     // This removes the markers from any edges that have either ownership or control
+    const { shareholding, votingRights } = interests;
     if (shareholding || votingRights) {
-      d3.select(g.edge(source, target).elem).select('path').attr('marker-end', '');
+      removeMarkers(g, source, target);
     }
   });
 
