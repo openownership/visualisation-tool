@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import { getPersonNodes, getEntityNodes, setUnknownNode, getNodes } from './model/nodes/nodes';
-import { checkInterests, getEdges, getOwnershipEdges } from './model/edges/edges';
+import { getNodes } from './model/nodes/nodes';
+import { checkInterests, getEdges } from './model/edges/edges';
 import interestTypesCodelist from './codelists/interestTypes';
 import {
   setupD3,
