@@ -398,3 +398,11 @@ export const setZoomTransform = (inner, svg, g) => {
 
   return { zoom };
 };
+
+export const removeMarkers = (g, source, target) => {
+  d3.select(g.edge(source, target).elem).select('path').attr('marker-end', '');
+};
+
+export const setDashedLine = (element) => {
+  d3.select(element).style('stroke-dasharray: 20,12');
+};
