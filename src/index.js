@@ -33,8 +33,8 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const { nodes } = getNodes(data, edges);
 
   // This section maps the incoming BODS data to the parameters expected by Dagre
-  setNodes(nodes, g);
   setEdges(edges, g);
+  setNodes(nodes, g);
 
   // Run the renderer. This is what draws the final graph.
   render(inner, g);

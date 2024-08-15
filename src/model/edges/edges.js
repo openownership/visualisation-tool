@@ -52,78 +52,108 @@ export const checkInterests = (interestRelationship) => {
 };
 
 export const getOwnershipEdges = (bodsData) => {
-  return latest(
-    bodsData
-      .filter((statement) => statement.statementType === 'ownershipOrControlStatement')
-      .map((statement) => {
-        const { statementID, subject, interestedParty, interests } = statement;
-        const replaces = statement.replacesStatements ? statement.replacesStatements : [];
-        const { interestLevel, directOrIndirect } = interests
-          ? interests[0] || { interestLevel: 'unknown' }
-          : { interestLevel: 'unknown' };
-        // this accounts for changes from 0.2 to 0.3 (interestLevel renamed to directOrIndirect)
-        const interestRelationship = interestLevel
-          ? interestLevel
-          : directOrIndirect
-          ? directOrIndirect
-          : 'unknown';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || null;
 
-        const mappedInterests = getInterests(interests);
+  const filteredData = bodsData.filter((statement) => {
+    if (version === '0.4') {
+      return statement.recordType === 'relationship';
+    } else {
+      return statement.statementType === 'ownershipOrControlStatement';
+    }
+  });
 
-        // work out the ownership stroke and text
-        const { shareholding, votingRights } = mappedInterests;
+  const mappedData = filteredData.map((statement) => {
+    const {
+      statementID = null,
+      statementId = null,
+      statementDate = null,
+      recordId = null,
+      recordDetails = null,
+      subject,
+      interestedParty,
+      interests,
+    } = statement;
+    const replaces = statement.replacesStatements ? statement.replacesStatements : [];
 
-        const shareStroke = getStroke(shareholding);
-        const shareText = getText(shareholding, 'Owns');
+    const interestsData = recordDetails?.interests || interests;
+    const { interestLevel, directOrIndirect } = interestsData
+      ? interestsData[0] || { interestLevel: 'unknown' }
+      : { interestLevel: 'unknown' };
 
-        const controlStroke = getStroke(votingRights);
-        const controlText = getText(votingRights, 'Controls');
+    // this accounts for changes from 0.2 to 0.3 (interestLevel renamed to directOrIndirect)
+    const interestRelationship = interestLevel
+      ? interestLevel
+      : directOrIndirect
+      ? directOrIndirect
+      : 'unknown';
+    let source, target;
+    if (version === '0.4') {
+      source = recordDetails.interestedParty;
+      target = recordDetails.subject;
+    } else {
+      source =
+        interestedParty?.describedByPersonStatement ||
+        interestedParty?.describedByEntityStatement ||
+        'unknown';
+      target = subject.describedByPersonStatement
+        ? subject.describedByPersonStatement
+        : subject.describedByEntityStatement;
+    }
 
-        if ('shareholding' in mappedInterests) {
-          const arrowheadColour = shareStroke === 0 ? 'black' : '';
-          const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
-          const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
-          const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
+    const mappedInterests = getInterests(interestsData);
 
-          edgeConfig.share = {
-            arrowheadShape,
-            strokeValue,
-            positiveStroke,
-          };
-        }
-        if ('votingRights' in mappedInterests) {
-          const arrowheadColour = controlStroke === 0 ? 'black' : '';
-          const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
-          const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
-          const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
+    // work out the ownership stroke and text
+    const { shareholding, votingRights } = mappedInterests;
 
-          edgeConfig.control = {
-            arrowheadShape,
-            strokeValue,
-            positiveStroke,
-          };
-        }
+    const shareStroke = getStroke(shareholding);
+    const shareText = getText(shareholding, 'Owns');
 
-        return {
-          id: statementID,
-          interests: mappedInterests,
-          interestRelationship,
-          controlStroke,
-          controlText,
-          shareText,
-          shareStroke,
-          source:
-            interestedParty?.describedByPersonStatement ||
-            interestedParty?.describedByEntityStatement ||
-            'unknown',
-          target: subject.describedByPersonStatement
-            ? subject.describedByPersonStatement
-            : subject.describedByEntityStatement,
-          config: edgeConfig,
-          replaces: replaces,
-        };
-      })
-  );
+    const controlStroke = getStroke(votingRights);
+    const controlText = getText(votingRights, 'Controls');
+
+    if ('shareholding' in mappedInterests) {
+      const arrowheadColour = shareStroke === 0 ? 'black' : '';
+      const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
+      const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
+      const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
+
+      edgeConfig.share = {
+        arrowheadShape,
+        strokeValue,
+        positiveStroke,
+      };
+    }
+    if ('votingRights' in mappedInterests) {
+      const arrowheadColour = controlStroke === 0 ? 'black' : '';
+      const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
+      const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
+      const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
+
+      edgeConfig.control = {
+        arrowheadShape,
+        strokeValue,
+        positiveStroke,
+      };
+    }
+
+    return {
+      id: statementId || statementID,
+      statementDate,
+      recordId,
+      interests: mappedInterests,
+      interestRelationship,
+      controlStroke,
+      controlText,
+      shareText,
+      shareStroke,
+      source,
+      target,
+      config: edgeConfig,
+      replaces: replaces,
+    };
+  });
+
+  return latest(mappedData, version);
 };
 
 export const getEdges = (data) => {
