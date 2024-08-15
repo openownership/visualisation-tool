@@ -20,7 +20,7 @@ export const setupGraph = (rankDir) => {
 
 export const setNodes = (nodes, g) => {
   nodes.forEach((node) => {
-    g.setNode(node.id, {
+    g.setNode(node.recordId || node.id, {
       label: node.label,
       class: node.class || '',
       labelType: node.labelType || 'string',
@@ -32,11 +32,11 @@ export const setNodes = (nodes, g) => {
 };
 
 export const setEdges = (edges, g) => {
-  edges.forEach((edge) =>
+  edges.forEach((edge) => {
     g.setEdge(edge.source, edge.target, {
       class: edge.class || '',
       edgeType: edge.interestRelationship,
       ...edge.config,
-    })
-  );
+    });
+  });
 };
