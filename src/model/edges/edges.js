@@ -1,5 +1,5 @@
 import { curveMonotoneX } from 'd3';
-import latest from '../../utils/bods';
+import { closedRecords, latest } from '../../utils/bods';
 
 // This sets the style and shape of the edges using D3 parameters
 const edgeConfig = {
@@ -68,6 +68,7 @@ export const getOwnershipEdges = (bodsData) => {
       statementId = null,
       statementDate = null,
       recordId = null,
+      recordStatus,
       recordDetails = null,
       subject,
       interestedParty,
@@ -140,6 +141,7 @@ export const getOwnershipEdges = (bodsData) => {
       id: statementId || statementID,
       statementDate,
       recordId,
+      recordStatus,
       interests: mappedInterests,
       interestRelationship,
       controlStroke,
@@ -153,7 +155,7 @@ export const getOwnershipEdges = (bodsData) => {
     };
   });
 
-  return latest(mappedData, version);
+  return latest(mappedData, closedRecords, version);
 };
 
 export const getEdges = (data) => {
