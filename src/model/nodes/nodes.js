@@ -1,5 +1,5 @@
 import generateNodeLabel from './nodeSVGLabel';
-import latest from '../../utils/bods';
+import { closedRecords, latest } from '../../utils/bods';
 import sanitise from '../../utils/sanitiser';
 
 // This will generate a node when there unknown fields
@@ -122,7 +122,7 @@ export const getPersonNodes = (bodsData) => {
     };
   });
 
-  return latest(mappedData, version);
+  return latest(mappedData, closedRecords, version);
 };
 
 // This builds up the required entity object from the BODS data, using the functions above
@@ -184,7 +184,7 @@ export const getEntityNodes = (bodsData) => {
     };
   });
 
-  return latest(mappedData, version);
+  return latest(mappedData, closedRecords, version);
 };
 
 export const setUnknownNode = (source) => unknownNode(source);
