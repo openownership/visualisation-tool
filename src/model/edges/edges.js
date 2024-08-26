@@ -22,10 +22,13 @@ const getInterests = (interests) => {
 };
 
 const getStroke = (shareValues) => {
-  const { exact, minimum, maximum } = shareValues || {};
+  const { exact, minimum, exclusiveMinimum, maximum, exclusiveMaximum } = shareValues || {};
   if (exact === undefined) {
-    if (minimum !== undefined && maximum !== undefined) {
-      return (minimum + maximum) / 2 / 10;
+    if (
+      (minimum !== undefined || exclusiveMinimum !== undefined) &&
+      (maximum !== undefined || exclusiveMaximum !== undefined)
+    ) {
+      return ((minimum || exclusiveMinimum) + (maximum || exclusiveMaximum)) / 2 / 10;
     } else {
       return defaultStroke;
     }
@@ -35,10 +38,13 @@ const getStroke = (shareValues) => {
 };
 
 const getText = (shareValues, type) => {
-  const { exact, minimum, maximum } = shareValues || {};
+  const { exact, minimum, exclusiveMinimum, maximum, exclusiveMaximum } = shareValues || {};
   if (exact === undefined) {
-    if (minimum !== undefined && maximum !== undefined) {
-      return `${type} ${minimum} - ${maximum}%`;
+    if (
+      (minimum !== undefined || exclusiveMinimum !== undefined) &&
+      (maximum !== undefined || exclusiveMaximum !== undefined)
+    ) {
+      return `${type} ${minimum || exclusiveMinimum} - ${maximum || exclusiveMaximum}%`;
     } else {
       return ``;
     }
