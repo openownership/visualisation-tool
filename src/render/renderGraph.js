@@ -26,6 +26,7 @@ export const setNodes = (nodes, g) => {
       labelType: node.labelType || 'string',
       nodeType: node.nodeType,
       countryCode: node.countryCode,
+      description: node.description,
       ...node.config,
     });
   });
