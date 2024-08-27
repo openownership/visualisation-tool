@@ -11,6 +11,7 @@
     "@iconfu/svg-inject": "^1.2.3",
     "bezier-js": "^2.6.1",
     "canvas-toBlob": "^1.0.0",
+    "compare-versions": "^6.1.1",
     "computed-styles": "^1.1.2",
     "d3": "^5.15.0",
     "dagre-d3": "^0.6.4",
