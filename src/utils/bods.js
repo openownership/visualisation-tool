@@ -1,7 +1,7 @@
 export const closedRecords = new Set();
 
 export const latest = (statements, closedRecords, version) => {
-  if (version === '0.4') {
+  if (version >= Number('0.4')) {
     const statementMap = {};
 
     statements.forEach((statement) => {
