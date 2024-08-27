@@ -1,3 +1,4 @@
+import { compareVersions } from 'compare-versions';
 import generateNodeLabel from './nodeSVGLabel';
 import { closedRecords, latest } from '../../utils/bods';
 import sanitise from '../../utils/sanitiser';
@@ -77,10 +78,10 @@ let iconType = (nodeType) => {
 
 // This builds up the required person object from the BODS data, using the functions above
 export const getPersonNodes = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || null;
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
 
   const filteredData = bodsData.filter((statement) => {
-    if (version >= Number('0.4')) {
+    if (compareVersions(version, '0.4') >= 0) {
       return statement.recordType === 'person';
     } else {
       return statement.statementType === 'personStatement';
@@ -127,10 +128,10 @@ export const getPersonNodes = (bodsData) => {
 
 // This builds up the required entity object from the BODS data, using the functions above
 export const getEntityNodes = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || null;
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
 
   const filteredData = bodsData.filter((statement) => {
-    if (version >= Number('0.4')) {
+    if (compareVersions(version, '0.4') >= 0) {
       return statement.recordType === 'entity';
     } else {
       return statement.statementType === 'entityStatement';
@@ -153,7 +154,7 @@ export const getEntityNodes = (bodsData) => {
 
     let countryCode;
 
-    if (version >= Number('0.4')) {
+    if (compareVersions(version, '0.4') >= 0) {
       countryCode = recordDetails.jurisdiction ? sanitise(recordDetails.jurisdiction.code) : null;
     } else {
       // This gets the country code from v0.2 BODS (incorporatedInJurisdiction)

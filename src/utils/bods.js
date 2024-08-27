@@ -1,7 +1,8 @@
+import { compareVersions } from 'compare-versions';
 export const closedRecords = new Set();
 
 export const latest = (statements, closedRecords, version) => {
-  if (version >= Number('0.4')) {
+  if (compareVersions(version, '0.4') >= 0) {
     const statementMap = {};
 
     statements.forEach((statement) => {
