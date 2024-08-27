@@ -61,7 +61,7 @@ export const getOwnershipEdges = (bodsData) => {
   const version = bodsData[0]?.publicationDetails?.bodsVersion || null;
 
   const filteredData = bodsData.filter((statement) => {
-    if (version === '0.4') {
+    if (version >= Number('0.4')) {
       return statement.recordType === 'relationship';
     } else {
       return statement.statementType === 'ownershipOrControlStatement';
@@ -94,7 +94,7 @@ export const getOwnershipEdges = (bodsData) => {
       ? directOrIndirect
       : 'unknown';
     let source, target;
-    if (version === '0.4') {
+    if (version >= Number('0.4')) {
       source = recordDetails.interestedParty;
       target = recordDetails.subject;
     } else {

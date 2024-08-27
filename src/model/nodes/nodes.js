@@ -80,7 +80,7 @@ export const getPersonNodes = (bodsData) => {
   const version = bodsData[0]?.publicationDetails?.bodsVersion || null;
 
   const filteredData = bodsData.filter((statement) => {
-    if (version === '0.4') {
+    if (version >= Number('0.4')) {
       return statement.recordType === 'person';
     } else {
       return statement.statementType === 'personStatement';
@@ -130,7 +130,7 @@ export const getEntityNodes = (bodsData) => {
   const version = bodsData[0]?.publicationDetails?.bodsVersion || null;
 
   const filteredData = bodsData.filter((statement) => {
-    if (version === '0.4') {
+    if (version >= Number('0.4')) {
       return statement.recordType === 'entity';
     } else {
       return statement.statementType === 'entityStatement';
@@ -153,7 +153,7 @@ export const getEntityNodes = (bodsData) => {
 
     let countryCode;
 
-    if (version === '0.4') {
+    if (version >= Number('0.4')) {
       countryCode = recordDetails.jurisdiction ? sanitise(recordDetails.jurisdiction.code) : null;
     } else {
       // This gets the country code from v0.2 BODS (incorporatedInJurisdiction)
