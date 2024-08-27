@@ -45,6 +45,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   // Create white backgrounds for all of the node labels so that text legible
   setNodeLabelBkg('white');
 
+  nodes.forEach((node) => {
+    console.log(node.description);
+  });
+
   // calculate the new edges using control and ownership values
   // this section could do with a refactor and move more of the logic into edges.js
   edges.forEach((edge, index) => {
