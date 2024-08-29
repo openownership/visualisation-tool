@@ -1,6 +1,6 @@
-import tippy from 'tippy.js';
+import tippy, { hideAll } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import * as d3 from 'd3';
+import 'tippy.js/themes/light-border.css';
 
 import { SvgSaver } from '../utils/svgsaver';
 
@@ -66,6 +66,7 @@ export const renderProperties = (inner, g) => {
       trigger: 'manual',
       hideOnClick: false,
       interactive: true,
+      theme: 'light-border',
       appendTo: document.body,
       onShow: () => {
         disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
@@ -73,6 +74,7 @@ export const renderProperties = (inner, g) => {
     });
 
     node.elem.addEventListener('click', () => {
+      hideAll();
       tippyInstance.show();
 
       document.getElementById('close-tooltip').addEventListener('click', () => {
@@ -94,6 +96,7 @@ export const renderProperties = (inner, g) => {
       trigger: 'manual',
       hideOnClick: false,
       interactive: true,
+      theme: 'light-border',
       appendTo: document.body,
       onShow: () => {
         disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
@@ -101,6 +104,7 @@ export const renderProperties = (inner, g) => {
     });
 
     edge.elem.addEventListener('click', () => {
+      hideAll();
       tippyInstance.show();
 
       document.getElementById('close-tooltip').addEventListener('click', () => {
