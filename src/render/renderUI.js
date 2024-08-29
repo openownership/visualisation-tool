@@ -51,18 +51,33 @@ export const setupUI = (zoom, svg) => {
 };
 
 export const renderProperties = (inner, g) => {
+  const disclosureWidget = document.querySelector('#disclosure-widget');
+
   const nodes = inner.selectAll('g.node');
   nodes.each((d, i) => {
     const node = g.node(d);
 
-    const content = JSON.stringify(node.description, null, 2);
+    const description = JSON.stringify(node.description, null, 2);
+    const fullDescription = JSON.stringify(node.fullDescription, null, 2);
 
-    tippy(node.elem, {
-      content: `<pre>${content}</pre>`,
+    const tippyInstance = tippy(node.elem, {
+      content: `<div class="button-container"><button id="close-tooltip">&times;</button></div><pre>${description}</pre>`,
       allowHTML: true,
-      trigger: 'click',
+      trigger: 'manual',
+      hideOnClick: false,
       interactive: true,
       appendTo: document.body,
+      onShow: () => {
+        disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
+      },
+    });
+
+    node.elem.addEventListener('click', () => {
+      tippyInstance.show();
+
+      document.getElementById('close-tooltip').addEventListener('click', () => {
+        tippyInstance.hide();
+      });
     });
   });
 
@@ -70,14 +85,27 @@ export const renderProperties = (inner, g) => {
   edges.each((d, i) => {
     const edge = g.edge(d.v, d.w);
 
-    const content = JSON.stringify(g.edge(d.v, d.w).description, null, 2);
+    const description = JSON.stringify(edge.description, null, 2);
+    const fullDescription = JSON.stringify(edge.fullDescription, null, 2);
 
-    tippy(edge.elem, {
-      content: `<pre>${content}</pre>`,
+    const tippyInstance = tippy(edge.elem, {
+      content: `<div class="button-container"><button id="close-tooltip">&times;</button></div><pre>${description}</pre>`,
       allowHTML: true,
-      trigger: 'click',
+      trigger: 'manual',
+      hideOnClick: false,
       interactive: true,
       appendTo: document.body,
+      onShow: () => {
+        disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
+      },
+    });
+
+    edge.elem.addEventListener('click', () => {
+      tippyInstance.show();
+
+      document.getElementById('close-tooltip').addEventListener('click', () => {
+        tippyInstance.hide();
+      });
     });
   });
 };

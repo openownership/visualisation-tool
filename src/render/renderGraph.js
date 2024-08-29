@@ -28,6 +28,7 @@ export const setNodes = (nodes, g) => {
       nodeType: node.nodeType,
       countryCode: node.countryCode,
       description: node.description,
+      fullDescription: node.fullDescription,
       ...node.config,
     });
   });
@@ -40,6 +41,7 @@ export const setEdges = (edges, g) => {
       class: edge.class || '',
       edgeType: edge.interestRelationship,
       description: edge.description,
+      fullDescription: edge.fullDescription,
       ...edge.config,
     });
   });
