@@ -159,6 +159,13 @@ export const getOwnershipEdges = (bodsData) => {
       target,
       config: edgeConfig,
       replaces: replaces,
+      fullDescription: statement,
+      description: {
+        statementDate,
+        recordId,
+        identifiers: recordDetails.identifiers,
+        interests: recordDetails.interests,
+      },
     };
   });
 

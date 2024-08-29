@@ -120,11 +120,12 @@ export const getPersonNodes = (bodsData) => {
       replaces: replaces,
       nodeType: iconType(personTypeData),
       countryCode: countryCode,
+      fullDescription: statement,
       description: {
-        statementDate: statement.statementDate,
-        recordId: statement.recordId,
-        identifiers: statement.identifiers,
-        interests: statement.interests,
+        statementDate,
+        recordId,
+        identifiers: recordDetails.identifiers,
+        interests: recordDetails.interests,
       },
     };
   });
@@ -188,11 +189,12 @@ export const getEntityNodes = (bodsData) => {
       countryCode: countryCode,
       config: nodeConfig,
       replaces: replaces,
+      fullDescription: statement,
       description: {
-        statementDate: statement.statementDate,
-        recordId: statement.recordId,
-        identifiers: statement.identifiers,
-        interests: statement.interests,
+        statementDate,
+        recordId,
+        identifiers: recordDetails.identifiers,
+        interests: recordDetails.interests,
       },
     };
   });

@@ -1,3 +1,7 @@
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+import * as d3 from 'd3';
+
 import { SvgSaver } from '../utils/svgsaver';
 
 export const setupUI = (zoom, svg) => {
@@ -43,5 +47,37 @@ export const setupUI = (zoom, svg) => {
     if (e.key === 'Enter' || e.key === 'Space') {
       svgsaver.asPng(svgElement, 'bods.png');
     }
+  });
+};
+
+export const renderProperties = (inner, g) => {
+  const nodes = inner.selectAll('g.node');
+  nodes.each((d, i) => {
+    const node = g.node(d);
+
+    const content = JSON.stringify(node.description, null, 2);
+
+    tippy(node.elem, {
+      content: `<pre>${content}</pre>`,
+      allowHTML: true,
+      trigger: 'click',
+      interactive: true,
+      appendTo: document.body,
+    });
+  });
+
+  const edges = inner.selectAll('g.edgePath');
+  edges.each((d, i) => {
+    const edge = g.edge(d.v, d.w);
+
+    const content = JSON.stringify(g.edge(d.v, d.w).description, null, 2);
+
+    tippy(edge.elem, {
+      content: `<pre>${content}</pre>`,
+      allowHTML: true,
+      trigger: 'click',
+      interactive: true,
+      appendTo: document.body,
+    });
   });
 };

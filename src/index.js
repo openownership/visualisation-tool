@@ -16,12 +16,12 @@ import {
   setDashedLine,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
-import { setupUI } from './render/renderUI';
+import { setupUI, renderProperties } from './render/renderUI';
 
 import './style.css';
 
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
-const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
+const draw = ({ data, container, imagesPath, labelLimit = 8, rankDir = 'LR', viewProperties = true }) => {
   // Initialise D3 and graph
   const { svg, inner } = setupD3(container);
   const { g, render } = setupGraph(rankDir);
@@ -44,10 +44,6 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
 
   // Create white backgrounds for all of the node labels so that text legible
   setNodeLabelBkg('white');
-
-  nodes.forEach((node) => {
-    console.log(node.description);
-  });
 
   // calculate the new edges using control and ownership values
   // this section could do with a refactor and move more of the logic into edges.js
@@ -122,6 +118,10 @@ const draw = (data, container, imagesPath, labelLimit = 8, rankDir = 'LR') => {
   const { zoom } = setZoomTransform(inner, svg, g);
 
   setupUI(zoom, svg);
+
+  if (viewProperties) {
+    renderProperties(inner, g);
+  }
 };
 
 export { draw };

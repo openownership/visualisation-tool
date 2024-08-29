@@ -58,7 +58,12 @@ const visualiseData = (data) => {
   // Render data as text
   document.getElementById('result').value = data.formatted;
   // Render data as graph
-  BODSDagre.draw(data.parsed, document.getElementById('svg-holder'), 'images', 100);
+  BODSDagre.draw({
+    data: data.parsed,
+    container: document.getElementById('svg-holder'),
+    imagesPath: 'images',
+    labelLimit: 100,
+  });
 };
 
 window.onload = () => {

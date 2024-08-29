@@ -21,6 +21,7 @@ export const setupGraph = (rankDir) => {
 export const setNodes = (nodes, g) => {
   nodes.forEach((node) => {
     g.setNode(node.recordId || node.id, {
+      id: node.recordId || node.id,
       label: node.label,
       class: node.class || '',
       labelType: node.labelType || 'string',
@@ -35,8 +36,10 @@ export const setNodes = (nodes, g) => {
 export const setEdges = (edges, g) => {
   edges.forEach((edge) => {
     g.setEdge(edge.source, edge.target, {
+      id: edge.recordId || edge.id,
       class: edge.class || '',
       edgeType: edge.interestRelationship,
+      description: edge.description,
       ...edge.config,
     });
   });
