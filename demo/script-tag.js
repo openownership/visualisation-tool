@@ -63,6 +63,7 @@ const visualiseData = (data) => {
     container: document.getElementById('svg-holder'),
     imagesPath: 'images',
     labelLimit: 100,
+    useTippy: true,
   });
 };
 
