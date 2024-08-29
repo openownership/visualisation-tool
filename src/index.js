@@ -21,7 +21,15 @@ import { setupUI, renderProperties } from './render/renderUI';
 import './style.css';
 
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
-const draw = ({ data, container, imagesPath, labelLimit = 8, rankDir = 'LR', viewProperties = true }) => {
+const draw = ({
+  data,
+  container,
+  imagesPath,
+  labelLimit = 8,
+  rankDir = 'LR',
+  viewProperties = true,
+  useTippy = false,
+}) => {
   // Initialise D3 and graph
   const { svg, inner } = setupD3(container);
   const { g, render } = setupGraph(rankDir);
@@ -120,7 +128,7 @@ const draw = ({ data, container, imagesPath, labelLimit = 8, rankDir = 'LR', vie
   setupUI(zoom, svg);
 
   if (viewProperties) {
-    renderProperties(inner, g);
+    renderProperties(inner, g, useTippy);
   }
 };
 
