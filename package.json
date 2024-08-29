@@ -16,7 +16,8 @@
     "d3": "^5.15.0",
     "dagre-d3": "^0.6.4",
     "file-saver": "^2.0.5",
-    "flag-icons": "6.1.1"
+    "flag-icons": "6.1.1",
+    "tippy.js": "^6.3.7"
   },
   "scripts": {
     "demo": "webpack --config=webpack.demo.config.js",
