@@ -116,9 +116,11 @@ export const renderProperties = (inner, g, useTippy) => {
         hideAll();
         tippyInstance.show();
 
-        document.getElementById('close-tooltip').addEventListener('click', () => {
-          tippyInstance.hide();
-        });
+        setTimeout(() => {
+          document.getElementById('close-tooltip').addEventListener('click', () => {
+            hideAll();
+          });
+        }, 0);
       });
     }
   });
@@ -148,9 +150,11 @@ export const renderProperties = (inner, g, useTippy) => {
         hideAll();
         tippyInstance.show();
 
-        document.getElementById('close-tooltip').addEventListener('click', () => {
-          tippyInstance.hide();
-        });
+        setTimeout(() => {
+          document.getElementById('close-tooltip').addEventListener('click', () => {
+            hideAll();
+          });
+        }, 0);
       });
     }
   });
