@@ -40,10 +40,15 @@ button {
   border: 1px solid #000;
   padding: 10px;
   margin: 10px 0 10px 0;
+  overflow: scroll;
 }
 
 .button-container {
   text-align: right;
+}
+
+.tippy-content pre {
+  overflow: scroll;
 }
 
 #close-tooltip {

@@ -50,6 +50,44 @@ export const setupUI = (zoom, svg) => {
   });
 };
 
+const getDescription = (description) => {
+  // Extract identifiers from description and output text on newlines
+  let identifiers = [];
+  let identifiersOutput = '';
+  if (typeof description.identifiers !== 'undefined' && description.identifiers !== null) {
+    identifiers = description.identifiers.map((identifier, index) => ({
+      [`Identifier ${index + 1}`]: `(${identifier.scheme}) ${identifier.id}`,
+    }));
+    identifiers.forEach((item) => {
+      const key = Object.keys(item)[0];
+      const value = item[key];
+      identifiersOutput += `${key}: ${value}\n`;
+    });
+  }
+
+  // Extract interests from description and output text on newlines
+  let interests = [];
+  let interestsOutput = '';
+  if (typeof description.interests !== 'undefined' && description.interests !== null) {
+    interests = description.interests.map((interest, index) => ({
+      [`Interest ${index + 1} Type`]: `${interest.type}\n`,
+      [`Interest ${index + 1} Start Date`]: `${interest.startDate}\n`,
+    }));
+    interests.forEach((item) => {
+      for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+          interestsOutput += `${key}: ${item[key]}`;
+        }
+      }
+    });
+  }
+
+  // Output the descriptions subset as key value pairs on new lines
+  return `Statement date: ${description.statementDate}\nRecord ID: ${description.recordId}\n${
+    identifiers.length > 0 ? identifiersOutput : ''
+  }${interests.length > 0 ? interestsOutput : ''}`;
+};
+
 export const renderProperties = (inner, g, useTippy) => {
   const disclosureWidget = document.querySelector('#disclosure-widget');
 
@@ -57,7 +95,7 @@ export const renderProperties = (inner, g, useTippy) => {
   nodes.each((d, i) => {
     const node = g.node(d);
 
-    const description = JSON.stringify(node.description, null, 2);
+    const description = getDescription(node.description);
     const fullDescription = JSON.stringify(node.fullDescription, null, 2);
 
     if (useTippy) {
@@ -89,7 +127,7 @@ export const renderProperties = (inner, g, useTippy) => {
   edges.each((d, i) => {
     const edge = g.edge(d.v, d.w);
 
-    const description = JSON.stringify(edge.description, null, 2);
+    const description = getDescription(edge.description);
     const fullDescription = JSON.stringify(edge.fullDescription, null, 2);
 
     if (useTippy) {
