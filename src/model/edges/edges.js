@@ -113,7 +113,6 @@ export const getOwnershipEdges = (bodsData) => {
     }
 
     const mappedInterests = getInterests(interestsData);
-    console.log(mappedInterests)
 
     // work out the ownership stroke and text
     const { type, share, category } = mappedInterests;
@@ -126,7 +125,7 @@ export const getOwnershipEdges = (bodsData) => {
 
     if (category === 'ownership') {
       const arrowheadColour = shareStroke === 0 ? 'black' : '';
-      const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
+      const arrowheadShape = `${arrowheadColour}${'ownership' in mappedInterests ? 'Half' : 'Full'}`;
       const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
       const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
 
@@ -138,7 +137,7 @@ export const getOwnershipEdges = (bodsData) => {
     }
     if (category === 'control') {
       const arrowheadColour = controlStroke === 0 ? 'black' : '';
-      const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
+      const arrowheadShape = `${arrowheadColour}${'control' in mappedInterests ? 'Half' : 'Full'}`;
       const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
       const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
 
@@ -162,7 +161,7 @@ export const getOwnershipEdges = (bodsData) => {
       shareStroke,
       source,
       target,
-      config: edgeConfig,
+      config: { ...edgeConfig },
       replaces: replaces,
       fullDescription: statement,
       description: {
