@@ -17,7 +17,11 @@ const getInterests = (interests) => {
         ...interests.reduce((data, interest) => {
           const { type, share, endDate } = interest;
           const typeKey = type === 'voting-rights' ? 'votingRights' : type;
-          return { ...data, [typeKey]: share };
+          const typeCategory = {
+            votingRights: 'control',
+            shareholding: 'ownership',
+          };
+          return { ...data, type: typeKey, share, category: typeCategory[type] };
         }, {}),
       };
 };
@@ -109,17 +113,18 @@ export const getOwnershipEdges = (bodsData) => {
     }
 
     const mappedInterests = getInterests(interestsData);
+    console.log(mappedInterests)
 
     // work out the ownership stroke and text
-    const { shareholding, votingRights } = mappedInterests;
+    const { type, share, category } = mappedInterests;
 
-    const shareStroke = getStroke(shareholding);
-    const shareText = getText(shareholding, 'Owns');
+    const shareStroke = getStroke(type === 'shareholding' && share);
+    const shareText = getText(type === 'shareholding' && share, 'Owns');
 
-    const controlStroke = getStroke(votingRights);
-    const controlText = getText(votingRights, 'Controls');
+    const controlStroke = getStroke(type === 'votingRights' && share);
+    const controlText = getText(type === 'votingRights' && share, 'Controls');
 
-    if ('shareholding' in mappedInterests) {
+    if (category === 'ownership') {
       const arrowheadColour = shareStroke === 0 ? 'black' : '';
       const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
       const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
@@ -131,7 +136,7 @@ export const getOwnershipEdges = (bodsData) => {
         positiveStroke,
       };
     }
-    if ('votingRights' in mappedInterests) {
+    if (category === 'control') {
       const arrowheadColour = controlStroke === 0 ? 'black' : '';
       const arrowheadShape = `${arrowheadColour}${'votingRights' in mappedInterests ? 'Half' : 'Full'}`;
       const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
