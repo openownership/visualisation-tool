@@ -51,7 +51,7 @@ button {
   overflow: scroll;
 }
 
-#close-tooltip {
+.close-tooltip {
   width: 40px;
 }
 
