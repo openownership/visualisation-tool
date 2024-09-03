@@ -54,7 +54,7 @@ const getDescription = (description) => {
   // Extract identifiers from description and output text on newlines
   let identifiers = [];
   let identifiersOutput = '';
-  if (typeof description.identifiers !== 'undefined' && description.identifiers !== null) {
+  if (description.identifiers) {
     identifiers = description.identifiers.map((identifier, index) => ({
       [`Identifier ${index + 1}`]: `(${identifier.scheme}) ${identifier.id}`,
     }));
@@ -68,7 +68,7 @@ const getDescription = (description) => {
   // Extract interests from description and output text on newlines
   let interests = [];
   let interestsOutput = '';
-  if (typeof description.interests !== 'undefined' && description.interests !== null) {
+  if (description.interests) {
     interests = description.interests.map((interest, index) => ({
       [`Interest ${index + 1} Type`]: `${interest.type}\n`,
       [`Interest ${index + 1} Start Date`]: `${interest.startDate}\n`,
@@ -88,6 +88,31 @@ const getDescription = (description) => {
   }${interests.length > 0 ? interestsOutput : ''}`;
 };
 
+const setTippyInstance = (element, content) => {
+  return tippy(element, {
+    content: `<div class="button-container"><button class="close-tooltip">&times;</button></div><pre>${content}</pre>`,
+    allowHTML: true,
+    trigger: 'manual',
+    hideOnClick: false,
+    interactive: true,
+    theme: 'light-border',
+    appendTo: document.body,
+  });
+};
+
+function waitForElementsToExist(selector, callback) {
+  if (document.querySelectorAll(selector)) {
+    return callback(document.querySelectorAll(selector));
+  }
+
+  const intervalId = setInterval(() => {
+    if (document.querySelectorAll(selector)) {
+      clearInterval(intervalId);
+      callback(document.querySelectorAll(selector));
+    }
+  }, 500);
+}
+
 export const renderProperties = (inner, g, useTippy) => {
   const disclosureWidget = document.querySelector('#disclosure-widget');
 
@@ -98,31 +123,25 @@ export const renderProperties = (inner, g, useTippy) => {
     const description = getDescription(node.description);
     const fullDescription = JSON.stringify(node.fullDescription, null, 2);
 
-    if (useTippy) {
-      const tippyInstance = tippy(node.elem, {
-        content: `<div class="button-container"><button id="close-tooltip">&times;</button></div><pre>${description}</pre>`,
-        allowHTML: true,
-        trigger: 'manual',
-        hideOnClick: false,
-        interactive: true,
-        theme: 'light-border',
-        appendTo: document.body,
-        onShow: () => {
-          disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
-        },
-      });
+    node.elem.addEventListener('click', () => {
+      disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
 
-      node.elem.addEventListener('click', () => {
+      // Only use tippy.js if the useTippy property is true
+      if (useTippy) {
         hideAll();
+        const tippyInstance = setTippyInstance(node.elem, description);
         tippyInstance.show();
 
-        setTimeout(() => {
-          document.getElementById('close-tooltip').addEventListener('click', () => {
-            hideAll();
+        // Wait until the tooltip is displayed before attaching a close event to the button
+        waitForElementsToExist('.close-tooltip', (elements) => {
+          elements.forEach((element) => {
+            element.addEventListener('click', () => {
+              hideAll();
+            });
           });
-        }, 0);
-      });
-    }
+        });
+      }
+    });
   });
 
   const edges = inner.selectAll('g.edgePath');
@@ -132,30 +151,23 @@ export const renderProperties = (inner, g, useTippy) => {
     const description = getDescription(edge.description);
     const fullDescription = JSON.stringify(edge.fullDescription, null, 2);
 
-    if (useTippy) {
-      const tippyInstance = tippy(edge.elem, {
-        content: `<div class="button-container"><button id="close-tooltip">&times;</button></div><pre>${description}</pre>`,
-        allowHTML: true,
-        trigger: 'manual',
-        hideOnClick: false,
-        interactive: true,
-        theme: 'light-border',
-        appendTo: document.body,
-        onShow: () => {
-          disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
-        },
-      });
+    edge.elem.addEventListener('click', () => {
+      disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
 
-      edge.elem.addEventListener('click', () => {
+      if (useTippy) {
         hideAll();
+        const tippyInstance = setTippyInstance(edge.elem, description);
         tippyInstance.show();
 
-        setTimeout(() => {
-          document.getElementById('close-tooltip').addEventListener('click', () => {
-            hideAll();
+        // Wait until the tooltip is displayed before attaching a close event to the button
+        waitForElementsToExist('.close-tooltip', (elements) => {
+          elements.forEach((element) => {
+            element.addEventListener('click', () => {
+              hideAll();
+            });
           });
-        }, 0);
-      });
-    }
+        });
+      }
+    });
   });
 };
