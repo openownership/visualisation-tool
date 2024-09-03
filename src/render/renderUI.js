@@ -88,6 +88,7 @@ const getDescription = (description) => {
   }${interests.length > 0 ? interestsOutput : ''}`;
 };
 
+// Configure tippy.js
 const setTippyInstance = (element, content) => {
   return tippy(element, {
     content: `<div class="button-container"><button class="close-tooltip">&times;</button></div><pre>${content}</pre>`,
@@ -100,6 +101,7 @@ const setTippyInstance = (element, content) => {
   });
 };
 
+//  Generic function to check if elements (multiple) exist in the DOM
 function waitForElementsToExist(selector, callback) {
   if (document.querySelectorAll(selector)) {
     return callback(document.querySelectorAll(selector));
@@ -119,20 +121,23 @@ export const renderProperties = (inner, g, useTippy) => {
   const nodes = inner.selectAll('g.node');
   nodes.each((d, i) => {
     const node = g.node(d);
-
     const description = getDescription(node.description);
     const fullDescription = JSON.stringify(node.fullDescription, null, 2);
 
     node.elem.addEventListener('click', () => {
+      // Populate disclosure widget with node `fullDescription` JSON
       disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
 
       // Only use tippy.js if the useTippy property is true
       if (useTippy) {
+        // Pre-emptively hide any rogue open tooltips
         hideAll();
+
+        // Create tooltip instance and display it
         const tippyInstance = setTippyInstance(node.elem, description);
         tippyInstance.show();
 
-        // Wait until the tooltip is displayed before attaching a close event to the button
+        // Wait until the tooltip button exists before attaching a close event
         waitForElementsToExist('.close-tooltip', (elements) => {
           elements.forEach((element) => {
             element.addEventListener('click', () => {
@@ -147,19 +152,23 @@ export const renderProperties = (inner, g, useTippy) => {
   const edges = inner.selectAll('g.edgePath');
   edges.each((d, i) => {
     const edge = g.edge(d.v, d.w);
-
     const description = getDescription(edge.description);
     const fullDescription = JSON.stringify(edge.fullDescription, null, 2);
 
     edge.elem.addEventListener('click', () => {
+      // Populate disclosure widget with edge `fullDescription` JSON
       disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
 
+      // Only use tippy.js if the useTippy property is true
       if (useTippy) {
+        // Pre-emptively hide any rogue open tooltips
         hideAll();
+
+        // Create tooltip instance and display it
         const tippyInstance = setTippyInstance(edge.elem, description);
         tippyInstance.show();
 
-        // Wait until the tooltip is displayed before attaching a close event to the button
+        // Wait until the tooltip button exists before attaching a close event
         waitForElementsToExist('.close-tooltip', (elements) => {
           elements.forEach((element) => {
             element.addEventListener('click', () => {
