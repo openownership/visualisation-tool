@@ -224,7 +224,7 @@ export const createControlCurve = (
     .attr('marker-end', `url(#arrow-control-${arrowheadShape})`)
     .attr(
       'style',
-      `fill: none; stroke: ${strokeValue}; stroke-width: 1px; stroke-width: ${positiveStroke}px; ${
+      `fill: none; stroke: ${strokeValue}; stroke-width: ${positiveStroke}px; ${
         dashedInterest ? 'stroke-dasharray: 20,12' : ''
       };`
     )
