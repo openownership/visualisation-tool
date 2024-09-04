@@ -77,7 +77,7 @@ const draw = ({
       setDashedLine(element);
     }
 
-    if (interests.type === 'shareholding') {
+    if (interests.some((item) => item.type === 'shareholding')) {
       createOwnershipCurve(
         element,
         index,
@@ -88,7 +88,7 @@ const draw = ({
         config.share.arrowheadShape
       );
     }
-    if (interests.type === 'votingRights') {
+    if (interests.some((item) => item.type === 'votingRights')) {
       createControlCurve(
         element,
         index,
@@ -109,16 +109,18 @@ const draw = ({
     // The unknown interest labels are drawn when the interest type is set to 'unknownInterest' or the data are missing
     // No label is displayed if the interestType is within the interestType codelist but is not shareholding or votingRights
     if (
-      interests.type === 'unknownInterest' ||
-      interests.type === '' ||
-      !interests.type in interestTypesCodelist
+      interests.some((item) => item.type === 'unknownInterest') ||
+      interests.some((item) => item.type === '') ||
+      !interests.some((item) => item.type in interestTypesCodelist)
     ) {
       limitLabels(createUnknownText(svg, index, element));
     }
 
     // This removes the markers from any edges that have either ownership or control
-    const { category } = interests;
-    if (category === 'ownership' || category === 'control') {
+    if (
+      interests.some((item) => item.category === 'ownership') ||
+      interests.some((item) => item.category === 'control')
+    ) {
       removeMarkers(g, source, target);
     }
   });
