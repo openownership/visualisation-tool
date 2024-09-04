@@ -11,23 +11,30 @@ const edgeConfig = {
 const defaultStroke = 5;
 
 const getInterests = (interests) => {
-  return !interests
-    ? {}
-    : {
-        ...interests.reduce((data, interest) => {
-          const { type, share, endDate } = interest;
-          const typeKey = type === 'voting-rights' ? 'votingRights' : type;
-          const typeCategory = {
-            votingRights: 'control',
-            shareholding: 'ownership',
-          };
-          return { ...data, type: typeKey, share, category: typeCategory[type] };
-        }, {}),
-      };
+  const transformedInterests = interests.reduce((acc, interest) => {
+    const { type, share, endDate } = interest;
+    const typeKey = type === 'voting-rights' ? 'votingRights' : type;
+    const typeCategory = {
+      votingRights: 'control',
+      shareholding: 'ownership',
+    };
+
+    const transformedInterest = {
+      type: typeKey,
+      share,
+      category: typeCategory[typeKey],
+    };
+
+    // Add the transformed object to the array
+    acc.push(transformedInterest);
+    return acc;
+  }, []);
+
+  return !interests ? [] : transformedInterests;
 };
 
 const getStroke = (shareValues) => {
-  const { exact, minimum, exclusiveMinimum, maximum, exclusiveMaximum } = shareValues || {};
+  const { exact, minimum, exclusiveMinimum, maximum, exclusiveMaximum } = shareValues?.share || {};
   if (exact === undefined) {
     if (
       (minimum !== undefined || exclusiveMinimum !== undefined) &&
@@ -43,7 +50,7 @@ const getStroke = (shareValues) => {
 };
 
 const getText = (shareValues, type) => {
-  const { exact, minimum, exclusiveMinimum, maximum, exclusiveMaximum } = shareValues || {};
+  const { exact, minimum, exclusiveMinimum, maximum, exclusiveMaximum } = shareValues?.share || {};
   if (exact === undefined) {
     if (
       (minimum !== undefined || exclusiveMinimum !== undefined) &&
@@ -115,17 +122,23 @@ export const getOwnershipEdges = (bodsData) => {
     const mappedInterests = getInterests(interestsData);
 
     // work out the ownership stroke and text
-    const { type, share, category } = mappedInterests;
+    const shareStroke = getStroke(mappedInterests.find((item) => item.type === 'shareholding'));
+    const shareText = getText(
+      mappedInterests.find((item) => item.type === 'shareholding'),
+      'Owns'
+    );
 
-    const shareStroke = getStroke(type === 'shareholding' && share);
-    const shareText = getText(type === 'shareholding' && share, 'Owns');
+    const controlStroke = getStroke(mappedInterests.find((item) => item.type === 'votingRights'));
+    const controlText = getText(
+      mappedInterests.find((item) => item.type === 'votingRights'),
+      'Controls'
+    );
 
-    const controlStroke = getStroke(type === 'votingRights' && share);
-    const controlText = getText(type === 'votingRights' && share, 'Controls');
-
-    if (category === 'ownership') {
+    if (mappedInterests.some((item) => item.category === 'ownership')) {
       const arrowheadColour = shareStroke === 0 ? 'black' : '';
-      const arrowheadShape = `${arrowheadColour}${'ownership' in mappedInterests ? 'Half' : 'Full'}`;
+      const arrowheadShape = `${arrowheadColour}${
+        mappedInterests.some((item) => item.category === 'control') ? 'Half' : 'Full'
+      }`;
       const strokeValue = shareStroke === 0 ? '#000' : '#652eb1';
       const positiveStroke = shareStroke === 0 ? 1 : shareStroke;
 
@@ -135,9 +148,11 @@ export const getOwnershipEdges = (bodsData) => {
         positiveStroke,
       };
     }
-    if (category === 'control') {
+    if (mappedInterests.some((item) => item.category === 'control')) {
       const arrowheadColour = controlStroke === 0 ? 'black' : '';
-      const arrowheadShape = `${arrowheadColour}${'control' in mappedInterests ? 'Half' : 'Full'}`;
+      const arrowheadShape = `${arrowheadColour}${
+        mappedInterests.some((item) => item.category === 'ownership') ? 'Half' : 'Full'
+      }`;
       const strokeValue = controlStroke === 0 ? '#000' : '#349aee';
       const positiveStroke = controlStroke === 0 ? 1 : controlStroke;
 
