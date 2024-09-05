@@ -71,12 +71,7 @@ const draw = ({
     const controlOffset = -(controlStroke / 2);
     const element = g.edge(source, target).elem;
 
-    // set all indirect relationships to dashed lines
-    if (checkInterests(interestRelationship)) {
-      setDashedLine(element);
-    }
-
-    if (interests.some((item) => item.type === 'shareholding')) {
+    if (interests.some((item) => item.category === 'ownership')) {
       createOwnershipCurve(
         element,
         index,
@@ -87,7 +82,7 @@ const draw = ({
         config.share.arrowheadShape
       );
     }
-    if (interests.some((item) => item.type === 'votingRights')) {
+    if (interests.some((item) => item.category === 'control')) {
       createControlCurve(
         element,
         index,
