@@ -56,7 +56,7 @@ const getText = (shareValues, type) => {
     ) {
       return `${type} ${minimum || exclusiveMinimum} - ${maximum || exclusiveMaximum}%`;
     } else {
-      return ``;
+      return `${type}`;
     }
   } else {
     return `${type} ${exact}%`;
