@@ -292,7 +292,6 @@ export const createUnknownCurve = (
   dashedInterest,
   arrowheadShape
 ) => {
-  console.log(arrowheadShape);
   d3.select(element)
     .attr('style', 'opacity: 0;')
     .clone(true)
