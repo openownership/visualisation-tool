@@ -120,15 +120,15 @@ export const getOwnershipEdges = (bodsData) => {
     const mappedInterests = getInterests(interestsData);
 
     // work out the ownership stroke and text
-    const shareStroke = getStroke(mappedInterests.find((item) => item.type === 'shareholding'));
+    const shareStroke = getStroke(mappedInterests.find((item) => item.category === 'ownership'));
     const shareText = getText(
-      mappedInterests.find((item) => item.type === 'shareholding'),
+      mappedInterests.find((item) => item.category === 'ownership'),
       'Owns'
     );
 
-    const controlStroke = getStroke(mappedInterests.find((item) => item.type === 'votingRights'));
+    const controlStroke = getStroke(mappedInterests.find((item) => item.category === 'control'));
     const controlText = getText(
-      mappedInterests.find((item) => item.type === 'votingRights'),
+      mappedInterests.find((item) => item.category === 'control'),
       'Controls'
     );
 
