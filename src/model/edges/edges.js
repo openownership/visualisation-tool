@@ -1,6 +1,7 @@
 import { compareVersions } from 'compare-versions';
 import { curveMonotoneX } from 'd3';
 import { closedRecords, latest } from '../../utils/bods';
+import interestTypesCodelist from '../../codelists/interestTypes';
 
 // This sets the style and shape of the edges using D3 parameters
 const edgeConfig = {
@@ -13,16 +14,13 @@ const defaultStroke = 5;
 const getInterests = (interests) => {
   const transformedInterests = interests.reduce((acc, interest) => {
     const { type, share, endDate } = interest;
-    const typeKey = type === 'voting-rights' ? 'votingRights' : type;
-    const typeCategory = {
-      votingRights: 'control',
-      shareholding: 'ownership',
-    };
+    const typeKey = type;
+    const typeCategory = interestTypesCodelist[type]?.category || '';
 
     const transformedInterest = {
       type: typeKey,
       share,
-      category: typeCategory[typeKey],
+      category: typeCategory,
     };
 
     // Add the transformed object to the array
