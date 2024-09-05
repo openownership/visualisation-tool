@@ -1,6 +1,5 @@
 import { getNodes } from './model/nodes/nodes';
 import { checkInterests, getEdges } from './model/edges/edges';
-import interestTypesCodelist from './codelists/interestTypes';
 import {
   setupD3,
   defineArrowHeads,
@@ -110,8 +109,9 @@ const draw = ({
     // No label is displayed if the interestType is within the interestType codelist but is not shareholding or votingRights
     if (
       interests.some((item) => item.type === 'unknownInterest') ||
+      interests.some((item) => item.type === 'unpublishedInterest') ||
       interests.some((item) => item.type === '') ||
-      !interests.some((item) => item.type in interestTypesCodelist)
+      interests.some((item) => !item.type)
     ) {
       limitLabels(createUnknownText(svg, index, element));
     }
