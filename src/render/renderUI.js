@@ -69,10 +69,18 @@ const getDescription = (description) => {
   let interests = [];
   let interestsOutput = '';
   if (description.interests) {
-    interests = description.interests.map((interest, index) => ({
-      [`Interest ${index + 1} Type`]: `${interest.type}\n`,
-      [`Interest ${index + 1} Start Date`]: `${interest.startDate}\n`,
-    }));
+    interests = description.interests.map((interest, index) => {
+      if (interest.startDate) {
+        return {
+          [`Interest ${index + 1} Type`]: `${interest.type}\n`,
+          [`Interest ${index + 1} Start Date`]: `${interest.startDate}\n`,
+        };
+      } else {
+        return {
+          [`Interest ${index + 1} Type`]: `${interest.type}\n`,
+        };
+      }
+    });
     interests.forEach((item) => {
       for (const key in item) {
         if (item.hasOwnProperty(key)) {
@@ -152,31 +160,34 @@ export const renderProperties = (inner, g, useTippy) => {
   const edges = inner.selectAll('g.edgePath');
   edges.each((d, i) => {
     const edge = g.edge(d.v, d.w);
+    const edgeInstances = document.querySelectorAll(`#${edge.elem.id}`);
     const description = getDescription(edge.description);
     const fullDescription = JSON.stringify(edge.fullDescription, null, 2);
 
-    edge.elem.addEventListener('click', () => {
-      // Populate disclosure widget with edge `fullDescription` JSON
-      disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
+    edgeInstances.forEach((edgeInstance) => {
+      edgeInstance.addEventListener('click', () => {
+        // Populate disclosure widget with edge `fullDescription` JSON
+        disclosureWidget.innerHTML = `<details open><summary>Properties</summary><pre>${fullDescription}</pre></details>`;
 
-      // Only use tippy.js if the useTippy property is true
-      if (useTippy) {
-        // Pre-emptively hide any rogue open tooltips
-        hideAll();
+        // Only use tippy.js if the useTippy property is true
+        if (useTippy) {
+          // Pre-emptively hide any rogue open tooltips
+          hideAll();
 
-        // Create tooltip instance and display it
-        const tippyInstance = setTippyInstance(edge.elem, description);
-        tippyInstance.show();
+          // Create tooltip instance and display it
+          const tippyInstance = setTippyInstance(edgeInstance, description);
+          tippyInstance.show();
 
-        // Wait until the tooltip button exists before attaching a close event
-        waitForElementsToExist('.close-tooltip', (elements) => {
-          elements.forEach((element) => {
-            element.addEventListener('click', () => {
-              hideAll();
+          // Wait until the tooltip button exists before attaching a close event
+          waitForElementsToExist('.close-tooltip', (elements) => {
+            elements.forEach((element) => {
+              element.addEventListener('click', () => {
+                hideAll();
+              });
             });
           });
-        });
-      }
+        }
+      });
     });
   });
 };
