@@ -148,6 +148,38 @@ export const defineArrowHeads = (svg) => {
     .attr('stroke', 'none')
     .attr('fill', '#000');
 
+  const unknownBlackHalf = svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-unknown-blackHalf')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 6.1)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 10 L 10 5 L 0 5 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#000');
+
+  const unknownBlackFull = svg
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow-unknown-blackFull')
+    .attr('viewBox', [0, 0, 10, 10])
+    .attr('refX', 8)
+    .attr('refY', 5)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('markerWidth', 40)
+    .attr('markerHeight', 40)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', 'M 0 10 L 10 5 L 0 0 z')
+    .attr('stroke', 'none')
+    .attr('fill', '#000');
+
   return {
     half,
     full,
@@ -157,6 +189,8 @@ export const defineArrowHeads = (svg) => {
     blackFull,
     ownBlackHalf,
     ownBlackFull,
+    unknownBlackHalf,
+    unknownBlackFull,
   };
 };
 
@@ -249,6 +283,51 @@ export const createControlCurve = (
     });
 };
 
+export const createUnknownCurve = (
+  element,
+  index,
+  positiveStroke,
+  strokeValue,
+  curveOffset,
+  dashedInterest,
+  arrowheadShape
+) => {
+  console.log(arrowheadShape);
+  d3.select(element)
+    .attr('style', 'opacity: 0;')
+    .clone(true)
+    .attr('style', 'opacity: 1;')
+    .attr('class', 'edgePath control')
+    .select('.path')
+    .attr('id', (d, i) => 'unknownPath' + index)
+    .attr('marker-end', `url(#arrow-unknown-${arrowheadShape})`)
+    .attr(
+      'style',
+      `fill: none; stroke: ${strokeValue}; stroke-width: ${positiveStroke}px; ${
+        dashedInterest ? 'stroke-dasharray: 20,12' : ''
+      };`
+    )
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(curveOffset);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+
+  d3.select(element)
+    .clone(true)
+    .select('.path')
+    .attr('id', (d, i) => 'unknownText' + index)
+    .attr('style', 'fill: none;')
+    .attr('marker-end', '')
+    .each(function () {
+      const path = d3.select(this);
+      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+      const offsetCurve = newBezier.offset(-15);
+      path.attr('d', bezierBuilder(offsetCurve));
+    });
+};
+
 export const createControlText = (svg, index, controlText) => {
   svg
     .select('.edgeLabels')
@@ -283,19 +362,19 @@ export const createOwnText = (svg, index, shareText) => {
     .style('fill', '#652eb1');
 };
 
-export const createUnknownText = (svg, index, element) => {
-  d3.select(element)
-    .clone(true)
-    .select('path')
-    .attr('id', `unknown${index}`)
-    .attr('style', 'fill: none;')
-    .attr('marker-end', '')
-    .each(function () {
-      const path = d3.select(this);
-      const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-      const offsetCurve = newBezier.offset(-10);
-      path.attr('d', bezierBuilder(offsetCurve));
-    });
+export const createUnknownText = (svg, index) => {
+  // d3.select(element)
+  //   .clone(true)
+  //   .select('path')
+  //   .attr('id', `unknown${index}`)
+  //   .attr('style', 'fill: none;')
+  //   .attr('marker-end', '')
+  //   .each(function () {
+  //     const path = d3.select(this);
+  //     const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
+  //     const offsetCurve = newBezier.offset(-10);
+  //     path.attr('d', bezierBuilder(offsetCurve));
+  //   });
   svg
     .select('.edgeLabels')
     .append('g')
@@ -305,7 +384,7 @@ export const createUnknownText = (svg, index, element) => {
     .attr('text-anchor', 'middle')
     .append('textPath')
     .attr('xlink:href', function (d, i) {
-      return '#unknown' + index;
+      return '#unknownText' + index;
     })
     .attr('startOffset', '50%')
     .text(`Interest details unknown`);

@@ -5,6 +5,7 @@ import {
   defineArrowHeads,
   createOwnershipCurve,
   createControlCurve,
+  createUnknownCurve,
   createControlText,
   createOwnText,
   createUnknownText,
@@ -64,9 +65,11 @@ const draw = ({
       shareText,
       controlStroke,
       controlText,
+      unknownStroke,
       config,
     } = edge;
 
+    const unknownOffset = unknownStroke / 2;
     const shareOffset = shareStroke / 2;
     const controlOffset = -(controlStroke / 2);
     const element = g.edge(source, target).elem;
@@ -93,6 +96,17 @@ const draw = ({
         config.control.arrowheadShape
       );
     }
+    if (interests.some((item) => item.category === '')) {
+      createUnknownCurve(
+        element,
+        index,
+        config.unknown.positiveStroke,
+        config.unknown.strokeValue,
+        unknownOffset,
+        checkInterests(interestRelationship),
+        config.unknown.arrowheadShape
+      );
+    }
 
     // this creates the edge labels, and will allow the labels to be turned off if the node count exceeds the labelLimit
     const limitLabels = (createLabel) => g.nodeCount() < labelLimit && createLabel;
@@ -108,7 +122,7 @@ const draw = ({
       interests.some((item) => item.type === '') ||
       interests.some((item) => !item.type)
     ) {
-      limitLabels(createUnknownText(svg, index, element));
+      limitLabels(createUnknownText(svg, index));
     }
 
     // This removes the markers from any edges that have either ownership or control

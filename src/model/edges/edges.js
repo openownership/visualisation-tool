@@ -120,6 +120,7 @@ export const getOwnershipEdges = (bodsData) => {
     const mappedInterests = getInterests(interestsData);
 
     // work out the ownership stroke and text
+    const unknownStroke = getStroke(mappedInterests.find((item) => item.category === ''));
     const shareStroke = getStroke(mappedInterests.find((item) => item.category === 'ownership'));
     const shareText = getText(
       mappedInterests.find((item) => item.category === 'ownership'),
@@ -160,6 +161,13 @@ export const getOwnershipEdges = (bodsData) => {
         positiveStroke,
       };
     }
+    if (mappedInterests.some((item) => item.category === '')) {
+      edgeConfig.unknown = {
+        arrowheadShape: 'blackFull',
+        strokeValue: '#000',
+        positiveStroke: unknownStroke,
+      };
+    }
 
     return {
       id: statementId || statementID,
@@ -172,6 +180,7 @@ export const getOwnershipEdges = (bodsData) => {
       controlText,
       shareText,
       shareStroke,
+      unknownStroke,
       source,
       target,
       config: { ...edgeConfig },
