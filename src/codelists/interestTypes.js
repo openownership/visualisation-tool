@@ -163,30 +163,30 @@ export default {
   },
   'influence-or-control': {
     description: 'Influence or control',
-    category: '',
+    category: 'control',
   },
   'settlor-of-trust': {
     description: 'Settlor of trust',
-    category: '',
+    category: 'control',
   },
   'trustee-of-trust': {
     description: 'Trustee of a trust',
-    category: '',
+    category: 'control',
   },
   'protector-of-trust': {
     description: 'Protector of a trust',
-    category: '',
+    category: 'control',
   },
   'beneficiary-of-trust': {
     description: 'Beneficiary of a trust',
-    category: '',
+    category: 'ownership',
   },
   'other-influence-or-control-of-trust': {
     description: 'Other influence or control of a trust',
-    category: '',
+    category: 'control',
   },
   'rights-to-surplus-assets': {
     description: 'Rights to surplus assets',
-    category: '',
+    category: 'ownership',
   },
 };
