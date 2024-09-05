@@ -163,8 +163,7 @@ export const getOwnershipEdges = (bodsData) => {
       description: {
         statementDate,
         recordId,
-        identifiers: recordDetails.identifiers,
-        interests: recordDetails.interests,
+        interests: recordDetails?.interests || interests || [],
       },
     };
   });

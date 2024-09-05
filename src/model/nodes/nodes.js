@@ -124,8 +124,7 @@ export const getPersonNodes = (bodsData) => {
       description: {
         statementDate,
         recordId,
-        identifiers: recordDetails.identifiers,
-        interests: recordDetails.interests,
+        identifiers: recordDetails?.identifiers || statement.identifiers || [],
       },
     };
   });
@@ -193,8 +192,7 @@ export const getEntityNodes = (bodsData) => {
       description: {
         statementDate,
         recordId,
-        identifiers: recordDetails.identifiers,
-        interests: recordDetails.interests,
+        identifiers: recordDetails?.identifiers || statement.identifiers || [],
       },
     };
   });
