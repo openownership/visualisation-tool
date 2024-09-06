@@ -91,9 +91,9 @@ const getDescription = (description) => {
   }
 
   // Output the descriptions subset as key value pairs on new lines
-  return `Statement date: ${description.statementDate}\nRecord ID: ${description.recordId}\n${
-    identifiers.length > 0 ? identifiersOutput : ''
-  }${interests.length > 0 ? interestsOutput : ''}`;
+  return `Statement date: ${description.statementDate}\n${
+    description.recordId !== null ? 'Record ID: ' + description.recordId + '\n' : ''
+  }${identifiers.length > 0 ? identifiersOutput : ''}${interests.length > 0 ? interestsOutput : ''}`;
 };
 
 // Configure tippy.js
