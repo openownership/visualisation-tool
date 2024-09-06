@@ -96,7 +96,7 @@ const draw = ({
         config.control.arrowheadShape
       );
     }
-    if (interests.some((item) => item.category === '')) {
+    if (!interests.length || interests.some((item) => item.category === '')) {
       createUnknownCurve(
         element,
         index,
@@ -117,6 +117,7 @@ const draw = ({
     // The unknown interest labels are drawn when the interest type is set to 'unknownInterest' or the data are missing
     // No label is displayed if the interestType is within the interestType codelist but is not shareholding or votingRights
     if (
+      !interests.length ||
       interests.some((item) => item.type === 'unknownInterest') ||
       interests.some((item) => item.type === 'unpublishedInterest') ||
       interests.some((item) => item.type === '') ||
