@@ -12,7 +12,7 @@ const edgeConfig = {
 const defaultStroke = 5;
 
 const getInterests = (interests) => {
-  const transformedInterests = interests.reduce((acc, interest) => {
+  return interests.reduce((acc, interest) => {
     const { type, share, endDate } = interest;
     const typeKey = type;
     const typeCategory = interestTypesCodelist[type]?.category || '';
@@ -23,12 +23,9 @@ const getInterests = (interests) => {
       category: typeCategory,
     };
 
-    // Add the transformed object to the array
     acc.push(transformedInterest);
     return acc;
   }, []);
-
-  return !interests ? [] : transformedInterests;
 };
 
 const getStroke = (shareValues) => {
@@ -64,7 +61,7 @@ const getText = (shareValues, type) => {
 };
 
 export const checkInterests = (interestRelationship) => {
-  return interestRelationship === 'indirect' || interestRelationship === 'unknown' ? true : false;
+  return interestRelationship === 'indirect' || interestRelationship === '' ? true : false;
 };
 
 export const getOwnershipEdges = (bodsData) => {
@@ -92,22 +89,36 @@ export const getOwnershipEdges = (bodsData) => {
     } = statement;
     const replaces = statement.replacesStatements ? statement.replacesStatements : [];
 
-    const interestsData = recordDetails?.interests || interests;
+    const interestsData = recordDetails?.interests || interests || [];
     const { interestLevel, directOrIndirect } = interestsData
       ? interestsData[0] || { interestLevel: 'unknown' }
       : { interestLevel: 'unknown' };
 
-    // this accounts for changes from 0.2 to 0.3 (interestLevel renamed to directOrIndirect)
-    const interestRelationship = interestLevel
-      ? interestLevel
-      : directOrIndirect
-      ? directOrIndirect
-      : 'unknown';
-    let source, target;
+    let interestRelationship, source, target;
     if (compareVersions(version, '0.4') >= 0) {
+      if (directOrIndirect) {
+        interestRelationship = directOrIndirect;
+      } else {
+        if (!interestsData.length) {
+          interestRelationship = '';
+        } else {
+          interestRelationship = 'unknown';
+        }
+      }
       source = recordDetails.interestedParty;
       target = recordDetails.subject;
     } else {
+      if (directOrIndirect) {
+        interestRelationship = directOrIndirect;
+      } else if (interestLevel) {
+        interestRelationship = interestLevel;
+      } else {
+        if (!interestsData.length) {
+          interestRelationship = '';
+        } else {
+          interestRelationship = 'unknown';
+        }
+      }
       source =
         interestedParty?.describedByPersonStatement ||
         interestedParty?.describedByEntityStatement ||
@@ -161,7 +172,7 @@ export const getOwnershipEdges = (bodsData) => {
         positiveStroke,
       };
     }
-    if (mappedInterests.some((item) => item.category === '')) {
+    if (!mappedInterests.length || mappedInterests.some((item) => item.category === '')) {
       edgeConfig.unknown = {
         arrowheadShape: 'blackFull',
         strokeValue: '#000',
