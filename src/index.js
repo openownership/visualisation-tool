@@ -114,18 +114,6 @@ const draw = ({
     limitLabels(createControlText(svg, index, controlText));
     limitLabels(createOwnText(svg, index, shareText));
 
-    // The unknown interest labels are drawn when the interest type is set to 'unknownInterest' or the data are missing
-    // No label is displayed if the interestType is within the interestType codelist but is not shareholding or votingRights
-    if (
-      !interests.length ||
-      interests.some((item) => item.type === 'unknownInterest') ||
-      interests.some((item) => item.type === 'unpublishedInterest') ||
-      interests.some((item) => item.type === '') ||
-      interests.some((item) => !item.type)
-    ) {
-      limitLabels(createUnknownText(svg, index));
-    }
-
     // This removes the markers from any edges that have either ownership or control
     if (
       interests.some((item) => item.category === 'ownership') ||

@@ -361,34 +361,6 @@ export const createOwnText = (svg, index, shareText) => {
     .style('fill', '#652eb1');
 };
 
-export const createUnknownText = (svg, index) => {
-  // d3.select(element)
-  //   .clone(true)
-  //   .select('path')
-  //   .attr('id', `unknown${index}`)
-  //   .attr('style', 'fill: none;')
-  //   .attr('marker-end', '')
-  //   .each(function () {
-  //     const path = d3.select(this);
-  //     const newBezier = Bezier.SVGtoBeziers(path.attr('d'));
-  //     const offsetCurve = newBezier.offset(-10);
-  //     path.attr('d', bezierBuilder(offsetCurve));
-  //   });
-  svg
-    .select('.edgeLabels')
-    .append('g')
-    .attr('class', 'edgeLabel')
-    .append('text')
-    .attr('class', 'edgeText')
-    .attr('text-anchor', 'middle')
-    .append('textPath')
-    .attr('xlink:href', function (d, i) {
-      return '#unknownText' + index;
-    })
-    .attr('startOffset', '50%')
-    .text(`Interest details unknown`);
-};
-
 export const setNodeLabelBkg = (color) => {
   d3.selectAll('.edgeLabels .edgeLabel .label, .nodes .node .label').each(function (d, i) {
     const label = d3.select(this);
