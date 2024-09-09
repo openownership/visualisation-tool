@@ -9,7 +9,10 @@ export const setupD3 = (container) => {
   // This ensures that the graph is drawn on a clean slate
   clearSVG(container);
 
-  const svg = d3.select('#bods-svg');
+  const svg = d3
+    .select('#bods-svg')
+    .attr('width', container.clientWidth)
+    .attr('height', container.clientWidth);
   const inner = svg.append('g');
 
   return {
@@ -433,18 +436,21 @@ export const setZoomTransform = (inner, svg, g) => {
   });
   svg.call(zoom);
 
-  // Center the nodes
-  const initialScale = 0.5;
+  const bounds = inner.node().getBBox();
+  const width = svg.attr('width');
+  const height = svg.attr('height');
+
+  // Offset zoom level to account for flags and apply small border of whitespace
+  const zoomOffset = 0.015;
+
+  // Scale and center the graph
   svg.call(
     zoom.transform,
     d3.zoomIdentity
-      .translate((svg.attr('width') * initialScale) / 2, (svg.attr('height') * initialScale) / 2)
-      .scale(initialScale)
+      .translate(width / 2, height / 2)
+      .scale(Math.min(width / bounds.width - zoomOffset, height / bounds.height - zoomOffset))
+      .translate(-bounds.x - bounds.width / 2, -bounds.y - bounds.height / 2)
   );
-
-  svg.attr('height', g.graph().height * initialScale + 400);
-  svg.attr('width', g.graph().width * initialScale + 400);
-  svg.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
   return { zoom };
 };
