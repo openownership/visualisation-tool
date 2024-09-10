@@ -194,6 +194,39 @@ export const defineArrowHeads = (svg) => {
   };
 };
 
+export const createUnspecifiedNode = (element) => {
+  const translateExistingTransform = (d, i, nodes, x) => {
+    // Get the current transform value (if any)
+    const currentTransform = d3.select(nodes[i]).attr('transform') || 'translate(0,0)';
+
+    // Extract the current x and y translation values
+    const translate = currentTransform.match(/translate\(([^,]+),([^\)]+)\)/);
+
+    let currentX = 0;
+    let currentY = 0;
+    if (translate) {
+      currentX = parseFloat(translate[1]);
+      currentY = parseFloat(translate[2]);
+    }
+
+    return `translate(${currentX + x}, ${currentY})`;
+  };
+
+  const firstClone = d3.select(element).clone(true);
+  firstClone
+    .attr('transform', (d, i, nodes) => translateExistingTransform(d, i, nodes, 10))
+    .lower()
+    .selectAll('.label')
+    .remove();
+
+  const secondClone = d3.select(element).clone(true);
+  secondClone
+    .attr('transform', (d, i, nodes) => translateExistingTransform(d, i, nodes, 20))
+    .lower()
+    .selectAll('.label')
+    .remove();
+};
+
 // define the additional offset curves and text for ownership and control edges
 export const createOwnershipCurve = (
   element,

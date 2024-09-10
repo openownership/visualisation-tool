@@ -14,6 +14,7 @@ import {
   setZoomTransform,
   removeMarkers,
   setDashedLine,
+  createUnspecifiedNode,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
 import { setupUI, renderProperties } from './render/renderUI';
@@ -52,6 +53,14 @@ const draw = ({
 
   // Create white backgrounds for all of the node labels so that text legible
   setNodeLabelBkg('white');
+
+  // stack unspecified nodes
+  nodes.forEach((node, index) => {
+    if (node.class.includes('unspecified')) {
+      const element = g.node(node.id).elem;
+      createUnspecifiedNode(element);
+    }
+  });
 
   // calculate the new edges using control and ownership values
   // this section could do with a refactor and move more of the logic into edges.js

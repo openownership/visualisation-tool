@@ -21,6 +21,12 @@ const nodeConfig = {
   style: 'opacity: 1; fill: #fff; stroke: #000; stroke-width: 4px;',
 };
 
+const unknownNodeConfig = {
+  shape: 'circle',
+  width: 100,
+  style: 'opacity: 1; fill: #fff; stroke: #000; stroke-width: 4px; stroke-dasharray: 4,4;',
+};
+
 // This sets up the order in which names should be selected from the data
 const personName = (names, personType) => {
   const personTypes = [
@@ -116,7 +122,7 @@ export const getPersonNodes = (bodsData) => {
       label: personLabel,
       labelType: 'svg',
       class: personType,
-      config: nodeConfig,
+      config: personType !== 'unspecified' ? nodeConfig : unknownNodeConfig,
       replaces: replaces,
       nodeType: iconType(personTypeData),
       countryCode: countryCode,
