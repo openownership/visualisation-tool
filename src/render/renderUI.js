@@ -1,10 +1,10 @@
 import tippy, { hideAll } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
-
+import { setZoomTransform } from './renderD3';
 import { SvgSaver } from '../utils/svgsaver';
 
-export const setupUI = (zoom, svg) => {
+export const setupUI = (zoom, inner, svg) => {
   const zoomInBtn = document.querySelector('#zoom_in');
   const zoomOutBtn = document.querySelector('#zoom_out');
   const downloadSVGBtn = document.querySelector('#download-svg');
@@ -32,19 +32,23 @@ export const setupUI = (zoom, svg) => {
   });
 
   downloadSVGBtn.addEventListener('click', () => {
+    setZoomTransform(inner, svg);
     svgsaver.asSvg(svgElement, 'bods.svg');
   });
   downloadSVGBtn.addEventListener('keyup', (e) => {
     if (e.key === 'Enter' || e.key === 'Space') {
+      setZoomTransform(inner, svg);
       svgsaver.asSvg(svgElement, 'bods.svg');
     }
   });
 
   downloadPNGBtn.addEventListener('click', () => {
+    setZoomTransform(inner, svg);
     svgsaver.asPng(svgElement, 'bods.png');
   });
   downloadPNGBtn.addEventListener('keyup', (e) => {
     if (e.key === 'Enter' || e.key === 'Space') {
+      setZoomTransform(inner, svg);
       svgsaver.asPng(svgElement, 'bods.png');
     }
   });
