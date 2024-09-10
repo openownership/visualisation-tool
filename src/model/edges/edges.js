@@ -105,8 +105,8 @@ export const getOwnershipEdges = (bodsData) => {
           interestRelationship = 'unknown';
         }
       }
-      source = recordDetails.interestedParty;
-      target = recordDetails.subject;
+      source = typeof recordDetails.interestedParty === 'string' ? recordDetails.interestedParty : 'unknown';
+      target = typeof recordDetails.subject === 'string' ? recordDetails.subject : 'unknown';
     } else {
       if (directOrIndirect) {
         interestRelationship = directOrIndirect;
