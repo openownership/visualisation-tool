@@ -10,7 +10,7 @@ const unknownNode = (nodeId) => {
     statementID: nodeId,
     recordType: 'person',
     statementType: 'personStatement',
-    personType: 'unknownPerson',
+    personType: 'unspecified',
     names: [{ fullName: 'Unspecified' }],
   };
 };
