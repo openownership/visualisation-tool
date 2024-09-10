@@ -35,6 +35,11 @@ button {
   text-align: center;
 }
 
+.edgePath,
+.node:not(.unspecified) {
+  cursor:pointer
+}
+
 #disclosure-widget details {
   text-align: left;
   border: 1px solid #000;
