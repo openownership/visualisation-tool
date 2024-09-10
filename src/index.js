@@ -123,9 +123,9 @@ const draw = ({
     }
   });
 
-  const { zoom } = setZoomTransform(inner, svg, g);
+  const { zoom } = setZoomTransform(inner, svg);
 
-  setupUI(zoom, svg);
+  setupUI(zoom, inner, svg);
 
   if (viewProperties) {
     renderProperties(inner, g, useTippy);
