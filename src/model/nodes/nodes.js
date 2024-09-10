@@ -3,7 +3,7 @@ import generateNodeLabel from './nodeSVGLabel';
 import { closedRecords, latest } from '../../utils/bods';
 import sanitise from '../../utils/sanitiser';
 
-// This will generate a node when there unknown fields
+// This will generate a node when there are unspecified fields
 const unknownNode = (nodeId) => {
   return {
     statementId: nodeId,
@@ -11,7 +11,7 @@ const unknownNode = (nodeId) => {
     recordType: 'person',
     statementType: 'personStatement',
     personType: 'unknownPerson',
-    names: [{ fullName: 'Unknown Person(s)' }],
+    names: [{ fullName: 'Unspecified' }],
   };
 };
 
@@ -206,14 +206,29 @@ export const getNodes = (data, edges) => {
   const personNodes = getPersonNodes(data);
   const entityNodes = getEntityNodes(data);
 
-  // Some of the edges have unknown sources then we map these to an inserted unknown node
+  // Some of the edges have unspecified sources or targets so we map these to an inserted unknown node
   const unknownSubjects = edges.filter((edge, index) => {
-    edge.source = edge.source === 'unknown' ? `unknown${index}` : edge.source;
-    return edge.source === `unknown${index}`;
+    edge.source = edge.source === 'unknown' ? `unknownSubject${index}` : edge.source;
+    return edge.source === `unknownSubject${index}`;
   });
-  const unknownNodes = unknownSubjects.map((unknownSubject) => {
-    return setUnknownNode(unknownSubject.source);
+  const unknownTargets = edges.filter((edge, index) => {
+    edge.target = edge.target === 'unknown' ? `unknownTarget${index}` : edge.target;
+    return edge.target === `unknownTarget${index}`;
   });
 
-  return { nodes: [...personNodes, ...entityNodes, ...getPersonNodes(unknownNodes)] };
+  const unknownSubjectNodes = unknownSubjects.map((unknownSubject) => {
+    return setUnknownNode(unknownSubject.source);
+  });
+  const unknownTargetNodes = unknownTargets.map((unknownTarget) => {
+    return setUnknownNode(unknownTarget.target);
+  });
+
+  return {
+    nodes: [
+      ...personNodes,
+      ...entityNodes,
+      ...getPersonNodes(unknownSubjectNodes),
+      ...getPersonNodes(unknownTargetNodes),
+    ],
+  };
 };
