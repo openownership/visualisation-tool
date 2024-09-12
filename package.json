@@ -13,8 +13,8 @@
     "canvas-toBlob": "^1.0.0",
     "compare-versions": "^6.1.1",
     "computed-styles": "^1.1.2",
-    "d3": "^5.15.0",
-    "dagre-d3": "^0.6.4",
+    "d3": "^7.9.0",
+    "dagre-d3-es": "^7.0.10",
     "file-saver": "^2.0.5",
     "flag-icons": "6.1.1",
     "tippy.js": "^6.3.7"
