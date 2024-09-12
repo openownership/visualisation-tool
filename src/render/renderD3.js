@@ -222,12 +222,16 @@ export const createUnspecifiedNode = (element) => {
     .selectAll('.label')
     .remove();
 
+  firstClone.select('circle').attr('style', 'fill:#fff;stroke:#888;stroke-width:4px;stroke-dasharray:4,4;');
+
   const secondClone = d3.select(element).clone(true);
   secondClone
     .attr('transform', (d, i, nodes) => translateExistingTransform(d, i, nodes, 20))
     .lower()
     .selectAll('.label')
     .remove();
+
+  secondClone.select('circle').attr('style', 'fill:#fff;stroke:#888;stroke-width:4px;stroke-dasharray:4,4;');
 };
 
 // define the additional offset curves and text for ownership and control edges

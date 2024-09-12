@@ -55,7 +55,7 @@ const draw = ({
   setNodeLabelBkg('white');
 
   // stack unspecified nodes
-  nodes.forEach((node, index) => {
+  nodes.forEach((node) => {
     if (node.class.includes('unspecified')) {
       const element = g.node(node.id).elem;
       createUnspecifiedNode(element);
