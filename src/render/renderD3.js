@@ -391,14 +391,14 @@ export const setZoomTransform = (inner, svg, g) => {
   const height = svg.attr('height');
 
   // Offset zoom level to account for flags and apply small border of whitespace
-  const zoomOffset = 0.015;
+  const zoomOffset = 50;
 
   // Scale and center the graph
   svg.call(
     zoom.transform,
     d3.zoomIdentity
       .translate(width / 2, height / 2)
-      .scale(Math.min(width / bounds.width - zoomOffset, height / bounds.height - zoomOffset))
+      .scale(Math.min(width / (bounds.width + zoomOffset), height / (bounds.height + zoomOffset)))
       .translate(-bounds.x - bounds.width / 2, -bounds.y - bounds.height / 2)
   );
 
