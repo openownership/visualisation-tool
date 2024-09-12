@@ -1,4 +1,4 @@
-import dagreD3 from 'dagre-d3';
+import * as dagreD3 from 'dagre-d3-es';
 
 export const setupGraph = (rankDir) => {
   const g = new dagreD3.graphlib.Graph({});
