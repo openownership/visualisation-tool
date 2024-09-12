@@ -56,7 +56,7 @@ const draw = ({
 
   // stack unspecified nodes
   nodes.forEach((node) => {
-    if (node.class.includes('unspecified')) {
+    if (node?.class?.includes('unspecified')) {
       const element = g.node(node.id).elem;
       createUnspecifiedNode(element);
     }

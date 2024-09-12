@@ -134,7 +134,7 @@ export const renderProperties = (inner, g, useTippy) => {
   nodes.each((d, i) => {
     const node = g.node(d);
     // Don't display statement properties if the node is unspecified
-    if (node.class.includes('unspecified')) {
+    if (node?.class?.includes('unspecified')) {
       return;
     }
     const description = getDescription(node.description);
