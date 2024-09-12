@@ -431,8 +431,8 @@ export const injectSVGElements = (imagesPath, inner, g) => {
 
 export const setZoomTransform = (inner, svg) => {
   // Set up zoom support
-  const zoom = d3.zoom().on('zoom', () => {
-    inner.attr('transform', d3.event.transform);
+  const zoom = d3.zoom().on('zoom', (zoomEvent) => {
+    inner.attr('transform', zoomEvent.transform);
   });
   svg.call(zoom);
 
