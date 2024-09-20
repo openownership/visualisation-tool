@@ -1,6 +1,6 @@
-import { draw } from '../src/index';
-import { clearSVG } from '../src/utils/svgTools';
-import { parse } from '../src/parse/parse';
+import { draw } from '../src/index.js';
+import { clearSVG } from '../src/utils/svgTools.js';
+import { parse } from '../src/parse/parse.js';
 import './demo.css';
 
 const clearDrawing = () => {

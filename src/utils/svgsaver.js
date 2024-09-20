@@ -1,5 +1,8 @@
 'use strict';
 
+import _computedStyles from 'computed-styles';
+import _fileSaver from 'file-saver';
+
 var _createClass = (function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
@@ -27,11 +30,7 @@ function _classCallCheck(instance, Constructor) {
   }
 }
 
-var _computedStyles = require('computed-styles');
-
 var _computedStyles2 = _interopRequireDefault(_computedStyles);
-
-var _fileSaver = require('file-saver');
 
 var _fileSaver2 = _interopRequireDefault(_fileSaver);
 

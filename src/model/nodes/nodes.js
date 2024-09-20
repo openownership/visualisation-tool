@@ -1,7 +1,7 @@
 import { compareVersions } from 'compare-versions';
-import generateNodeLabel from './nodeSVGLabel';
-import { closedRecords, latest } from '../../utils/bods';
-import sanitise from '../../utils/sanitiser';
+import generateNodeLabel from './nodeSVGLabel.js';
+import { closedRecords, latest } from '../../utils/bods.js';
+import sanitise from '../../utils/sanitiser.js';
 
 // This will generate a node when there are unspecified fields
 const unknownNode = (nodeId) => {
