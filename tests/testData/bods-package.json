@@ -1,0 +1,111 @@
+[
+  {
+    "statementId": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2020-03-04",
+    "publicationDetails": {
+      "publicationDate": "2020-03-04",
+      "bodsVersion": "0.4",
+      "publisher": {
+        "name": "Profitech Ltd"
+      }
+    },
+    "recordId": "c359f58d2977",
+    "recordStatus": "new",
+    "recordType": "entity",
+    "recordDetails": {
+      "isComponent": false,
+      "entityType": {
+        "type": "registeredEntity"
+      },
+      "name": "Profitech Ltd",
+      "foundingDate": "2019-09-03",
+      "identifiers": [
+        {
+          "scheme": "GB-COH",
+          "id": "2063384560"
+        }
+      ]
+    }
+  },
+  {
+    "statementId": "019a93f1-e470-42e9-957b-03559861b2e2",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2020-03-04",
+    "publicationDetails": {
+      "publicationDate": "2020-03-04",
+      "bodsVersion": "0.4",
+      "publisher": {
+        "name": "Profitech Ltd"
+      }
+    },
+    "recordId": "10478c6cf6de",
+    "recordStatus": "new",
+    "recordType": "person",
+    "recordDetails": {
+      "isComponent": false,
+      "personType": "knownPerson",
+      "nationalities": [
+        {
+          "code": "GB",
+          "name": "United Kingdom of Great Britain and Northern Ireland (the)"
+        }
+      ],
+      "names": [
+        {
+          "type": "legal",
+          "fullName": "Jennifer Hewitson-Smith",
+          "givenName": "Jennifer",
+          "familyName": "Hewitson-Smith"
+        },
+        {
+          "type": "alternative",
+          "fullName": "Jenny Hewitson-Smith"
+        }
+      ],
+      "birthDate": "1978-07",
+      "addresses": [
+        {
+          "type": "service",
+          "address": "76 York Road Bournemouth",
+          "postCode": "BH81 3LO",
+          "country": {
+            "name": "United Kingdom",
+            "code": "GB"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "statementId": "fbfd0547-d0c6-4a00-b559-5c5e91c34f5c",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2020-03-04",
+    "publicationDetails": {
+      "publicationDate": "2020-03-04",
+      "bodsVersion": "0.4",
+      "publisher": {
+        "name": "Profitech Ltd"
+      }
+    },
+    "recordId": "93b53022ae6a",
+    "recordStatus": "new",
+    "recordType": "relationship",
+    "recordDetails": {
+      "isComponent": false,
+      "subject": "c359f58d2977",
+      "interestedParty": "10478c6cf6de",
+      "interests": [
+        {
+          "type": "shareholding",
+          "beneficialOwnershipOrControl": true,
+          "directOrIndirect": "direct",
+          "startDate": "2016-04-06",
+          "share": {
+            "exact": 100
+          }
+        }
+      ]
+    }
+  }
+]
