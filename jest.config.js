@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 export default {
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: ['**/src/**'],
   verbose: true,
 };
