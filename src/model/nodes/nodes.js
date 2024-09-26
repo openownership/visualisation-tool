@@ -10,6 +10,17 @@ const unknownNode = (nodeId) => {
     statementID: nodeId,
     recordType: 'person',
     statementType: 'personStatement',
+    personType: 'unknown',
+    names: [{ fullName: 'Unknown' }],
+  };
+};
+
+const unspecifiedNode = (nodeId) => {
+  return {
+    statementId: nodeId,
+    statementID: nodeId,
+    recordType: 'person',
+    statementType: 'personStatement',
     personType: 'unspecified',
     names: [{ fullName: 'Unspecified' }],
   };
@@ -207,6 +218,19 @@ export const getEntityNodes = (bodsData) => {
 };
 
 export const setUnknownNode = (source) => unknownNode(source);
+export const setUnspecifiedNode = (source) => unspecifiedNode(source);
+
+export const findMatchingStatement = (data, matchingId) => {
+  let matchingStatement;
+  const version = data[0]?.publicationDetails?.bodsVersion || '0';
+
+  if (compareVersions(version, '0.4') >= 0) {
+    matchingStatement = data.find((statement) => statement.recordId === matchingId);
+  } else {
+    matchingStatement = data.find((statement) => statement.statementID === matchingId);
+  }
+  return matchingStatement;
+};
 
 export const getNodes = (data, edges) => {
   const personNodes = getPersonNodes(data);
@@ -214,12 +238,34 @@ export const getNodes = (data, edges) => {
 
   // Some of the edges have unspecified sources or targets so we map these to an inserted unknown node
   const unknownSubjects = edges.filter((edge, index) => {
-    edge.source = edge.source === 'unknown' ? `unknownSubject${index}` : edge.source;
-    return edge.source === `unknownSubject${index}`;
+    let source = edge.source;
+    const match = findMatchingStatement(data, source);
+    if (edge.source === 'unknown' || !match) {
+      source = `unknownSubject${index}`;
+    }
+    return source === `unknownSubject${index}`;
   });
   const unknownTargets = edges.filter((edge, index) => {
-    edge.target = edge.target === 'unknown' ? `unknownTarget${index}` : edge.target;
-    return edge.target === `unknownTarget${index}`;
+    let target = edge.target;
+    const match = findMatchingStatement(data, target);
+    if (edge.target === 'unknown' || !match) {
+      target = `unknownTarget${index}`;
+    }
+    return target === `unknownTarget${index}`;
+  });
+  const unspecifiedSubjects = edges.filter((edge, index) => {
+    let source = edge.source;
+    if (edge.source === 'unspecified') {
+      source = `unspecifiedSubject${index}`;
+    }
+    return source === `unspecifiedSubject${index}`;
+  });
+  const unspecifiedTargets = edges.filter((edge, index) => {
+    let target = edge.target;
+    if (edge.target === 'unspecified') {
+      target = `unspecifiedTarget${index}`;
+    }
+    return target === `unspecifiedTarget${index}`;
   });
 
   const unknownSubjectNodes = unknownSubjects.map((unknownSubject) => {
@@ -228,6 +274,12 @@ export const getNodes = (data, edges) => {
   const unknownTargetNodes = unknownTargets.map((unknownTarget) => {
     return setUnknownNode(unknownTarget.target);
   });
+  const unspecifiedSubjectNodes = unspecifiedSubjects.map((unspecifiedSubject) => {
+    return setUnspecifiedNode(unspecifiedSubject.source);
+  });
+  const unspecifiedTargetNodes = unspecifiedTargets.map((unspecifiedTarget) => {
+    return setUnspecifiedNode(unspecifiedTarget.target);
+  });
 
   return {
     nodes: [
@@ -235,6 +287,8 @@ export const getNodes = (data, edges) => {
       ...entityNodes,
       ...getPersonNodes(unknownSubjectNodes),
       ...getPersonNodes(unknownTargetNodes),
+      ...getPersonNodes(unspecifiedSubjectNodes),
+      ...getPersonNodes(unspecifiedTargetNodes),
     ],
   };
 };
