@@ -36,8 +36,13 @@ button {
 }
 
 .edgePath,
-.node:not(.unspecified) {
-  cursor:pointer
+.node {
+  cursor: pointer;
+}
+
+.node.unspecified,
+.node.unknown {
+  cursor: default;
 }
 
 #disclosure-widget details {
