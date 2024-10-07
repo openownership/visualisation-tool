@@ -7,10 +7,5 @@ export default defineConfig({
       reporter: ['text', 'html'],
     },
     environment: 'jsdom',
-    browser: {
-      provider: 'playwright',
-      enabled: true,
-      name: 'chromium',
-    },
   },
 });
