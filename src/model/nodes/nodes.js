@@ -236,8 +236,6 @@ export const getNodes = (data, edges) => {
   const personNodes = getPersonNodes(data);
   const entityNodes = getEntityNodes(data);
 
-  console.log(edges);
-
   // Some of the edges have unspecified sources or targets so we map these to an inserted unknown node
   const unknownSubjects = edges.filter((edge, index) => {
     let source = edge.source;

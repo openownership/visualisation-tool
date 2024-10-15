@@ -4,7 +4,7 @@
 
 import { getPersonNodes, getEntityNodes, findMatchingStatement, getNodes } from '../src/model/nodes/nodes.js';
 
-import edges from './__mocks__/edgeMock.js';
+import testEdges from './__mocks__/edgeMock.js';
 import testData from './__mocks__/dataMock.json';
 
 describe('getPersonNodes()', () => {
@@ -35,12 +35,14 @@ describe('findMatchingStatement()', () => {
 describe('getNodes()', () => {
   it('should not throw an error when called', () => {
     const data = testData;
+    const edges = testEdges;
     const result = () => getNodes(data, edges);
     expect(result).not.toThrow();
   });
 
-  it('should contain a nodes property', () => {
+  it('should contain a "nodes" property', () => {
     const data = testData;
+    const edges = testEdges;
     const nodes = getNodes(data, edges);
     expect(nodes.nodes).toBeDefined();
   });
