@@ -2,5 +2,5 @@ node_modules
 dist
 dev-build
 demo-build
-node_modules
+coverage
 sample

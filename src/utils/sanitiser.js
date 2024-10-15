@@ -1,4 +1,6 @@
 export default (string) => {
+  // Convert non-string values to strings before sanitising
+  const coercedString = string.toString();
   const map = {
     '&': '&amp;',
     '<': '&lt;',
@@ -8,5 +10,5 @@ export default (string) => {
     '/': '&#x2F;',
   };
   const reg = /[&<>"'/]/gi;
-  return string.replace(reg, (match) => map[match]);
+  return coercedString.replace(reg, (match) => map[match]);
 };

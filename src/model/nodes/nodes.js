@@ -1,7 +1,7 @@
 import { compareVersions } from 'compare-versions';
-import generateNodeLabel from './nodeSVGLabel';
-import { closedRecords, latest } from '../../utils/bods';
-import sanitise from '../../utils/sanitiser';
+import generateNodeLabel from './nodeSVGLabel.js';
+import { closedRecords, latest } from '../../utils/bods.js';
+import sanitise from '../../utils/sanitiser.js';
 
 // This will generate a node when there are unspecified fields
 const unknownNode = (nodeId) => {
@@ -75,7 +75,7 @@ const personName = (names, personType) => {
 };
 
 // These are a direct mapping from the nodetype to the respresentative SVG element
-let iconType = (nodeType) => {
+const iconType = (nodeType) => {
   const iconFile = {
     knownPerson: 'bovs-person.svg',
     anonymousPerson: 'bovs-person-unknown.svg',
@@ -222,7 +222,7 @@ export const setUnspecifiedNode = (source) => unspecifiedNode(source);
 
 export const findMatchingStatement = (data, matchingId) => {
   let matchingStatement;
-  const version = data[0]?.publicationDetails?.bodsVersion || '0';
+  const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
 
   if (compareVersions(version, '0.4') >= 0) {
     matchingStatement = data.find((statement) => statement.recordId === matchingId);

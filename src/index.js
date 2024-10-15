@@ -1,5 +1,5 @@
-import { getNodes } from './model/nodes/nodes';
-import { checkInterests, getEdges } from './model/edges/edges';
+import { getNodes } from './model/nodes/nodes.js';
+import { checkInterests, getEdges } from './model/edges/edges.js';
 import {
   setupD3,
   defineArrowHeads,

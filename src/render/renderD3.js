@@ -2,8 +2,8 @@ import * as d3 from 'd3';
 import Bezier from 'bezier-js';
 import SVGInjectInstance from '@iconfu/svg-inject';
 
-import bezierBuilder from '../utils/bezierBuilder';
-import { clearSVG } from '../utils/svgTools';
+import bezierBuilder from '../utils/bezierBuilder.js';
+import { clearSVG } from '../utils/svgTools.js';
 
 export const setupD3 = (container) => {
   // This ensures that the graph is drawn on a clean slate
