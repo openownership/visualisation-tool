@@ -75,7 +75,7 @@ const personName = (names, personType) => {
 };
 
 // These are a direct mapping from the nodetype to the respresentative SVG element
-let iconType = (nodeType) => {
+const iconType = (nodeType) => {
   const iconFile = {
     knownPerson: 'bovs-person.svg',
     anonymousPerson: 'bovs-person-unknown.svg',
@@ -235,6 +235,8 @@ export const findMatchingStatement = (data, matchingId) => {
 export const getNodes = (data, edges) => {
   const personNodes = getPersonNodes(data);
   const entityNodes = getEntityNodes(data);
+
+  console.log(edges);
 
   // Some of the edges have unspecified sources or targets so we map these to an inserted unknown node
   const unknownSubjects = edges.filter((edge, index) => {
