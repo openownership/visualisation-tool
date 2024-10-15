@@ -25,7 +25,7 @@ describe('getEdges()', () => {
     expect(result).not.toThrow();
   });
 
-  it('should contain an edges property', () => {
+  it('should contain an "edges" property', () => {
     const data = testData;
     const edges = getEdges(data);
     expect(edges.edges).toBeDefined();
