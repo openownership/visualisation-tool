@@ -222,7 +222,7 @@ export const setUnspecifiedNode = (source) => unspecifiedNode(source);
 
 export const findMatchingStatement = (data, matchingId) => {
   let matchingStatement;
-  const version = data[0]?.publicationDetails?.bodsVersion || '0';
+  const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
 
   if (compareVersions(version, '0.4') >= 0) {
     matchingStatement = data.find((statement) => statement.recordId === matchingId);

@@ -15,7 +15,7 @@ describe('latest()', () => {
     const data = testData;
     const closedRecords = new Set();
     const version = '0.4';
-    const statements = [
+    const keys = [
       'declarationSubject',
       'publicationDetails',
       'recordDetails',
@@ -26,6 +26,6 @@ describe('latest()', () => {
       'statementId',
     ];
     const result = latest(data, closedRecords, version);
-    expect(result[0]).toContainKeys(statements);
+    expect(result[0]).toContainKeys(keys);
   });
 });
