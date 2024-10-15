@@ -16,7 +16,7 @@ describe('getPersonNodes()', () => {
 
   it('should return data in the correct format', () => {
     const data = testData;
-    const statements = [
+    const keys = [
       'class',
       'config',
       'countryCode',
@@ -31,7 +31,7 @@ describe('getPersonNodes()', () => {
       'statementDate',
     ];
     const result = getPersonNodes(data);
-    expect(result[0]).toContainKeys(statements);
+    expect(result[0]).toContainKeys(keys);
   });
 });
 
@@ -41,6 +41,26 @@ describe('getEntityNodes()', () => {
     const result = () => getEntityNodes(data);
     expect(result).not.toThrow();
   });
+
+  it('should return data in the correct format', () => {
+    const data = testData;
+    const keys = [
+      'class',
+      'config',
+      'countryCode',
+      'description',
+      'fullDescription',
+      'id',
+      'label',
+      'labelType',
+      'nodeType',
+      'recordId',
+      'replaces',
+      'statementDate',
+    ];
+    const result = getPersonNodes(data);
+    expect(result[0]).toContainKeys(keys);
+  });
 });
 
 describe('findMatchingStatement()', () => {
@@ -49,6 +69,13 @@ describe('findMatchingStatement()', () => {
     const id = '10478c6cf6de';
     const result = () => findMatchingStatement(data, id);
     expect(result).not.toThrow();
+  });
+
+  it('should return a matching statement given an id', () => {
+    const data = [{ recordId: '123' }, { recordId: '456' }];
+    const id = '123';
+    const result = findMatchingStatement(data, id);
+    expect(result).toEqual(data[0]);
   });
 });
 
