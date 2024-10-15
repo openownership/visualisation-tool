@@ -13,6 +13,26 @@ describe('getPersonNodes()', () => {
     const result = () => getPersonNodes(data);
     expect(result).not.toThrow();
   });
+
+  it('should return data in the correct format', () => {
+    const data = testData;
+    const statements = [
+      'class',
+      'config',
+      'countryCode',
+      'description',
+      'fullDescription',
+      'id',
+      'label',
+      'labelType',
+      'nodeType',
+      'recordId',
+      'replaces',
+      'statementDate',
+    ];
+    const result = getPersonNodes(data);
+    expect(result[0]).toContainKeys(statements);
+  });
 });
 
 describe('getEntityNodes()', () => {
