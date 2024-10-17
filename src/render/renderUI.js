@@ -32,21 +32,25 @@ export const setupUI = (zoom, inner, svg) => {
   });
 
   downloadSVGBtn.addEventListener('click', () => {
+    e.stopPropagation();
     setZoomTransform(inner, svg);
     svgsaver.asSvg(svgElement, 'bods.svg');
   });
   downloadSVGBtn.addEventListener('keyup', (e) => {
+    e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Space') {
       setZoomTransform(inner, svg);
       svgsaver.asSvg(svgElement, 'bods.svg');
     }
   });
 
-  downloadPNGBtn.addEventListener('click', () => {
+  downloadPNGBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     setZoomTransform(inner, svg);
     svgsaver.asPng(svgElement, 'bods.png');
   });
   downloadPNGBtn.addEventListener('keyup', (e) => {
+    e.stopPropagation();
     if (e.key === 'Enter' || e.key === 'Space') {
       setZoomTransform(inner, svg);
       svgsaver.asPng(svgElement, 'bods.png');
