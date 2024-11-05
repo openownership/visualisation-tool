@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 button {
   margin: 10px;
   width: 200px;
@@ -66,6 +70,7 @@ button {
 }
 
 #draw-vis {
+  margin: 10px auto;
   width: 100%;
 }
 
