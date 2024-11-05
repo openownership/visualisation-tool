@@ -17,7 +17,7 @@ import {
   createUnspecifiedNode,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
-import { setupUI, renderProperties } from './render/renderUI';
+import { setupUI, renderMessage, renderProperties } from './render/renderUI';
 
 import './style.css';
 
@@ -46,7 +46,13 @@ const draw = ({
   setNodes(nodes, g);
 
   // Run the renderer. This is what draws the final graph.
-  render(inner, g);
+  try {
+    render(inner, g);
+  } catch (error) {
+    const message = 'Your data does not have any information that can be drawn.';
+    renderMessage(message);
+    console.error(error);
+  }
 
   // Inject SVG images (for use e.g. as flags)
   injectSVGElements(imagesPath, inner, g);
