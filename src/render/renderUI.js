@@ -131,6 +131,10 @@ function waitForElementsToExist(selector, callback) {
   }, 500);
 }
 
+export const renderMessage = (message) => {
+  alert(message);
+};
+
 export const renderProperties = (inner, g, useTippy) => {
   const disclosureWidget = document.querySelector('#disclosure-widget');
 
