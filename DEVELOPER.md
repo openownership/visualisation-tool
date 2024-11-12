@@ -36,4 +36,12 @@ permissions on the project):
 
 ## Code Guide
 
-The access point to the library is [index.js](./src/index.js). The first few lines of this file generate the objects required to draw the graph by mapping the BODS data to [nodes](./src/nodes/nodes.js) to [edges](./src/edges/edges.js). These are then used to draw draw the graph. After building and drawing the graph we then apply extensive customisation to the D3 graph. See code comments for more context.
+The access point to the library is [index.js](./src/index.js), which contains a `draw()` function. This function is central to bringing the rest of the code together.
+
+The remaining code is structured into three phases, **parsing**, **modelling** and **rendering**, as well as some utility functions.
+
+- [Parsing](./src/parse/parse.js) happens within the demo [index.js](./demo/index.js), as soon as the data is input, before the `draw()` function is called.
+- Modelling occurs at the beginning of the `draw()` function, and generates the objects required to draw the graph by mapping the BODS data to [nodes](./src/model/nodes/nodes.js) to [edges](./src/model/edges/edges.js).
+- Rendering of the [graph](./src/render/renderGraph.js) occurs after the data has been modelled. After building and drawing the graph we then apply extensive customisation to the [D3 graph](./src/render/renderD3.js). Further [UI elements](./src/render/renderUI.js) are rendered at the end of the `draw()` function.
+
+See code comments for more context.
