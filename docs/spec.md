@@ -1,316 +1,117 @@
-# BODS Visualiser Specification
+# BODS visualisation library specification
 
-This document outlines the functionality and requirements of the [BODS Visualiser](https://github.com/openownership/visualisation-tool).
+This document outlines the functionality and requirements of the [BODS visualisation library](https://github.com/openownership/visualisation-tool).
 
-Refer to the full [BODS documentation](https://standard.openownership.org/en/0.3.0/) for more information (and the associated [github repository](https://github.com/openownership/data-standard)). 
+Refer to the full [BODS documentation](https://standard.openownership.org/en/latest) for more information (and the associated [Github repository](https://github.com/openownership/data-standard)). 
 
+## Data requirements for visual features
 
-## Data requirements
+The visualisation library requires JSON data with a minimum set of data fields to produce a directed graph. It is not necessary for the supplied JSON data to be valid BODS data, but it must meet some minimum requirements.
 
-The visualiser requires JSON data with a minimum set of data fields to produce a directed graph. It is not necessary for the supplied JSON data to be valid BODS data, but it must meet these minimum requirements.
+The following sections and tables show the visual features rendered by the tool and what fields they require in the given format of data. Any schema fields that are not present in the tables below are not currently used in the generation of graphs by the visualiser tool and will be ignored.
 
-This is not a full schema. The following tables represent the opinionated requirements of the visualiser. Any schema fields that are not present in the tables below are not currently used in the generation of graphs by the visualiser tool and will be ignored.
+### General
 
+The format of the data presented to the tool:
 
-### Edges
-Edges are drawn using BODS (or BODS-like) [ownership or control statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#ownership-or-control-statement)
+- MUST be a valid JSON array of objects
+- is presumed to be BODS 0.4-like, unless the first object in the JSON array has a `publicationDetails.bodsVersion` value of `0.2` or `0.3`, in which case all objects will be presumed to be BODS 0.2/0.3-like.
+- is presumed to have a time dimension (that is to show the properties of people, entities and relationships changing over a period of time) if:
+  - In BODS 0.2 or 0.3-like data, the `replacesStatements` field is present in any object and contains a value corresponding to the `statementID` value of a different object (both objects having the same `statementType` value).
+  - In BODS 0.4-like data, there are multiple objects which share both a `recordId` value and a `recordType` value.
 
-<table>
-  <tr>
-   <td><strong>Field</strong>
-   </td>
-   <td><strong>Required</strong>
-   </td>
-   <td><strong>Notes</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>statementID
-   </td>
-   <td>Yes
-   </td>
-   <td>A unique ID for this statement
-   </td>
-  </tr>
-  <tr>
-   <td>statementType
-   </td>
-   <td>Yes
-   </td>
-   <td>Must be "ownershipOrControlStatement" to generate edge
-   </td>
-  </tr>
-  <tr>
-   <td>subject
-   </td>
-   <td>Yes
-   </td>
-   <td>This is the connecting node and is required
-   </td>
-  </tr>
-  <tr>
-   <td>subject.describedByPersonStatement
-   </td>
-   <td>(Yes)
-   </td>
-   <td>Must contain a `statementID` from a person node or an entity node in the dataset
-   </td>
-  </tr>
-  <tr>
-   <td>subject.describedByEntityStatement
-   </td>
-   <td>(Yes)
-   </td>
-   <td>Must contain a `statementID` from a person node or an entity node in the dataset
-   </td>
-  </tr>
-  <tr>
-   <td>interestedParty
-   </td>
-   <td>No
-   </td>
-   <td>Creates an unknown node if object is empty (can contain either describedByPersonStatement or describedByEntityStatement)
-   </td>
-  </tr>
-  <tr>
-   <td>interestedParty.describedByPersonStatement
-   </td>
-   <td>No
-   </td>
-   <td>Either person or entity should be supplied otherwise unknown is assumed
-   </td>
-  </tr>
-  <tr>
-   <td>interestedParty.describedByEntityStatement
-   </td>
-   <td>No
-   </td>
-   <td>Either person or entity should be supplied otherwise unknown is assumed
-   </td>
-  </tr>
-  <tr>
-   <td>interests
-   </td>
-   <td>No
-   </td>
-   <td>"<em>Interest details unknown</em>" label applied if empty array
-   </td>
-  </tr>
-  <tr>
-   <td>interests.type
-   </td>
-   <td>No
-   </td>
-   <td>No edge drawn if missing. Only shareholding or votingRights shown
-   </td>
-  </tr>
-  <tr>
-   <td>interests.interestLevel (BODS v0.2)/interests.directOrIndirect (BODS v0.3)
-   </td>
-   <td>No
-   </td>
-   <td>Direct interests are shown as solid lines, indirect or unknown are shown as dotted lines
-   </td>
-  </tr>
-  <tr>
-   <td>interests.share
-   </td>
-   <td>No
-   </td>
-   <td>No labels applied if this field is missing
-   </td>
-  </tr>
-  <tr>
-   <td>interests.share.min
-   </td>
-   <td>No
-   </td>
-   <td>Used to calculate a min - max range
-   </td>
-  </tr>
-  <tr>
-   <td>interests.share.max
-   </td>
-   <td>No
-   </td>
-   <td>Used to calculate a min - max range
-   </td>
-  </tr>
-  <tr>
-   <td>interests.share.exact
-   </td>
-   <td>No
-   </td>
-   <td>Takes precedence over min and max values
-   </td>
-  </tr>
-</table>
+The list of JSON objects presented to the tool is first filtered to represent a snapshot in time (if the data has a time dimension). Then it is processed to draw person nodes, entity nodes and relationship edges.
 
+### Filtering data to produce a snapshot in time
 
+#### BODS 0.2 or 0.3-like data
 
-### Person Nodes
-Person nodes are drawn using BODS (or BODS-like) [person statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#person-statement)
+Only the latest data in a dataset is retained and rendered. If an object (X) has a `statementID` value which appears in the `replacesStatements` array of any other object in the dataset AND both objects have the `statementType` (of `ownershipOrControlStatement`, `entityStatement`, or `personStatement`) then X is filtered out.
 
-<table>
-  <tr>
-   <td><strong>Field</strong>
-   </td>
-   <td><strong>Required</strong>
-   </td>
-   <td><strong>Notes</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>statementID
-   </td>
-   <td>Yes
-   </td>
-   <td>A unique ID for this node
-   </td>
-  </tr>
-  <tr>
-   <td>StatementType
-   </td>
-   <td>Yes
-   </td>
-   <td>Must be "personStatement" to generate person node
-   </td>
-  </tr>
-  <tr>
-   <td>names
-   </td>
-   <td>No
-   </td>
-   <td>Unknown person will be used if this data is missing. The name types will be used in the following order: 'individual', 'transliteration', 'alternative', 'birth', 'translation', 'former'. Unnamed person will be used if any specific name data is missing.
-   </td>
-  </tr>
-  <tr>
-   <td>names.fullName
-   </td>
-   <td>No
-   </td>
-   <td>This field takes precedence
-   </td>
-  </tr>
-  <tr>
-   <td>names.givenName
-   </td>
-   <td>No
-   </td>
-   <td>The name is a join of [givenName, patronymicName, familyName] if fullName is omitted
-   </td>
-  </tr>
-  <tr>
-   <td>names.patronymicName
-   </td>
-   <td>No
-   </td>
-   <td>The name is a join of [givenName, patronymicName, familyName] if fullName is omitted
-   </td>
-  </tr>
-  <tr>
-   <td>names.familyName
-   </td>
-   <td>No
-   </td>
-   <td>The name is a join of [givenName, patronymicName, familyName] if fullName is omitted
-   </td>
-  </tr>
-  <tr>
-   <td>personType
-   </td>
-   <td>No
-   </td>
-   <td>Unknown person will be assumed if the personType is missing.
-   </td>
-  </tr>
-  <tr>
-   <td>nationalities
-   </td>
-   <td>No
-   </td>
-   <td>No flags will be drawn if these data are missing. The visualiser only uses the first nationality in the nationalities array.
-   </td>
-  </tr>
-  <tr>
-   <td>nationalities.code
-   </td>
-   <td>No
-   </td>
-   <td>No flag will be drawn if the country code is missing. The visualiser only uses the first nationality in the nationalities array.
-   </td>
-  </tr>
-</table>
+#### BODS 0.4-like data
 
+A timepoint is a date (not a date-time). To produce a snapshot for timepoint, we take the following approach for T:
 
+1. Objects are grouped, which have both matching `recordId` and `recordType` values. (Where `recordType` is one of `entity`, `person`, or `relationship`.) 
+2. In each group:
+   - for all objects with a `statementDate` value, if `statementDate` > T then filter out the object.
+   - for all objects with a `statementDate` value, filter out all objects except one with the largest value.
+   - if no objects have a `statementDate` value, filter out all but one object. Otherwise filter out all objects without a `statementDate`.
+3. Only one object will be left in each group. These, plus any initial singleton objects are then filtered as follows:
+   - If the object has `recordStatus` `closed`, filter it out.
+   - If the object has `recordType` `entity` and a `dissolutionDate` <= T, filter it out.
+   - If the object has `recordType` `person` and a `deathDate` <= T, filter it out.
+   - If the object has `recordType` `relationship`, filter out all objects in the `interests` array where `endDate` <= T.
 
-### Entity Nodes
-Entity nodes are drawn using BODS (or BODS-like) [entity statements](https://standard.openownership.org/en/0.3.0/schema/schema-browser.html#entity-statement).
+### Processing objects to render visual features
 
-<table>
-  <tr>
-   <td><strong>Field</strong>
-   </td>
-   <td><strong>Required</strong>
-   </td>
-   <td><strong>Notes</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>statementID
-   </td>
-   <td>Yes
-   </td>
-   <td>Unique ID for this node
-   </td>
-  </tr>
-  <tr>
-   <td>statementType
-   </td>
-   <td>Yes
-   </td>
-   <td>Must be 'entityStatement' for entity node
-   </td>
-  </tr>
-  <tr>
-   <td>name
-   </td>
-   <td>No
-   </td>
-   <td>No label shown if missing
-   </td>
-  </tr>
-  <tr>
-   <td>entityType
-   </td>
-   <td>No
-   </td>
-   <td>Assumes unknown node type when entityType is missing
-   </td>
-  </tr>
-  <tr>
-   <td>publicListing
-   </td>
-   <td>No
-   </td>
-   <td>Assumes entity is not listed if this field is missing
-   </td>
-  </tr>
-  <tr>
-   <td>incorporatedInJurisdiction (BODS v0.2)/jurisdiction (BODS v0.3)
-   </td>
-   <td>No
-   </td>
-   <td>No flags are drawn if this field is missing.
-   </td>
-  </tr>
-  <tr>
-   <td>jurisdiction.code
-   </td>
-   <td>No
-   </td>
-   <td>No flags are drawn if this field is missing.
-   </td>
-  </tr>
-</table>
+#### Person Nodes
 
+| Feature | BODS 0.4 field | Value(s) | Required field? | BODS 0.2/0.3 field | Value(s) | Required field? |
+| --- | --- | --- | --- | --- | --- | --- |
+| Basic node drawn | `recordType` | `person` | yes | `statementType` | `personStatement` | yes |
+| | `recordStatus` | Not `closed` | no | | | |
+| Node label drawn (default is 'Unknown person') | `recordDetails.names[]`* | Value of `fullName` or compound of other field values in name object | no | `names[]`* | Value of `fullName` or compound of other field values in name object | no |
+| Node icon drawn (default is unknown person icon) | `recordDetails.personType` | `anonymousPerson`, `unknownPerson` or `knownPerson` | no | `personType` | `anonymousPerson`, `unknownPerson` or `knownPerson` | no |
+| Country flag drawn (default is no flag) | `recordDetails.nationalities[0].code` | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no | `nationalities[0].code | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no |
+| Node is connectable | `recordId` | Any string | no | `statementId` | Any string | no |
+
+\* The name types will be used in the following order: `individual`, `transliteration`, `alternative`, `birth`, `translation`, `former`.
+
+#### Entity Nodes
+
+| Feature | BODS 0.4 field | Value(s) | Required field? | BODS 0.2/0.3 field | Value(s) | Required field? |
+| --- | --- | --- | --- | --- | --- | --- |
+| Basic node drawn | `recordType` | `entity` | yes | `statementType` | `entityStatement` | yes |
+| | `recordStatus` | not `closed` | no | | | |
+| Node label drawn (default is none) | `recordDetails.name` | Any string | no | `name` | Any string | no |
+| Node icon drawn (default is unknown entity icon) | `recordDetails.entityType.type` | `registeredEntity`, `legalEntity`, `arrangement`, `anonymousEntity`, `unknownEntity`, `state` or `stateBody` | no | `entityType` | `registeredEntity`, `legalEntity`, `arrangement`, `anonymousEntity`, `unknownEntity`, `state` or `stateBody` | no |
+| Public company node icon drawn | `recordDetails.publicListing.hasPublicListing` | `true` | no | `publicListing.hasPublicListing` | `true` | no |
+| Country flag drawn (default is no flag) | `recordDetails.jurisdiction.code` | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no | `incorporatedInJurisdiction.code` (BODS v0.2) or `jurisdiction.code` (BODS v0.3) | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no |
+| Node is connectable | `recordId` | Any string | no | `statementId` | Any string | no |
+
+#### Edges
+
+| Feature | BODS 0.4 field | Value(s) | Required field? | BODS 0.2/0.3 field | Value(s) | Required field? |
+| --- | --- | --- | --- | --- | --- | --- |
+| Edge is drawn (black dotted line, no label) | `recordType` | `relationship` | yes | `statementType` | `ownershipOrControlStatement` | yes |
+| | `recordStatus` | not `closed` | no | | | |
+| | `recordDetails.subject` or `recordDetails.interestedParty` | `recordId` of a connectable node | yes | `subject` or `interestedParty` | `statementId` of a connectable node | yes |
+| Unspecified node drawn and connected as interested party with label 'Unspecified' | `recordDetails.interestedParty` | `type` is object | no | `interestedParty` | `type` is object | no |
+| Unspecified node drawn and connected as subject with label 'Unspecified' | `recordDetails.subject` | `type` is object | no | `subject` | `type` is object | no |
+| Unknown node drawn and connected as interested party | `recordDetails.interestedParty` field is missing or `interestedParty` is not a `recordId` string matching a connectable node | n/a | no | `interestedParty` field is missing or `interestedParty` is not a `statementId` string matching a connectable node | n/a | no |
+| Unknown node drawn and connected as subject | `recordDetails.subject` field is missing or `subject` is not a `recordId` string matching a connectable node | n/a | no | `subject` field is missing or `subject` is not a `statementId` string matching a connectable node | n/a | no |
+| Edge line added: purple with 'owns' label (default is dotted) | `recordDetails.interests[].interestType` | At least one interest has `interestType` in the 'ownership' category** | no | `interests[].interestType` | At least one interest has `interestType` in the 'ownership' category** | no |
+| ...line is made solid | `recordDetails.interests[].directOrIndirect` | At least one interest in the 'ownership' category** and has value `direct` | no | `interests[].interestLevel` (BODS v0.2) or `interests[].directOrIndirect` (BODS v0.3) | At least one interest in the 'ownership' category** and has value `direct` | no |
+| Edge line added: light blue with 'controls' label (default is dotted) | `recordDetails.interests[].interestType` | At least one interest has `interestType` in the 'control' category** | no | `interests[].interestType` | At least one interest has `interestType` in the 'control' category** | no |
+| ...line is made solid | `recordDetails.interests[].directOrIndirect` | At least one interest in the 'control' category** and has value `direct` | no | `interests[].interestLevel` (BODS v0.2) or `interests[].directOrIndirect` (BODS v0.3) | At least one interest in the 'control' category** and has value `direct` | no |
+| Black edge is made solid | `recordDetails.interests[].directOrIndirect` | At least one interest not in the 'ownership' or 'control' category** and has value `direct` | no | `interests[].interestLevel` (BODS v0.2) or `interests[].directOrIndirect` (BODS v0.3) | At least one interest not in the 'ownership' or 'control' category** and has value `direct` | no |
+| Thickness or 'owns' and 'controls' lines | `recordDetails.interests[].share`, if `interestType` is `shareholding` or `votingRights` | Exact value takes precedence over a min-max range | no | `recordDetails.interests[].share`, if `interestType` is `shareholding` or `votingRights` | Exact value takes precedence over a min-max range | no |
+
+\** The following table details which `interestType`s fall into which category:
+
+| `interestType` | BODS 0.3 | BODS 0.4 | Category |
+| --- | --- | --- | --- |
+| `shareholding` | x | x | ownership |
+| `votingRights` | x | x | control |
+| `appointmentOfBoard` | x | x | control |
+| `otherInfluenceOrControl` | x | x | control |
+| `seniorManagingOfficial` | x | x | control |
+| `settlor` | x | x | control |
+| `trustee` | x | x | control |
+| `protector` | x | x | control |
+| `beneficiaryOfLegalArrangement` | x | x | ownership |
+| `rightsToSurplusAssetsOnDissolution` | x | x | ownership |
+| `rightsToProfitOrIncome` | x | x | ownership |
+| `rightsGrantedByContract` | x | x | control |
+| `conditionalRightsGrantedByContract` | x | x | control |
+| `controlViaCompanyRulesOrArticles` | x | x | control |
+| `controlByLegalFramework` | x | x | control |
+| `boardMember` | x | x | control |
+| `boardChair` | x | x | control |
+| `unknownInterest` | x | x | - |
+| `unpublishedInterest` | x | x | - |
+| `enjoymentAndUseOfAssets` | x | x | ownership |
+| `rightToProfitOrIncomeFromAssets` | x | x | ownership |
+| `nominee` | | x | control |
+| `nominator` | | x | control |
