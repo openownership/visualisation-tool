@@ -17,7 +17,7 @@ import {
   createUnspecifiedNode,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
-import { setupUI, renderMessage, renderProperties } from './render/renderUI';
+import { setupUI, renderMessage, renderProperties, renderChangesOverTime } from './render/renderUI';
 
 import './style.css';
 
@@ -145,6 +145,8 @@ const draw = ({
   if (viewProperties) {
     renderProperties(inner, g, useTippy);
   }
+
+  renderChangesOverTime(data);
 };
 
 export { draw };
