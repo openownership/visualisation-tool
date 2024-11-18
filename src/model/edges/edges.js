@@ -205,7 +205,7 @@ export const getOwnershipEdges = (bodsData) => {
     };
   });
 
-  return latest(mappedData, closedRecords, version);
+  return mappedData;
 };
 
 export const getEdges = (data) => {

@@ -17,7 +17,8 @@ import {
   createUnspecifiedNode,
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
-import { setupUI, renderMessage, renderProperties, renderChangesOverTime } from './render/renderUI';
+import { setupUI, renderMessage, renderProperties, renderDateSlider } from './render/renderUI';
+import { getDates } from './utils/bods.js';
 
 import './style.css';
 
@@ -36,6 +37,14 @@ const draw = ({
   const { g, render } = setupGraph(rankDir);
 
   defineArrowHeads(svg);
+
+  const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
+
+  // TODO: detect dates in data
+  const dates = getDates(data);
+  // TODO: select data for vis; default to most recent
+  // TODO: add event listener to update data according to slider position
+  renderDateSlider(data, dates, version);
 
   // Extract the BODS data that is required for drawing the graph
   const { edges } = getEdges(data);
@@ -145,8 +154,6 @@ const draw = ({
   if (viewProperties) {
     renderProperties(inner, g, useTippy);
   }
-
-  renderChangesOverTime(data);
 };
 
 export { draw };

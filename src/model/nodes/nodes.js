@@ -146,7 +146,7 @@ export const getPersonNodes = (bodsData) => {
     };
   });
 
-  return latest(mappedData, closedRecords, version);
+  return mappedData;
 };
 
 // This builds up the required entity object from the BODS data, using the functions above
@@ -214,7 +214,7 @@ export const getEntityNodes = (bodsData) => {
     };
   });
 
-  return latest(mappedData, closedRecords, version);
+  return mappedData;
 };
 
 export const setUnknownNode = (source) => unknownNode(source);
