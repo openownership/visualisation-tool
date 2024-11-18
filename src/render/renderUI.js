@@ -209,22 +209,31 @@ export const renderProperties = (inner, g, useTippy) => {
   });
 };
 
-export const renderChangesOverTime = (data) => {
+export const renderDateSlider = (data, dates, version) => {
   const sliderContainer = document.querySelector('#slider-container');
-  const dates = [1, 2];
-  const version = data[0]?.publicationDetails?.bodsVersion || '0';
   if (compareVersions(version, '0.4') >= 0 && dates.length) {
     sliderContainer.style.display = '';
     sliderContainer.innerHTML = `
-      <input type="range" min="0" max="1" value="1" list="markers" step="any"></input>
+      <input id="slider-input" type="range" min="${dates[0]}" max="${dates[1]}" value="${dates[1]}" list="markers" step="any"></input>
       <datalist id="markers">
-        <option value="0"></option>
-        <option value="0.25"></option>
-        <option value="0.50"></option>
-        <option value="0.75"></option>
-        <option value="1"></option>
       </datalist>
+      <p>Date: <output id="slider-value"></output></p>
     `;
+    const datalist = document.querySelector('#markers');
+
+    for (let i = 0; i < dates.length - 1; i++) {
+      datalist.innerHTML += `
+        <option value="${dates[i]}"></option>
+      `;
+    }
+
+    const value = document.querySelector('#slider-value');
+    const input = document.querySelector('#slider-input');
+    value.textContent = input.value;
+    input.addEventListener('input', (event) => {
+      value.textContent = event.target.value;
+    });
+
     // TODO: set slider steps to all dates values
   } else if (compareVersions(version, '0.4') <= 0 && dates.length) {
     sliderContainer.style.display = '';
