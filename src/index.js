@@ -22,8 +22,37 @@ import { getDates } from './utils/bods.js';
 
 import './style.css';
 
+export const selectData = (data, currentlySelectedDate = null) => {
+  const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
+  // Detect dates in data; default to most recent
+  const dates = getDates(data);
+  let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
+
+  // Update selected date according to slider position
+  renderDateSlider(dates, version, currentlySelectedDate);
+  const applyDateButton = document.querySelector('#apply-date-btn');
+  if (applyDateButton) {
+    applyDateButton.addEventListener('click', () => {
+      selectedDate = dates[document.querySelector('#slider-input').value];
+      selectData(data, selectedDate);
+    });
+
+    applyDateButton.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' || e.key === 'Space') {
+        selectedDate = dates[document.querySelector('#slider-input').value];
+        selectData(data, selectedDate);
+      }
+    });
+  }
+  console.log(selectedDate);
+
+  // TODO: Select data for vis based on selected date
+
+  return data;
+};
+
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
-const draw = ({
+export const draw = ({
   data,
   container,
   imagesPath,
@@ -37,14 +66,6 @@ const draw = ({
   const { g, render } = setupGraph(rankDir);
 
   defineArrowHeads(svg);
-
-  const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
-
-  // TODO: detect dates in data
-  const dates = getDates(data);
-  // TODO: select data for vis; default to most recent
-  // TODO: add event listener to update data according to slider position
-  renderDateSlider(data, dates, version);
 
   // Extract the BODS data that is required for drawing the graph
   const { edges } = getEdges(data);
@@ -155,5 +176,3 @@ const draw = ({
     renderProperties(inner, g, useTippy);
   }
 };
-
-export { draw };

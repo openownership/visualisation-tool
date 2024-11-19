@@ -32,7 +32,7 @@ export const setupUI = (zoom, inner, svg) => {
     }
   });
 
-  downloadSVGBtn.addEventListener('click', () => {
+  downloadSVGBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     setZoomTransform(inner, svg);
     svgsaver.asSvg(svgElement, 'bods.svg');
@@ -209,37 +209,43 @@ export const renderProperties = (inner, g, useTippy) => {
   });
 };
 
-export const renderDateSlider = (data, dates, version) => {
+export const renderDateSlider = (dates, version, currentlySelectedDate) => {
   const sliderContainer = document.querySelector('#slider-container');
+  let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
   if (compareVersions(version, '0.4') >= 0 && dates.length) {
-    sliderContainer.style.display = '';
+    sliderContainer.style.display = 'block';
     sliderContainer.innerHTML = `
-      <input id="slider-input" type="range" min="${dates[0]}" max="${dates[1]}" value="${dates[1]}" list="markers" step="any"></input>
+      <input id="slider-input" type="range" min="0" max="${dates.length - 1}" list="markers" step="1"></input>
       <datalist id="markers">
       </datalist>
       <p>Date: <output id="slider-value"></output></p>
+      <button id="apply-date-btn">Apply</button>
     `;
     const datalist = document.querySelector('#markers');
 
-    for (let i = 0; i < dates.length - 1; i++) {
+    for (let i = 0; i < dates.length; i++) {
       datalist.innerHTML += `
-        <option value="${dates[i]}"></option>
+        <option value="${i}"></option>
       `;
     }
 
     const value = document.querySelector('#slider-value');
     const input = document.querySelector('#slider-input');
-    value.textContent = input.value;
+    input.value = currentlySelectedDate ? dates.indexOf(currentlySelectedDate) : dates.length - 1;
+    value.textContent = dates[input.value];
     input.addEventListener('input', (event) => {
-      value.textContent = event.target.value;
+      value.textContent = dates[event.target.value];
+      selectedDate = dates[event.target.value];
     });
-
-    // TODO: set slider steps to all dates values
+    return selectedDate;
   } else if (compareVersions(version, '0.4') <= 0 && dates.length) {
-    sliderContainer.style.display = '';
+    sliderContainer.style.display = 'block';
     sliderContainer.innerHTML = `
-      <input type="range" disabled min="0" max="1" value="1"></input>
+      <input id="slider-input" type="range" disabled min="0" max="1"></input>
+      <p>Date: <output id="slider-value">${dates[dates.length - 1]}</output></p>
     `;
+    const input = document.querySelector('#slider-input');
+    input.value = 1;
   } else {
     sliderContainer.style.display = 'none';
   }
