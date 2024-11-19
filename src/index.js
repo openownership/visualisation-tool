@@ -18,12 +18,32 @@ import {
 } from './render/renderD3';
 import { setupGraph, setEdges, setNodes } from './render/renderGraph';
 import { setupUI, renderMessage, renderProperties, renderDateSlider } from './render/renderUI';
-import { getDates } from './utils/bods.js';
+import { getDates, filteredData } from './utils/bods.js';
 
 import './style.css';
 
-export const selectData = (data, currentlySelectedDate = null) => {
+export const selectData = ({
+  data,
+  selectedData,
+  container,
+  imagesPath,
+  labelLimit = 8,
+  rankDir = 'LR',
+  viewProperties = true,
+  useTippy = false,
+  currentlySelectedDate = null,
+}) => {
+  const config = {
+    data,
+    container,
+    imagesPath,
+    labelLimit,
+    rankDir,
+    viewProperties,
+    useTippy,
+  };
   const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
+
   // Detect dates in data; default to most recent
   const dates = getDates(data);
   let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
@@ -34,33 +54,41 @@ export const selectData = (data, currentlySelectedDate = null) => {
   if (applyDateButton) {
     applyDateButton.addEventListener('click', () => {
       selectedDate = dates[document.querySelector('#slider-input').value];
-      selectData(data, selectedDate);
+      selectData({
+        data,
+        container,
+        imagesPath,
+        labelLimit,
+        rankDir,
+        viewProperties,
+        useTippy,
+        currentlySelectedDate: selectedDate,
+      });
     });
 
     applyDateButton.addEventListener('keyup', (e) => {
       if (e.key === 'Enter' || e.key === 'Space') {
         selectedDate = dates[document.querySelector('#slider-input').value];
-        selectData(data, selectedDate);
+        selectData({
+          data,
+          container,
+          imagesPath,
+          labelLimit,
+          rankDir,
+          viewProperties,
+          useTippy,
+          currentlySelectedDate: selectedDate,
+        });
       }
     });
   }
-  console.log(selectedDate);
-
-  // TODO: Select data for vis based on selected date
-
-  return data;
+  config.selectedData = filteredData(data, selectedDate, version);
+  draw(config);
 };
 
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
-export const draw = ({
-  data,
-  container,
-  imagesPath,
-  labelLimit = 8,
-  rankDir = 'LR',
-  viewProperties = true,
-  useTippy = false,
-}) => {
+export const draw = (config) => {
+  const { data, selectedData, container, imagesPath, labelLimit, rankDir, viewProperties, useTippy } = config;
   // Initialise D3 and graph
   const { svg, inner } = setupD3(container);
   const { g, render } = setupGraph(rankDir);
@@ -68,8 +96,8 @@ export const draw = ({
   defineArrowHeads(svg);
 
   // Extract the BODS data that is required for drawing the graph
-  const { edges } = getEdges(data);
-  const { nodes } = getNodes(data, edges);
+  const { edges } = getEdges(selectedData);
+  const { nodes } = getNodes(selectedData, edges);
 
   // This section maps the incoming BODS data to the parameters expected by Dagre
   setEdges(edges, g);

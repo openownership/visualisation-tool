@@ -17,7 +17,7 @@ export const getDates = (statements) => {
   });
 };
 
-export const filteredData = (statements, version) => {
+export const filteredData = (statements, selectedDate, version) => {
   if (compareVersions(version, '0.4') >= 0) {
     // get all statements with matching recordId and recordType values
     const recordIdCount = {};
@@ -27,12 +27,36 @@ export const filteredData = (statements, version) => {
       recordIdCount[key] = (recordIdCount[key] || 0) + 1;
     }
 
-    const duplicates = statements.filter((statement) => {
+    const duplicateStatements = statements.filter((statement) => {
       const key = `${statement.recordId}-${statement.recordType}`;
       return recordIdCount[key] > 1;
     });
 
-    console.log(duplicates);
+    // remove all statements outside of selectedDate
+    const filteredByDate = duplicateStatements.filter((statement) => {
+      return statement.statementDate <= selectedDate;
+    });
+
+    // remove all statements but most recent of those already filtered by date
+    const filteredByRecency = Object.values(
+      filteredByDate.reduce((acc, statement) => {
+        const key = `${statement.recordId}-${statement.recordType}`;
+        if (!acc[key] || new Date(statement.statementDate) > new Date(acc[key].statementDate)) {
+          acc[key] = statement;
+        }
+        return acc;
+      }, {})
+    );
+
+    // filter original statements to only show selectedStatements
+    return statements.filter((statement) =>
+      filteredByRecency.some(
+        (filtered) =>
+          filtered.recordId === statement.recordId &&
+          filtered.recordType === statement.recordType &&
+          filtered.statementDate === statement.statementDate
+      )
+    );
   } else {
     // get all statements with statementID values in replacesStatements array
   }
