@@ -48,9 +48,44 @@ export const filteredData = (statements, selectedDate, version) => {
       }, {})
     );
 
+    // remove closed records of various types
+    const filteredByRecordStatus = filteredByRecency.filter((statement) => {
+      if (statement.recordStatus === 'closed') {
+        return false;
+      }
+
+      if (
+        statement.recordType === 'entity' &&
+        statement.dissolutionDate &&
+        new Date(statement.dissolutionDate) <= new Date(selectedDate)
+      ) {
+        return false;
+      }
+
+      if (
+        statement.recordType === 'person' &&
+        statement.deathDate &&
+        new Date(statement.deathDate) <= new Date(selectedDate)
+      ) {
+        return false;
+      }
+
+      if (statement.recordType === 'relationship' && statement.recordDetails?.interests) {
+        statement.recordDetails.interests = statement.recordDetails.interests.filter((interest) => {
+          return !interest.endDate || new Date(interest.endDate) > new Date(selectedDate);
+        });
+
+        if (statement.recordDetails.interests.length === 0) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
     // filter original statements to only show selectedStatements
     return statements.filter((statement) =>
-      filteredByRecency.some(
+      filteredByRecordStatus.some(
         (filtered) =>
           filtered.recordId === statement.recordId &&
           filtered.recordType === statement.recordType &&
