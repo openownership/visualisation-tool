@@ -212,7 +212,7 @@ export const renderProperties = (inner, g, useTippy) => {
 export const renderDateSlider = (dates, version, currentlySelectedDate) => {
   const sliderContainer = document.querySelector('#slider-container');
   let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
-  if (compareVersions(version, '0.4') >= 0 && dates.length) {
+  if (compareVersions(version, '0.4') >= 0 && dates.length > 1) {
     sliderContainer.style.display = 'block';
     sliderContainer.innerHTML = `
       <input id="slider-input" type="range" min="0" max="${dates.length - 1}" list="markers" step="1"></input>
@@ -238,7 +238,7 @@ export const renderDateSlider = (dates, version, currentlySelectedDate) => {
       selectedDate = dates[event.target.value];
     });
     return selectedDate;
-  } else if (compareVersions(version, '0.4') <= 0 && dates.length) {
+  } else if (compareVersions(version, '0.4') <= 0 && dates.length > 1) {
     sliderContainer.style.display = 'block';
     sliderContainer.innerHTML = `
       <input id="slider-input" type="range" disabled min="0" max="1"></input>
