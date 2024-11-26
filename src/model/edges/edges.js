@@ -1,6 +1,5 @@
 import { compareVersions } from 'compare-versions';
 import { curveMonotoneX } from 'd3';
-import { closedRecords, latest } from '../../utils/bods.js';
 import interestTypesCodelist from '../../codelists/interestTypes.js';
 
 // This sets the style and shape of the edges using D3 parameters
