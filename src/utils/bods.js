@@ -84,14 +84,18 @@ export const filteredData = (statements, selectedDate, version) => {
     });
 
     // filter original statements to only show selectedStatements
-    return statements.filter((statement) =>
-      filteredByRecordStatus.some(
-        (filtered) =>
-          filtered.recordId === statement.recordId &&
-          filtered.recordType === statement.recordType &&
-          filtered.statementDate === statement.statementDate
-      )
+    const selectedStatements = statements.filter(
+      (statement) =>
+        filteredByRecordStatus.length === 0 ||
+        filteredByRecordStatus.some(
+          (filtered) =>
+            filtered.recordId === statement.recordId &&
+            filtered.recordType === statement.recordType &&
+            filtered.statementDate === statement.statementDate
+        )
     );
+
+    return selectedStatements;
   } else {
     // get all statements with statementID values in replacesStatements array
   }
