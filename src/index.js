@@ -51,8 +51,9 @@ export const selectData = ({
   // Update selected date according to slider position
   renderDateSlider(dates, version, currentlySelectedDate);
   const applyDateButton = document.querySelector('#apply-date-btn');
-  if (applyDateButton) {
-    applyDateButton.addEventListener('click', () => {
+  const slider = document.querySelector('#slider-input');
+  if (slider) {
+    slider.addEventListener('input', () => {
       selectedDate = dates[document.querySelector('#slider-input').value];
       selectData({
         data,
@@ -65,22 +66,7 @@ export const selectData = ({
         currentlySelectedDate: selectedDate,
       });
     });
-
-    applyDateButton.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter' || e.key === 'Space') {
-        selectedDate = dates[document.querySelector('#slider-input').value];
-        selectData({
-          data,
-          container,
-          imagesPath,
-          labelLimit,
-          rankDir,
-          viewProperties,
-          useTippy,
-          currentlySelectedDate: selectedDate,
-        });
-      }
-    });
+    slider.focus();
   }
   config.selectedData = filteredData(data, selectedDate, version);
   draw(config);

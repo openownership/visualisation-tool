@@ -219,7 +219,6 @@ export const renderDateSlider = (dates, version, currentlySelectedDate) => {
       <datalist id="markers">
       </datalist>
       <p>Date: <output id="slider-value"></output></p>
-      <button id="apply-date-btn">Apply</button>
     `;
     const datalist = document.querySelector('#markers');
 
