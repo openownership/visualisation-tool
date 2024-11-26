@@ -38,20 +38,24 @@ export const filteredData = (statements, selectedDate, version) => {
     });
 
     // remove all statements outside of selectedDate
-    const filteredByDate = duplicateStatements.filter((statement) => {
-      return statement.statementDate <= selectedDate;
-    });
+    const filteredByDate = (array) => {
+      return array.filter((statement) => {
+        return statement.statementDate <= selectedDate;
+      });
+    };
 
     // remove all statements but most recent of those already filtered by date
-    const filteredByRecency = Object.values(
-      filteredByDate.reduce((acc, statement) => {
-        const key = `${statement.recordId}-${statement.recordType}`;
-        if (!acc[key] || new Date(statement.statementDate) > new Date(acc[key].statementDate)) {
-          acc[key] = statement;
-        }
-        return acc;
-      }, {})
-    );
+    const filteredByRecency = (array) => {
+      return Object.values(
+        array.reduce((acc, statement) => {
+          const key = `${statement.recordId}-${statement.recordType}`;
+          if (!acc[key] || new Date(statement.statementDate) > new Date(acc[key].statementDate)) {
+            acc[key] = statement;
+          }
+          return acc;
+        }, {})
+      );
+    };
 
     // remove closed records of various types
     const filterByRecordStatus = (array) => {
@@ -90,22 +94,26 @@ export const filteredData = (statements, selectedDate, version) => {
       });
     };
 
-    const dupsFilteredByStatus = filterByRecordStatus(filteredByRecency);
-    const uniqueFilteredByStatus = filterByRecordStatus(uniqueStatements);
-
-    // filter original statements to only show selectedStatements
-    const selectedStatements = statements.filter(
-      (statement) =>
-        dupsFilteredByStatus.length === 0 ||
-        dupsFilteredByStatus.some(
+    // filter original statements to only show selected statements
+    const selectStatements = (array) => {
+      return statements.filter((statement) =>
+        array.some(
           (filtered) =>
             filtered.recordId === statement.recordId &&
             filtered.recordType === statement.recordType &&
             filtered.statementDate === statement.statementDate
         )
+      );
+    };
+
+    const duplicateSelectedStatements = selectStatements(
+      filterByRecordStatus(filteredByRecency(filteredByDate(duplicateStatements)))
+    );
+    const uniqueSelectedStatements = selectStatements(
+      filterByRecordStatus(filteredByRecency(filteredByDate(uniqueStatements)))
     );
 
-    return [...selectedStatements, ...uniqueFilteredByStatus];
+    return [...duplicateSelectedStatements, ...uniqueSelectedStatements];
   } else {
     // get all statements with statementID values in replacesStatements array
     const nodeTypes = ['ownershipOrControlStatement', 'entityStatement', 'personStatement'];
