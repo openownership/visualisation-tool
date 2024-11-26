@@ -108,6 +108,18 @@ export const filteredData = (statements, selectedDate, version) => {
     return [...selectedStatements, ...uniqueFilteredByStatus];
   } else {
     // get all statements with statementID values in replacesStatements array
+    const nodeTypes = ['ownershipOrControlStatement', 'entityStatement', 'personStatement'];
+    const replacedStatements = new Set();
+
+    statements.forEach((statement) => {
+      if (nodeTypes.includes(statement.statementType)) {
+        (statement.replacesStatements || []).forEach((id) => replacedStatements.add(id));
+      }
+    });
+
+    return statements.filter((statement) => {
+      return !(replacedStatements.has(statement.statementID) && nodeTypes.includes(statement.statementType));
+    });
   }
 };
 
