@@ -64,7 +64,7 @@ export const checkInterests = (interestRelationship) => {
 };
 
 export const getOwnershipEdges = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0.4';
 
   const filteredData = bodsData.filter((statement) => {
     if (compareVersions(version, '0.4') >= 0) {

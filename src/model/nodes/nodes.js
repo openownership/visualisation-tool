@@ -94,7 +94,7 @@ const iconType = (nodeType) => {
 
 // This builds up the required person object from the BODS data, using the functions above
 export const getPersonNodes = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0.4';
 
   const filteredData = bodsData.filter((statement) => {
     if (compareVersions(version, '0.4') >= 0) {
@@ -150,7 +150,7 @@ export const getPersonNodes = (bodsData) => {
 
 // This builds up the required entity object from the BODS data, using the functions above
 export const getEntityNodes = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0.4';
 
   const filteredData = bodsData.filter((statement) => {
     if (compareVersions(version, '0.4') >= 0) {
