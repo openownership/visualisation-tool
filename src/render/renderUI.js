@@ -65,7 +65,9 @@ const getDescription = (description) => {
   let identifiersOutput = '';
   if (description.identifiers) {
     identifiers = description.identifiers.map((identifier, index) => ({
-      [`Identifier ${index + 1}`]: `(${identifier.schemeName}) ${identifier.id}`,
+      [`Identifier ${index + 1}`]: `${identifier.scheme ? '(' + identifier.scheme + ') ' : ''}${
+        identifier.id
+      }`,
     }));
     identifiers.forEach((item) => {
       const key = Object.keys(item)[0];
