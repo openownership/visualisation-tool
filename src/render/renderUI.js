@@ -1,3 +1,4 @@
+import { compareVersions } from 'compare-versions';
 import tippy, { hideAll } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
@@ -31,7 +32,7 @@ export const setupUI = (zoom, inner, svg) => {
     }
   });
 
-  downloadSVGBtn.addEventListener('click', () => {
+  downloadSVGBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     setZoomTransform(inner, svg);
     svgsaver.asSvg(svgElement, 'bods.svg');
@@ -64,7 +65,9 @@ const getDescription = (description) => {
   let identifiersOutput = '';
   if (description.identifiers) {
     identifiers = description.identifiers.map((identifier, index) => ({
-      [`Identifier ${index + 1}`]: `(${identifier.scheme}) ${identifier.id}`,
+      [`Identifier ${index + 1}`]: `${identifier.scheme ? '(' + identifier.scheme + ') ' : ''}${
+        identifier.id
+      }`,
     }));
     identifiers.forEach((item) => {
       const key = Object.keys(item)[0];
@@ -137,6 +140,7 @@ export const renderMessage = (message) => {
 
 export const renderProperties = (inner, g, useTippy) => {
   const disclosureWidget = document.querySelector('#disclosure-widget');
+  disclosureWidget.innerHTML = '';
 
   const nodes = inner.selectAll('g.node');
   nodes.each((d, i) => {
@@ -206,4 +210,45 @@ export const renderProperties = (inner, g, useTippy) => {
       });
     });
   });
+};
+
+export const renderDateSlider = (dates, version, currentlySelectedDate) => {
+  const sliderContainer = document.querySelector('#slider-container');
+  let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
+  if (compareVersions(version, '0.4') >= 0 && dates.length > 1) {
+    sliderContainer.style.display = 'block';
+    sliderContainer.innerHTML = `
+      <input id="slider-input" type="range" min="0" max="${dates.length - 1}" list="markers" step="1"></input>
+      <datalist id="markers">
+      </datalist>
+      <p>Date: <output id="slider-value"></output></p>
+    `;
+    const datalist = document.querySelector('#markers');
+
+    for (let i = 0; i < dates.length; i++) {
+      datalist.innerHTML += `
+        <option value="${i}"></option>
+      `;
+    }
+
+    const value = document.querySelector('#slider-value');
+    const input = document.querySelector('#slider-input');
+    input.value = currentlySelectedDate ? dates.indexOf(currentlySelectedDate) : dates.length - 1;
+    value.textContent = dates[input.value];
+    input.addEventListener('input', (event) => {
+      value.textContent = dates[event.target.value];
+      selectedDate = dates[event.target.value];
+    });
+    return selectedDate;
+  } else if (compareVersions(version, '0.4') <= 0 && dates.length > 1) {
+    sliderContainer.style.display = 'block';
+    sliderContainer.innerHTML = `
+      <input id="slider-input" type="range" disabled min="0" max="1"></input>
+      <p>Date: <output id="slider-value">${dates[dates.length - 1]}</output></p>
+    `;
+    const input = document.querySelector('#slider-input');
+    input.value = 1;
+  } else {
+    sliderContainer.style.display = 'none';
+  }
 };

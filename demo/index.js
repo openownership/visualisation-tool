@@ -1,4 +1,4 @@
-import { draw } from '../src/index.js';
+import { selectData } from '../src/index.js';
 import { clearSVG } from '../src/utils/svgTools.js';
 import { parse } from '../src/parse/parse.js';
 import './demo.css';
@@ -38,8 +38,8 @@ const getJSON = async () => {
 const visualiseData = (data) => {
   // Render data as text
   document.getElementById('result').value = data.formatted;
-  // Render data as graph
-  draw({
+  // Select data and render as graph
+  selectData({
     data: data.parsed,
     container: document.getElementById('svg-holder'),
     imagesPath: 'images',

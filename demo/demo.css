@@ -57,6 +57,18 @@ button {
   overflow: scroll;
 }
 
+#slider-container {
+  display: none;
+  border: 1px solid #000;
+  margin: 10px 0 10px 0;
+  width: 100%;
+}
+
+#slider-input {
+  width: calc(100% - 20px);
+  margin: 10px auto 0 auto;
+}
+
 .button-container {
   text-align: right;
 }

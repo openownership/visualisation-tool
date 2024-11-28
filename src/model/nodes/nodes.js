@@ -1,6 +1,5 @@
 import { compareVersions } from 'compare-versions';
 import generateNodeLabel from './nodeSVGLabel.js';
-import { closedRecords, latest } from '../../utils/bods.js';
 import sanitise from '../../utils/sanitiser.js';
 
 // This will generate a node when there are unspecified fields
@@ -95,7 +94,7 @@ const iconType = (nodeType) => {
 
 // This builds up the required person object from the BODS data, using the functions above
 export const getPersonNodes = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0.4';
 
   const filteredData = bodsData.filter((statement) => {
     if (compareVersions(version, '0.4') >= 0) {
@@ -113,14 +112,14 @@ export const getPersonNodes = (bodsData) => {
       recordId = null,
       recordDetails = null,
       names = null,
-      personType = null,
+      personType = '',
       nationalities = null,
     } = statement;
     const countryCode = nationalities && nationalities[0].code ? sanitise(nationalities[0].code) : null;
     const replaces = statement.replacesStatements ? statement.replacesStatements : [];
 
     const personNameData = recordDetails?.names || names;
-    const personTypeData = recordDetails?.personType || personType;
+    const personTypeData = recordDetails?.personType || personType || 'unknownPerson';
 
     const personLabel =
       personNameData && personNameData.length > 0 && personTypeData
@@ -146,12 +145,12 @@ export const getPersonNodes = (bodsData) => {
     };
   });
 
-  return latest(mappedData, closedRecords, version);
+  return mappedData;
 };
 
 // This builds up the required entity object from the BODS data, using the functions above
 export const getEntityNodes = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0.4';
 
   const filteredData = bodsData.filter((statement) => {
     if (compareVersions(version, '0.4') >= 0) {
@@ -169,7 +168,7 @@ export const getEntityNodes = (bodsData) => {
       recordId = null,
       recordDetails = null,
       name = null,
-      entityType = 'unknown',
+      entityType = '',
       publicListing = null,
       incorporatedInJurisdiction = null,
       jurisdiction = null,
@@ -191,9 +190,9 @@ export const getEntityNodes = (bodsData) => {
 
     const replaces = statement.replacesStatements ? statement.replacesStatements : [];
     const nodeType =
-      publicListing?.hasPublicListing !== true || recordDetails?.publicListing?.hasPublicListing !== true
-        ? recordDetails?.entityType.type || entityType
-        : 'registeredEntityListed';
+      publicListing?.hasPublicListing === true || recordDetails?.publicListing?.hasPublicListing === true
+        ? 'registeredEntityListed'
+        : recordDetails?.entityType.type || entityType || 'unknownEntity';
     return {
       id: statementId || statementID,
       statementDate,
@@ -214,7 +213,7 @@ export const getEntityNodes = (bodsData) => {
     };
   });
 
-  return latest(mappedData, closedRecords, version);
+  return mappedData;
 };
 
 export const setUnknownNode = (source) => unknownNode(source);
