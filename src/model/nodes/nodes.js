@@ -190,9 +190,9 @@ export const getEntityNodes = (bodsData) => {
 
     const replaces = statement.replacesStatements ? statement.replacesStatements : [];
     const nodeType =
-      publicListing?.hasPublicListing !== true || recordDetails?.publicListing?.hasPublicListing !== true
-        ? recordDetails?.entityType.type || entityType || 'unknownEntity'
-        : 'registeredEntityListed';
+      publicListing?.hasPublicListing === true || recordDetails?.publicListing?.hasPublicListing === true
+        ? 'registeredEntityListed'
+        : recordDetails?.entityType.type || entityType || 'unknownEntity';
     return {
       id: statementId || statementID,
       statementDate,
