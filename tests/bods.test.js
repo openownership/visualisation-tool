@@ -5,15 +5,13 @@ import testData from './__mocks__/dataMock.json';
 describe('filteredData()', () => {
   it('should not throw an error when called', () => {
     const data = testData;
-    const closedRecords = new Set();
     const version = '0.4';
-    const result = () => filteredData(data, closedRecords, version);
+    const result = () => filteredData(data, '2020-03-04', version);
     expect(result).not.toThrow();
   });
 
   it('should return data in the correct format', () => {
     const data = testData;
-    const closedRecords = new Set();
     const version = '0.4';
     const keys = [
       'declarationSubject',
@@ -25,7 +23,7 @@ describe('filteredData()', () => {
       'statementDate',
       'statementId',
     ];
-    const result = filteredData(data, closedRecords, version);
+    const result = filteredData(data, '2020-03-04', version);
     expect(result[0]).toContainKeys(keys);
   });
 });

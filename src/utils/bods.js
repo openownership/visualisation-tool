@@ -1,6 +1,4 @@
 import { compareVersions } from 'compare-versions';
-export const closedRecords = new Set();
-export const changedRecords = new Set();
 
 export const getDates = (statements) => {
   const uniqueDates = new Set();
