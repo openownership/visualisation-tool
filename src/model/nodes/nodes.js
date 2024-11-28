@@ -112,14 +112,14 @@ export const getPersonNodes = (bodsData) => {
       recordId = null,
       recordDetails = null,
       names = null,
-      personType = null,
+      personType = 'unknownPerson',
       nationalities = null,
     } = statement;
     const countryCode = nationalities && nationalities[0].code ? sanitise(nationalities[0].code) : null;
     const replaces = statement.replacesStatements ? statement.replacesStatements : [];
 
     const personNameData = recordDetails?.names || names;
-    const personTypeData = recordDetails?.personType || personType;
+    const personTypeData = recordDetails?.personType || personType || 'unknownPerson';
 
     const personLabel =
       personNameData && personNameData.length > 0 && personTypeData
@@ -168,7 +168,7 @@ export const getEntityNodes = (bodsData) => {
       recordId = null,
       recordDetails = null,
       name = null,
-      entityType = '',
+      entityType = 'unknownEntity',
       publicListing = null,
       incorporatedInJurisdiction = null,
       jurisdiction = null,
