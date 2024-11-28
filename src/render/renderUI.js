@@ -140,6 +140,7 @@ export const renderMessage = (message) => {
 
 export const renderProperties = (inner, g, useTippy) => {
   const disclosureWidget = document.querySelector('#disclosure-widget');
+  disclosureWidget.innerHTML = '';
 
   const nodes = inner.selectAll('g.node');
   nodes.each((d, i) => {

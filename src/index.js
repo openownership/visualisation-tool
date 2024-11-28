@@ -50,7 +50,6 @@ export const selectData = ({
 
   // Update selected date according to slider position
   renderDateSlider(dates, version, currentlySelectedDate);
-  const applyDateButton = document.querySelector('#apply-date-btn');
   const slider = document.querySelector('#slider-input');
   if (slider) {
     slider.addEventListener('input', () => {
