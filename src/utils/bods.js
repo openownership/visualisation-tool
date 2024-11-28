@@ -4,8 +4,9 @@ export const changedRecords = new Set();
 
 export const getDates = (statements) => {
   const uniqueDates = new Set();
+  const validStatements = Array.isArray(statements) ? statements : [statements];
 
-  for (const statement of statements) {
+  for (const statement of validStatements) {
     if (!uniqueDates.has(statement.statementDate)) {
       uniqueDates.add(statement.statementDate);
     }
@@ -13,26 +14,28 @@ export const getDates = (statements) => {
 
   const arr = Array.from(uniqueDates);
   return arr.sort((a, b) => {
-    return a - b;
+    return new Date(a) - new Date(b);
   });
 };
 
 export const filteredData = (statements, selectedDate, version) => {
+  const validStatements = Array.isArray(statements) ? statements : [statements];
+
   if (compareVersions(version, '0.4') >= 0) {
     // get all statements with matching recordId and recordType values
     const recordIdCount = {};
 
-    for (const statement of statements) {
+    for (const statement of validStatements) {
       const key = `${statement.recordId}-${statement.recordType}`;
       recordIdCount[key] = (recordIdCount[key] || 0) + 1;
     }
 
-    const duplicateStatements = statements.filter((statement) => {
+    const duplicateStatements = validStatements.filter((statement) => {
       const key = `${statement.recordId}-${statement.recordType}`;
       return recordIdCount[key] > 1;
     });
 
-    const uniqueStatements = statements.filter((statement) => {
+    const uniqueStatements = validStatements.filter((statement) => {
       const key = `${statement.recordId}-${statement.recordType}`;
       return recordIdCount[key] === 1;
     });
@@ -96,7 +99,7 @@ export const filteredData = (statements, selectedDate, version) => {
 
     // filter original statements to only show selected statements
     const selectStatements = (array) => {
-      return statements.filter((statement) =>
+      return validStatements.filter((statement) =>
         array.some(
           (filtered) =>
             filtered.recordId === statement.recordId &&
@@ -119,13 +122,13 @@ export const filteredData = (statements, selectedDate, version) => {
     const nodeTypes = ['ownershipOrControlStatement', 'entityStatement', 'personStatement'];
     const replacedStatements = new Set();
 
-    statements.forEach((statement) => {
+    validStatements.forEach((statement) => {
       if (nodeTypes.includes(statement.statementType)) {
         (statement.replacesStatements || []).forEach((id) => replacedStatements.add(id));
       }
     });
 
-    return statements.filter((statement) => {
+    return validStatements.filter((statement) => {
       return !(replacedStatements.has(statement.statementID) && nodeTypes.includes(statement.statementType));
     });
   }
