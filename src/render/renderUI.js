@@ -139,6 +139,11 @@ export const renderMessage = (message) => {
 };
 
 export const renderProperties = (inner, g, useTippy) => {
+  // Only use tippy.js if the useTippy property is true
+  if (useTippy) {
+    // Pre-emptively hide any rogue open tooltips
+    hideAll({ duration: 0 });
+  }
   const disclosureWidget = document.querySelector('#disclosure-widget');
   disclosureWidget.innerHTML = '';
 
@@ -169,7 +174,7 @@ export const renderProperties = (inner, g, useTippy) => {
         waitForElementsToExist('.close-tooltip', (elements) => {
           elements.forEach((element) => {
             element.addEventListener('click', () => {
-              hideAll();
+              hideAll({ duration: 0 });
             });
           });
         });
