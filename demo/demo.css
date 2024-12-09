@@ -69,6 +69,33 @@ button {
   margin: 10px auto 0 auto;
 }
 
+#slider-input:active {
+  cursor: grabbing;
+}
+
+#slider-input::-webkit-slider-thumb {
+  cursor: grab;
+}
+
+#slider-input::-moz-range-thumb {
+  cursor: grab;
+}
+
+#slider-input::-ms-thumb {
+  cursor: grab;
+}
+#slider-input::-webkit-slider-thumb:active {
+  cursor: grabbing;
+}
+
+#slider-input::-moz-range-thumb:active {
+  cursor: grabbing;
+}
+
+#slider-input::-ms-thumb:active {
+  cursor: grabbing;
+}
+
 .button-container {
   text-align: right;
 }
