@@ -19,29 +19,34 @@ export const getDates = (statements) => {
 export const filteredData = (statements, selectedDate, version) => {
   const validStatements = Array.isArray(statements) ? statements : [statements];
 
+  // Ensure all statements include recordType as the minimum valid criteria
+  const filteredStatements = validStatements.filter((statement) => {
+    return statement.recordType;
+  });
+
   if (compareVersions(version, '0.4') >= 0) {
     // get all statements with matching recordId and recordType values
     const recordIdCount = {};
 
-    for (const statement of validStatements) {
-      const key = `${statement.recordId}-${statement.recordType}`;
+    for (const statement of filteredStatements) {
+      const key = `${statement.recordId || ''}-${statement.recordType}`;
       recordIdCount[key] = (recordIdCount[key] || 0) + 1;
     }
 
-    const duplicateStatements = validStatements.filter((statement) => {
-      const key = `${statement.recordId}-${statement.recordType}`;
+    const duplicateStatements = filteredStatements.filter((statement) => {
+      const key = `${statement.recordId || ''}-${statement.recordType}`;
       return recordIdCount[key] > 1;
     });
 
-    const uniqueStatements = validStatements.filter((statement) => {
-      const key = `${statement.recordId}-${statement.recordType}`;
+    const uniqueStatements = filteredStatements.filter((statement) => {
+      const key = `${statement.recordId || ''}-${statement.recordType}`;
       return recordIdCount[key] === 1;
     });
 
     // remove all statements outside of selectedDate
     const filteredByDate = (array) => {
       return array.filter((statement) => {
-        return statement.statementDate <= selectedDate;
+        return !statement.statementDate || statement.statementDate <= selectedDate;
       });
     };
 
@@ -49,7 +54,7 @@ export const filteredData = (statements, selectedDate, version) => {
     const filteredByRecency = (array) => {
       return Object.values(
         array.reduce((acc, statement) => {
-          const key = `${statement.recordId}-${statement.recordType}`;
+          const key = `${statement.recordId || ''}-${statement.recordType}`;
           if (!acc[key] || new Date(statement.statementDate) > new Date(acc[key].statementDate)) {
             acc[key] = statement;
           }
@@ -97,7 +102,7 @@ export const filteredData = (statements, selectedDate, version) => {
 
     // filter original statements to only show selected statements
     const selectStatements = (array) => {
-      return validStatements.filter((statement) =>
+      return filteredStatements.filter((statement) =>
         array.some(
           (filtered) =>
             filtered.recordId === statement.recordId &&

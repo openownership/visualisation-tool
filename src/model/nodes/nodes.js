@@ -110,7 +110,7 @@ export const getPersonNodes = (bodsData) => {
       statementId = null,
       statementDate = null,
       recordId = null,
-      recordDetails = null,
+      recordDetails = {},
       names = null,
       personType = '',
       nationalities = null,
@@ -166,7 +166,7 @@ export const getEntityNodes = (bodsData) => {
       statementId = null,
       statementDate = null,
       recordId = null,
-      recordDetails = null,
+      recordDetails = {},
       name = null,
       entityType = '',
       publicListing = null,
@@ -192,7 +192,8 @@ export const getEntityNodes = (bodsData) => {
     const nodeType =
       publicListing?.hasPublicListing === true || recordDetails?.publicListing?.hasPublicListing === true
         ? 'registeredEntityListed'
-        : recordDetails?.entityType.type || entityType || 'unknownEntity';
+        : recordDetails?.entityType?.type || entityType || 'unknownEntity';
+
     return {
       id: statementId || statementID,
       statementDate,
