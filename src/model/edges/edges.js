@@ -1,6 +1,5 @@
 import { compareVersions } from 'compare-versions';
 import { curveMonotoneX } from 'd3';
-import { closedRecords, latest } from '../../utils/bods.js';
 import interestTypesCodelist from '../../codelists/interestTypes.js';
 
 // This sets the style and shape of the edges using D3 parameters
@@ -65,7 +64,7 @@ export const checkInterests = (interestRelationship) => {
 };
 
 export const getOwnershipEdges = (bodsData) => {
-  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0';
+  const version = bodsData[0]?.publicationDetails?.bodsVersion || '0.4';
 
   const filteredData = bodsData.filter((statement) => {
     if (compareVersions(version, '0.4') >= 0) {
@@ -205,7 +204,7 @@ export const getOwnershipEdges = (bodsData) => {
     };
   });
 
-  return latest(mappedData, closedRecords, version);
+  return mappedData;
 };
 
 export const getEdges = (data) => {
