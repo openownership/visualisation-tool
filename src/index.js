@@ -52,20 +52,14 @@ export const selectData = ({
   renderDateSlider(dates, version, currentlySelectedDate);
   const slider = document.querySelector('#slider-input');
   if (slider) {
-    slider.addEventListener('input', () => {
+    slider.addEventListener('input', (e) => {
+      const scrollPosition = window.scrollY;
       selectedDate = dates[document.querySelector('#slider-input').value];
-      selectData({
-        data,
-        container,
-        imagesPath,
-        labelLimit,
-        rankDir,
-        viewProperties,
-        useTippy,
-        currentlySelectedDate: selectedDate,
-      });
+      config.selectedData = filteredData(data, selectedDate, version);
+      draw(config);
+      window.scrollTo(0, scrollPosition);
+      slider.focus();
     });
-    slider.focus();
   }
   config.selectedData = filteredData(data, selectedDate, version);
   draw(config);
