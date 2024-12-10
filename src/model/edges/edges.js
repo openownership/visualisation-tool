@@ -1,11 +1,11 @@
 import { compareVersions } from 'compare-versions';
-import { curveMonotoneX } from 'd3';
+import { monotoneX } from '../../utils/curve.js';
 import interestTypesCodelist from '../../codelists/interestTypes.js';
 
 // This sets the style and shape of the edges using D3 parameters
 const edgeConfig = {
   style: 'fill: none; stroke: #000; stroke-width: 5px;',
-  curve: curveMonotoneX,
+  curve: monotoneX,
 };
 
 const defaultStroke = 5;
