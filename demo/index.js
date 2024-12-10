@@ -37,7 +37,9 @@ const getJSON = async () => {
 
 const visualiseData = (data) => {
   // Render data as text
-  document.getElementById('result').value = data.formatted;
+  if (data.formatted) {
+    document.getElementById('result').value = data.formatted;
+  }
   // Select data and render as graph
   selectData({
     data: data.parsed,

@@ -42,27 +42,30 @@ export const selectData = ({
     viewProperties,
     useTippy,
   };
-  const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
 
-  // Detect dates in data; default to most recent
-  const dates = getDates(data);
-  let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
+  if (data) {
+    const version = data[0]?.publicationDetails?.bodsVersion || '0.4';
 
-  // Update selected date according to slider position
-  renderDateSlider(dates, version, currentlySelectedDate);
-  const slider = document.querySelector('#slider-input');
-  if (slider) {
-    slider.addEventListener('input', (e) => {
-      const scrollPosition = window.scrollY;
-      selectedDate = dates[document.querySelector('#slider-input').value];
-      config.selectedData = filteredData(data, selectedDate, version);
-      draw(config);
-      window.scrollTo(0, scrollPosition);
-      slider.focus();
-    });
+    // Detect dates in data; default to most recent
+    const dates = getDates(data);
+    let selectedDate = currentlySelectedDate ? currentlySelectedDate : dates[dates.length - 1];
+
+    // Update selected date according to slider position
+    renderDateSlider(dates, version, currentlySelectedDate);
+    const slider = document.querySelector('#slider-input');
+    if (slider) {
+      slider.addEventListener('input', (e) => {
+        const scrollPosition = window.scrollY;
+        selectedDate = dates[document.querySelector('#slider-input').value];
+        config.selectedData = filteredData(data, selectedDate, version);
+        draw(config);
+        window.scrollTo(0, scrollPosition);
+        slider.focus();
+      });
+    }
+    config.selectedData = filteredData(data, selectedDate, version);
+    draw(config);
   }
-  config.selectedData = filteredData(data, selectedDate, version);
-  draw(config);
 };
 
 // This sets up the basic format of the graph, such as direction, node and rank separation, and default label limits
@@ -77,6 +80,11 @@ export const draw = (config) => {
   // Extract the BODS data that is required for drawing the graph
   const { edges } = getEdges(selectedData);
   const { nodes } = getNodes(selectedData, edges);
+
+  if (edges.length === 0 && nodes.length === 0) {
+    const message = 'Your data does not have any information that can be drawn.';
+    renderMessage(message);
+  }
 
   // This section maps the incoming BODS data to the parameters expected by Dagre
   setEdges(edges, g);
