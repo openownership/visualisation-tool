@@ -30,7 +30,7 @@ function point(that, t0, t1) {
     x1 = that._x1,
     y1 = that._y1,
     dx = (x1 - x0) / 3;
-  that._context.bezierCurveTo(x0 + dx * 0.5, y0 + dx * t0 * 0.5, x1 - dx * 0.5, y1 - dx * t1 * 0.5, x1, y1);
+  that._context.bezierCurveTo(x0 + dx * 0.9, y0 + dx * t0 * 0.9, x1 - dx * 0.9, y1 - dx * t1 * 0.9, x1, y1);
 }
 
 function MonotoneX(context) {
