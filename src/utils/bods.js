@@ -1,36 +1,138 @@
 import { compareVersions } from 'compare-versions';
-export const closedRecords = new Set();
 
-export const latest = (statements, closedRecords, version) => {
+export const getDates = (statements) => {
+  const uniqueDates = new Set();
+  const validStatements = Array.isArray(statements) ? statements : [statements];
+
+  for (const statement of validStatements) {
+    if (!uniqueDates.has(statement.statementDate)) {
+      uniqueDates.add(statement.statementDate);
+    }
+  }
+
+  const arr = Array.from(uniqueDates);
+  return arr.sort((a, b) => {
+    return new Date(a) - new Date(b);
+  });
+};
+
+export const filteredData = (statements, selectedDate, version) => {
+  const validStatements = Array.isArray(statements) ? statements : [statements];
+
+  // Ensure all statements include recordType as the minimum valid criteria
+  const filteredStatements = validStatements.filter((statement) => {
+    return statement.recordType || statement.statementType;
+  });
+
   if (compareVersions(version, '0.4') >= 0) {
-    const statementMap = {};
+    // get all statements with matching recordId and recordType values
+    const recordIdCount = {};
 
-    statements.forEach((statement) => {
-      const { recordId, recordStatus, source } = statement;
+    for (const statement of filteredStatements) {
+      const key = `${statement.recordId || ''}-${statement.recordType}`;
+      recordIdCount[key] = (recordIdCount[key] || 0) + 1;
+    }
 
-      if (recordStatus === 'closed') {
-        closedRecords.add(recordId);
-        closedRecords.add(source);
-      }
+    const duplicateStatements = filteredStatements.filter((statement) => {
+      const key = `${statement.recordId || ''}-${statement.recordType}`;
+      return recordIdCount[key] > 1;
     });
 
-    statements.forEach((statement) => {
-      const { recordId, statementDate, recordStatus } = statement;
-
-      if (recordStatus === 'closed' || closedRecords.has(recordId)) {
-        return;
-      }
-
-      if (
-        !statementMap[recordId] ||
-        new Date(statementDate) > new Date(statementMap[recordId].statementDate)
-      ) {
-        statementMap[recordId] = statement;
-      }
+    const uniqueStatements = filteredStatements.filter((statement) => {
+      const key = `${statement.recordId || ''}-${statement.recordType}`;
+      return recordIdCount[key] === 1;
     });
-    return Object.values(statementMap);
+
+    // remove all statements outside of selectedDate
+    const filteredByDate = (array) => {
+      return array.filter((statement) => {
+        return !statement.statementDate || statement.statementDate <= selectedDate;
+      });
+    };
+
+    // remove all statements but most recent of those already filtered by date
+    const filteredByRecency = (array) => {
+      return Object.values(
+        array.reduce((acc, statement) => {
+          const key = `${statement.recordId || ''}-${statement.recordType}`;
+          if (!acc[key] || new Date(statement.statementDate) > new Date(acc[key].statementDate)) {
+            acc[key] = statement;
+          }
+          return acc;
+        }, {})
+      );
+    };
+
+    // remove closed records of various types
+    const filterByRecordStatus = (array) => {
+      return array.filter((statement) => {
+        if (statement.recordStatus === 'closed') {
+          return false;
+        }
+
+        if (
+          statement.recordType === 'entity' &&
+          statement.dissolutionDate &&
+          new Date(statement.dissolutionDate) <= new Date(selectedDate)
+        ) {
+          return false;
+        }
+
+        if (
+          statement.recordType === 'person' &&
+          statement.deathDate &&
+          new Date(statement.deathDate) <= new Date(selectedDate)
+        ) {
+          return false;
+        }
+
+        if (statement.recordType === 'relationship' && statement.recordDetails?.interests) {
+          statement.recordDetails.interests = statement.recordDetails.interests.filter((interest) => {
+            return !interest.endDate || new Date(interest.endDate) > new Date(selectedDate);
+          });
+
+          if (statement.recordDetails.interests.length === 0) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    };
+
+    // filter original statements to only show selected statements
+    const selectStatements = (array) => {
+      return filteredStatements.filter((statement) =>
+        array.some(
+          (filtered) =>
+            filtered.recordId === statement.recordId &&
+            filtered.recordType === statement.recordType &&
+            filtered.statementDate === statement.statementDate
+        )
+      );
+    };
+
+    const duplicateSelectedStatements = selectStatements(
+      filterByRecordStatus(filteredByRecency(filteredByDate(duplicateStatements)))
+    );
+    const uniqueSelectedStatements = selectStatements(
+      filterByRecordStatus(filteredByRecency(filteredByDate(uniqueStatements)))
+    );
+
+    return [...duplicateSelectedStatements, ...uniqueSelectedStatements];
   } else {
-    const replaced = new Set(statements.flatMap((s) => s.replaces));
-    return statements.filter((s) => !replaced.has(s.id));
+    // get all statements with statementID values in replacesStatements array
+    const nodeTypes = ['ownershipOrControlStatement', 'entityStatement', 'personStatement'];
+    const replacedStatements = new Set();
+
+    filteredStatements.forEach((statement) => {
+      if (nodeTypes.includes(statement.statementType)) {
+        (statement.replacesStatements || []).forEach((id) => replacedStatements.add(id));
+      }
+    });
+
+    return filteredStatements.filter((statement) => {
+      return !(replacedStatements.has(statement.statementID) && nodeTypes.includes(statement.statementType));
+    });
   }
 };

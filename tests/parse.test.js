@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { parse } from '../src/parse/parse.js';
 
 describe('parse()', () => {

@@ -10,7 +10,7 @@ export const parse = (data) => {
     const message = 'There was an error drawing your data. The data must be a valid JSON array of objects.';
     renderMessage(message);
     console.error(error);
-    return {};
+    return [];
   }
 
   // Format JSON consistently
