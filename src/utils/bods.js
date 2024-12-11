@@ -21,7 +21,7 @@ export const filteredData = (statements, selectedDate, version) => {
 
   // Ensure all statements include recordType as the minimum valid criteria
   const filteredStatements = validStatements.filter((statement) => {
-    return statement.recordType;
+    return statement.recordType || statement.statementType;
   });
 
   if (compareVersions(version, '0.4') >= 0) {
@@ -125,13 +125,13 @@ export const filteredData = (statements, selectedDate, version) => {
     const nodeTypes = ['ownershipOrControlStatement', 'entityStatement', 'personStatement'];
     const replacedStatements = new Set();
 
-    validStatements.forEach((statement) => {
+    filteredStatements.forEach((statement) => {
       if (nodeTypes.includes(statement.statementType)) {
         (statement.replacesStatements || []).forEach((id) => replacedStatements.add(id));
       }
     });
 
-    return validStatements.filter((statement) => {
+    return filteredStatements.filter((statement) => {
       return !(replacedStatements.has(statement.statementID) && nodeTypes.includes(statement.statementType));
     });
   }
