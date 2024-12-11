@@ -9,10 +9,15 @@ button {
 }
 
 #svg-holder {
+  cursor: grab;
   position: relative;
   text-align: center;
   border: 1px solid #000;
   min-height: 400px;
+}
+
+#svg-holder:active {
+  cursor: grabbing;
 }
 
 #bods-svg {
