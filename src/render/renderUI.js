@@ -113,7 +113,7 @@ const setTippyInstance = (element, content) => {
     content: `<div class="button-container"><button class="close-tooltip">&times;</button></div><pre>${content}</pre>`,
     allowHTML: true,
     trigger: 'manual',
-    hideOnClick: false,
+    hideOnClick: true,
     interactive: true,
     theme: 'light-border',
     appendTo: document.body,
