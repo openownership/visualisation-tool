@@ -125,6 +125,7 @@ export const filteredData = (statements, selectedDate, version) => {
     const nodeTypes = ['ownershipOrControlStatement', 'entityStatement', 'personStatement'];
     const replacedStatements = new Set();
 
+    // filter statements by <0.4 changes over time, and only return the latest state of data
     filteredStatements.forEach((statement) => {
       if (nodeTypes.includes(statement.statementType)) {
         (statement.replacesStatements || []).forEach((id) => replacedStatements.add(id));
