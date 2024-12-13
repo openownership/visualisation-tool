@@ -74,8 +74,24 @@ button {
   margin: 10px auto 0 auto;
 }
 
+#slider-input:disabled {
+  cursor: not-allowed;
+}
+
 #slider-input:active {
   cursor: grabbing;
+}
+
+#slider-input:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+#slider-input:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+#slider-input:disabled::-ms-thumb {
+  cursor: not-allowed;
 }
 
 #slider-input::-webkit-slider-thumb {
