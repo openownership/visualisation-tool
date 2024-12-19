@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 button {
   margin: 10px;
   width: 200px;
@@ -5,10 +9,15 @@ button {
 }
 
 #svg-holder {
+  cursor: grab;
   position: relative;
   text-align: center;
   border: 1px solid #000;
   min-height: 400px;
+}
+
+#svg-holder:active {
+  cursor: grabbing;
 }
 
 #bods-svg {
@@ -35,7 +44,93 @@ button {
   text-align: center;
 }
 
+.edgePath,
+.node {
+  cursor: pointer;
+}
+
+.node.unspecified,
+.node.unknown {
+  cursor: default;
+}
+
+#disclosure-widget details {
+  text-align: left;
+  border: 1px solid #000;
+  padding: 10px;
+  margin: 10px 0 10px 0;
+  overflow: scroll;
+}
+
+#slider-container {
+  display: none;
+  border: 1px solid #000;
+  margin: 10px 0 10px 0;
+  width: 100%;
+}
+
+#slider-input {
+  width: calc(100% - 20px);
+  margin: 10px auto 0 auto;
+}
+
+#slider-input:disabled {
+  cursor: not-allowed;
+}
+
+#slider-input:active {
+  cursor: grabbing;
+}
+
+#slider-input:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+#slider-input:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+#slider-input:disabled::-ms-thumb {
+  cursor: not-allowed;
+}
+
+#slider-input::-webkit-slider-thumb {
+  cursor: grab;
+}
+
+#slider-input::-moz-range-thumb {
+  cursor: grab;
+}
+
+#slider-input::-ms-thumb {
+  cursor: grab;
+}
+#slider-input::-webkit-slider-thumb:active {
+  cursor: grabbing;
+}
+
+#slider-input::-moz-range-thumb:active {
+  cursor: grabbing;
+}
+
+#slider-input::-ms-thumb:active {
+  cursor: grabbing;
+}
+
+.button-container {
+  text-align: right;
+}
+
+.tippy-content pre {
+  overflow: scroll;
+}
+
+.close-tooltip {
+  width: 40px;
+}
+
 #draw-vis {
+  margin: 10px auto;
   width: 100%;
 }
 
