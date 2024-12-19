@@ -53,7 +53,7 @@ In the following tables, a feature may span multiple rows. In these cases, the c
 | | `recordStatus` | Not 'closed' | no | | | |
 | Node label drawn (default is 'Unknown person') | `recordDetails.names[]`\* | Value of 'fullName' or compound of other field values in name object | no | `names[]`* | Value of 'fullName' or compound of other field values in name object | no |
 | Node icon drawn (default is unknown person icon) | `recordDetails.personType` | 'anonymousPerson', 'unknownPerson' or 'knownPerson' | no | `personType` | 'anonymousPerson', 'unknownPerson' or 'knownPerson' | no |
-| Country flag drawn (default is no flag) | `recordDetails.nationalities[0].code` | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no | `nationalities[0].code | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no |
+| Country flag drawn (default is no flag) | `recordDetails.nationalities[0].code` | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no | `nationalities[0].code` | The 2-letter country code (ISO 3166-1) or the subdivision code (ISO 3166-2) for the jurisdiction | no |
 | Node is connectable | `recordId` | Any string | no | `statementId` | Any string | no |
 
 \* The name types will be used in the following order: 'individual', 'transliteration', 'alternative', 'birth', 'translation', 'former'.
